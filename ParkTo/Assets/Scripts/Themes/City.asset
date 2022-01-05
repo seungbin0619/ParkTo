@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdfd342c5da8eb247af57fed9f91c2e3, type: 3}
+  m_Name: City
+  m_EditorClassIdentifier: 
+  colors:
+  - serializedVersion: 2
+    rgba: 4283213446
+  - serializedVersion: 2
+    rgba: 4282218330
+  carColors:
+  - serializedVersion: 2
+    rgba: 4292509020
+  - serializedVersion: 2
+    rgba: 4284652500
+  grounds:
+  - {fileID: 11400000, guid: 3239b7bb95bd80845a2cd933fac9d352, type: 2}
+  - {fileID: 11400000, guid: ec0867e8ccc3a3c4a95606a93aa52f96, type: 2}
+  - {fileID: 11400000, guid: 3765eb7d51632c54c8c95823b9f08ea0, type: 2}
+  outlines:
+  - {fileID: 11400000, guid: 5911bf98bf8c7784a98d43b9f20782c3, type: 2}
+  - {fileID: 11400000, guid: ebb1f3aa211b7f24ebd4048f721e9c05, type: 2}
+  - {fileID: 11400000, guid: 9708c397da2885f4e8b166f0758dc733, type: 2}
+  decorates: []
