@@ -14,7 +14,9 @@ public class Vars : MonoBehaviour
 
     #endregion
 
+    public GameEvent PrevMove;
     public GameEvent AfterMove;
+    public GameEvent AfterChange;
     public GameEvent OnChanged;
     public GameEvent OnThemeChanged;
 }

@@ -30,7 +30,7 @@ public class Car : MonoBehaviour
 
     //private Vector3 velocity;
 
-    private bool collided;
+    public bool collided;
     public bool isOperatable { get { return path.Count > 1; } } // 다음에 움직일 수 있는지
 
     private void Awake()

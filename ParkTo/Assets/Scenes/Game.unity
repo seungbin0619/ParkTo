@@ -813,7 +813,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a25b468df62cd884aa149bf229a286bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PrevMove: {fileID: 11400000, guid: 34eebaf5cccf0294b82bd2cdaf4c235a, type: 2}
   AfterMove: {fileID: 11400000, guid: 67bbb2477bc405d47b8d589e341de277, type: 2}
+  AfterChange: {fileID: 11400000, guid: efae0bb81410fa7489c9f6c86327047d, type: 2}
   OnChanged: {fileID: 11400000, guid: c4f299fafbf070a4bac61aa8781590e0, type: 2}
   OnThemeChanged: {fileID: 11400000, guid: 8420a0538d080be459107ab9b3c8ff63, type: 2}
 --- !u!114 &778313378
@@ -1223,6 +1225,9 @@ GameObject:
   - component: {fileID: 1779044710}
   - component: {fileID: 1779044709}
   - component: {fileID: 1779044712}
+  - component: {fileID: 1779044713}
+  - component: {fileID: 1779044715}
+  - component: {fileID: 1779044714}
   m_Layer: 5
   m_Name: Play
   m_TagString: Untagged
@@ -1247,9 +1252,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 50}
+  m_AnchoredPosition: {x: 0, y: 113.99997}
   m_SizeDelta: {x: 128, y: 128}
-  m_Pivot: {x: 0.5, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1779044709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1268,7 +1273,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1357,6 +1362,72 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.2}
   m_EffectDistance: {x: 0, y: -5}
   m_UseGraphicAlpha: 1
+--- !u!114 &1779044713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779044707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef533500686edfb4895cd7a9af594acf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1779044714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779044707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b07f3a63fbba1f4d80e83bad0b67951, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventSO: {fileID: 11400000, guid: efae0bb81410fa7489c9f6c86327047d, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1779044713}
+        m_MethodName: AfterChange
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1779044715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779044707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b07f3a63fbba1f4d80e83bad0b67951, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventSO: {fileID: 11400000, guid: 34eebaf5cccf0294b82bd2cdaf4c235a, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1779044713}
+        m_MethodName: PrevMove
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1863467390
 GameObject:
   m_ObjectHideFlags: 0

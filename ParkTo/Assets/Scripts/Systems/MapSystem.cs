@@ -19,7 +19,9 @@ public class MapSystem : MonoBehaviour
 
     #region [ 맵 정보들 ]
 
+    public static int MapIndex = -1; // 현재 맵 인덱스
     private bool isDrawed; // 맵이 그려져있는가?
+    public static bool isPlayable; // 재생 가능한가?
 
     private WaitWhile drawFlag;
 
@@ -84,6 +86,11 @@ public class MapSystem : MonoBehaviour
 
     private IEnumerator PrevResetLevel()
     {
+        carTile.ClearAllTiles();
+        mapTile.ClearAllTiles();
+        lineTile.ClearAllTiles();
+        triggerTile.ClearAllTiles();
+
         isDrawed = false;
 
         yield return null;
@@ -93,6 +100,7 @@ public class MapSystem : MonoBehaviour
     {
         if (index < 0 || index >= levels.Length) return;
 
+        MapIndex = index;
         CurrentLevel = levels[index];
         CurrentTheme = themes[CurrentLevel.theme];
 
@@ -198,6 +206,8 @@ public class MapSystem : MonoBehaviour
             CurrentCars[i].GetNextPath();
 
         #endregion
+
+        isDrawed = true;
     }
 
     public static bool IsValidPosition(Vector3Int position)
@@ -226,6 +236,8 @@ public class MapSystem : MonoBehaviour
 
         IEnumerator CMove()
         {
+            Vars.instance.PrevMove.Raise();
+
             bool completeFlag = false;
             while (!completeFlag)
             {
@@ -245,20 +257,37 @@ public class MapSystem : MonoBehaviour
 
     public void AfterMove() // 이동이 종료되었을 때
     {
-        Vars.instance.OnChanged.Raise();
+        if(CurrentCars.FindAll(k => k.collided).Count > 0) // 충돌이 일어난 경우
+        {
+            // 다시 시작하기
+            Debug.Log("실패!");
 
+            return;
+        }
+
+        Vars.instance.OnChanged.Raise();
     }
 
     public void OnChanged() // 어떠한 변화가 생긴 경우
     {
-        bool valid = true;
-        for (int i = 0; i < CurrentCars.Count; i++)
+        isPlayable = false;
+
+        if (CurrentGoals.FindAll(k => k.IsArrived).Count == CurrentGoals.Count) // 클리어 체크
         {
-            CurrentCars[i].GetNextPath();
-            valid = CurrentCars[i].isOperatable || valid;
+            // 클리어
+            Debug.Log("클리어!");
+            PrevSelectLevel(MapIndex + 1);
+
+            return;
         }
 
+        for (int i = 0; i < CurrentCars.Count; i++) // 차 이동 가능 체크
+        {
+            CurrentCars[i].GetNextPath();
+            isPlayable = CurrentCars[i].isOperatable || isPlayable;
+        }
 
+        Vars.instance.AfterChange.Raise();
     }
 
     private void DrawPathPredictor() // 예상 경로를 그려줌

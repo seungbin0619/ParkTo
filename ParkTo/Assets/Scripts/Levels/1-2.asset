@@ -22,5 +22,6 @@ MonoBehaviour:
   lineRotations: 1,0,2,1,0,3,0,0,3
   cars: 1,0,0,0,0,0,0,0,1
   carRotations: 0,0,0,0,0,0,0,0,1
-  triggers: 
+  triggers: -1,-1,-1,-1,-1,-1,-1,-1,-1
+  triggerInformations: -1,-1,-1,-1,-1,-1,-1,-1,-1
   seed: 1
