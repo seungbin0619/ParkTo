@@ -8,22 +8,21 @@ public class MapSystem : MonoBehaviour
     #region [ 인스턴스 초기화 ]
 
     public static MapSystem instance;
+
+    private WaitWhile drawFlag;
+
+    private WaitWhile AnimateFlag;
     private void Awake()
     {
         if (instance == null) instance = this;
 
         drawFlag = new WaitWhile(() => isDrawed);
+        AnimateFlag = new WaitWhile(() => isAnimated);
     }
 
     #endregion
 
     #region [ 맵 정보들 ]
-
-    public static int MapIndex = -1; // 현재 맵 인덱스
-    private bool isDrawed; // 맵이 그려져있는가?
-    public static bool isPlayable; // 재생 가능한가?
-
-    private WaitWhile drawFlag;
 
     [SerializeField]
     private ThemeBase[] themes;
@@ -37,6 +36,9 @@ public class MapSystem : MonoBehaviour
     [SerializeField]
     private Tile car;
 
+    [SerializeField]
+    private Tile predictor;
+
     public static LevelBase CurrentLevel;
     public static ThemeBase CurrentTheme;
 
@@ -45,6 +47,19 @@ public class MapSystem : MonoBehaviour
 
     public static List<Car> CurrentCars;
     public static List<Goal> CurrentGoals;
+
+    #endregion
+
+    #region [ 변수 ]
+
+    public static int MapIndex = -1; // 현재 맵 인덱스
+    private static bool isDrawed; // 맵이 그려져있는가?
+    public static bool isPlayable; // 재생 가능한가?
+    public static bool isAnimated; // 애니메이션 재생중인가?
+
+    private static bool isPredictorInstantiated; // 경로 표시 중인가
+    private static int maxPathCount = -1;
+    private static float pathPredictorProgress; // 경로 표시 진행도
 
     #endregion
 
@@ -66,7 +81,7 @@ public class MapSystem : MonoBehaviour
     private Tilemap triggerTile;
 
     [SerializeField]
-    private UnityEngine.UI.Image background;
+    private Tilemap predictTile;
 
     #endregion
 
@@ -86,10 +101,15 @@ public class MapSystem : MonoBehaviour
 
     private IEnumerator PrevResetLevel()
     {
+        // 초기화 애니메이션
+
+        yield return AnimateFlag;
+
         carTile.ClearAllTiles();
         mapTile.ClearAllTiles();
         lineTile.ClearAllTiles();
         triggerTile.ClearAllTiles();
+        predictTile.ClearAllTiles();
 
         isDrawed = false;
 
@@ -121,7 +141,9 @@ public class MapSystem : MonoBehaviour
 
         #region [ 맵 배치 ]
 
-        // 중앙으로
+        #region [ 데이터 배열화 ]
+
+        // 중앙으로 배치 
         mapGrid.transform.position = new Vector3(-CurrentLevel.size.x * 0.5f, -CurrentLevel.size.y * 0.5f);
 
         int[,] tmpGroundRotation = CurrentLevel.ToArray(CurrentLevel.groundRotations);
@@ -144,6 +166,7 @@ public class MapSystem : MonoBehaviour
             shuffle[r2] = tmp;
         }
 
+        #endregion
 
         for (int y = 0; y < CurrentLevel.size.y; y++)
             for (int x = 0; x < CurrentLevel.size.x; x++)
@@ -202,12 +225,11 @@ public class MapSystem : MonoBehaviour
             }
         #endregion
 
-        for (int i = 0; i < CurrentCars.Count; i++)
-            CurrentCars[i].GetNextPath();
-
         #endregion
 
         isDrawed = true;
+
+        Vars.instance.OnChanged.Raise();
     }
 
     public static bool IsValidPosition(Vector3Int position)
@@ -272,7 +294,9 @@ public class MapSystem : MonoBehaviour
     {
         isPlayable = false;
 
-        if (CurrentGoals.FindAll(k => k.IsArrived).Count == CurrentGoals.Count) // 클리어 체크
+        #region [ 클리어 체크 ]
+
+        if (CurrentGoals.FindAll(k => k.IsArrived).Count == CurrentGoals.Count)
         {
             // 클리어
             Debug.Log("클리어!");
@@ -281,17 +305,54 @@ public class MapSystem : MonoBehaviour
             return;
         }
 
+        #endregion
+
+        #region [ 다음 경로 ] 
+
+        maxPathCount = -1;
+        pathPredictorProgress = 0;
+
         for (int i = 0; i < CurrentCars.Count; i++) // 차 이동 가능 체크
         {
             CurrentCars[i].GetNextPath();
             isPlayable = CurrentCars[i].isOperatable || isPlayable;
+
+            maxPathCount = Mathf.Max(maxPathCount, CurrentCars[i].path.Count);
         }
+
+        predictTile.ClearAllTiles();
+        for (int i = 0; i < CurrentCars.Count; i++)
+            for (int j = 1; j < CurrentCars[i].path.Count; j++)
+            {
+                Vector3Int targetPosition = CurrentCars[i].path[j];
+
+                Predictor tmpPredictor = Instantiate(predictor, predictTile.transform).gameObject.GetComponent<Predictor>();
+
+                tmpPredictor.Initialize(CurrentCars[i].color, i * 2 - 1, (Vector3)(CurrentCars[i].path[j - 1] + targetPosition) * 0.5f, true);
+
+                //
+
+                predictTile.SetTile(CurrentCars[i].path[j], predictor);
+                tmpPredictor = predictTile.GetInstantiatedObject(targetPosition).GetComponent<Predictor>();
+
+                tmpPredictor.Initialize(CurrentCars[i].color, i * 2, targetPosition);
+            }
+
+        isPredictorInstantiated = true;
+
+        #endregion
 
         Vars.instance.AfterChange.Raise();
     }
 
+    private void Update()
+    {
+        if (!isPredictorInstantiated) return;
+
+    }
+
     private void DrawPathPredictor() // 예상 경로를 그려줌
     {
-
+        
     }
 }

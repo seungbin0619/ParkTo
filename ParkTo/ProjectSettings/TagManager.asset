@@ -56,6 +56,9 @@ TagManager:
   - name: Cars
     uniqueID: 107534663
     locked: 0
+  - name: Predictor
+    uniqueID: 3752125411
+    locked: 0
   - name: UIBtns
     uniqueID: 2241489827
     locked: 0
