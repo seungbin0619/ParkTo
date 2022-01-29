@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class Main : MonoBehaviour
 {
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     private void Start()
     {
-        MapSystem.instance.PrevSelectLevel(0);
+        MapSystem.instance.PrevSelectLevel(1);
     }
 }

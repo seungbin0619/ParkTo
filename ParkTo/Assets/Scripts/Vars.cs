@@ -16,7 +16,12 @@ public class Vars : MonoBehaviour
 
     public GameEvent PrevMove;
     public GameEvent AfterMove;
+
     public GameEvent AfterChange;
     public GameEvent OnChanged;
+
     public GameEvent OnThemeChanged;
+
+    public GameEvent OnTriggerShow;
+    public GameEvent OnTriggerHide;
 }

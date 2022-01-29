@@ -23,6 +23,8 @@ public class LevelBase : ScriptableObject
     public string triggers;
     public string triggerInformations;
 
+    public int[] hadTriggers;
+
     public int seed;
 
     public int[,] ToArray(string data)

@@ -6,8 +6,20 @@ public class PlayButton : MonoBehaviour
 {
     private UnityEngine.UI.Button button;
 
-    private bool beforeCondition = true;
-    private Vector3 targetScale = Vector3.one;
+    private bool beforeCondition = false;
+
+    private Vector3 _targetScale = Vector3.one;
+    private Vector3 TargetScale
+    {
+        get { return _targetScale; }
+        set {
+            if(_targetScale != value)
+            {
+                progress = 0;
+                _targetScale = value;
+            }
+        }
+    }
     private float progress = 0;
 
     public void Awake()
@@ -18,10 +30,9 @@ public class PlayButton : MonoBehaviour
     public void PrevMove()
     {
         button.enabled = false;
-
         beforeCondition = false;
-        targetScale = Vector3.zero;
-        progress = 0;
+
+        TargetScale = Vector3.zero;
     }
 
     public void AfterChange()
@@ -30,17 +41,19 @@ public class PlayButton : MonoBehaviour
         {
             button.enabled = MapSystem.isPlayable;
             beforeCondition = MapSystem.isPlayable;
-            targetScale = beforeCondition ? Vector3.one : Vector3.zero;
-            progress = 0;
+
+            //TargetScale = beforeCondition ? Vector3.one : Vector3.zero;
         }
     }
 
     public void Update()
     {
-        if (transform.localScale == targetScale) return;
+        button.enabled = beforeCondition && TriggerSystem.trigBarHide;
+        TargetScale = button.enabled ? Vector3.one : Vector3.zero;
+
         float tmpProgress = Mathf.Clamp(progress, 0f, 1f);
 
-        transform.localScale = LineAnimation.Lerp(transform.localScale, targetScale, tmpProgress, 0.5f, 0.5f);
+        transform.localScale = LineAnimation.Lerp(transform.localScale, TargetScale, tmpProgress, 0.5f, 0.5f);
         progress += Time.deltaTime * 0.5f;
     }
 }

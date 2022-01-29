@@ -37,7 +37,7 @@ public class MapSystem : MonoBehaviour
     private Tile car;
 
     [SerializeField]
-    private Tile predictor;
+    private GameObject predictor;
 
     public static LevelBase CurrentLevel;
     public static ThemeBase CurrentTheme;
@@ -58,8 +58,6 @@ public class MapSystem : MonoBehaviour
     public static bool isAnimated; // 애니메이션 재생중인가?
 
     private static bool isPredictorInstantiated; // 경로 표시 중인가
-    private static int maxPathCount = -1;
-    private static float pathPredictorProgress; // 경로 표시 진행도
 
     #endregion
 
@@ -81,7 +79,7 @@ public class MapSystem : MonoBehaviour
     private Tilemap triggerTile;
 
     [SerializeField]
-    private Tilemap predictTile;
+    private Grid predictTile;
 
     #endregion
 
@@ -109,7 +107,9 @@ public class MapSystem : MonoBehaviour
         mapTile.ClearAllTiles();
         lineTile.ClearAllTiles();
         triggerTile.ClearAllTiles();
-        predictTile.ClearAllTiles();
+        //predictTile.ClearAllTiles();
+        foreach (Transform child in predictTile.transform)
+            Destroy(child.gameObject);
 
         isDrawed = false;
 
@@ -141,7 +141,7 @@ public class MapSystem : MonoBehaviour
 
         #region [ 맵 배치 ]
 
-        #region [ 데이터 배열화 ]
+        #region [ 데이터 배열 ]
 
         // 중앙으로 배치 
         mapGrid.transform.position = new Vector3(-CurrentLevel.size.x * 0.5f, -CurrentLevel.size.y * 0.5f);
@@ -224,6 +224,8 @@ public class MapSystem : MonoBehaviour
                 }
             }
         #endregion
+
+        TriggerSystem.instance.InitializeTriggers(CurrentLevel.hadTriggers);
 
         #endregion
 
@@ -309,38 +311,26 @@ public class MapSystem : MonoBehaviour
 
         #region [ 다음 경로 ] 
 
-        maxPathCount = -1;
-        pathPredictorProgress = 0;
-
-        for (int i = 0; i < CurrentCars.Count; i++) // 차 이동 가능 체크
-        {
-            CurrentCars[i].GetNextPath();
-            isPlayable = CurrentCars[i].isOperatable || isPlayable;
-
-            maxPathCount = Mathf.Max(maxPathCount, CurrentCars[i].path.Count);
-        }
-
-        predictTile.ClearAllTiles();
         for (int i = 0; i < CurrentCars.Count; i++)
-            for (int j = 1; j < CurrentCars[i].path.Count; j++)
+            CurrentCars[i].InitPath();
+
+        while (true)
+        {
+            bool pFlag = false;
+            for (int i = 0; i < CurrentCars.Count; i++)
             {
-                Vector3Int targetPosition = CurrentCars[i].path[j];
-
-                Predictor tmpPredictor = Instantiate(predictor, predictTile.transform).gameObject.GetComponent<Predictor>();
-
-                tmpPredictor.Initialize(CurrentCars[i].color, i * 2 - 1, (Vector3)(CurrentCars[i].path[j - 1] + targetPosition) * 0.5f, true);
-
-                //
-
-                predictTile.SetTile(CurrentCars[i].path[j], predictor);
-                tmpPredictor = predictTile.GetInstantiatedObject(targetPosition).GetComponent<Predictor>();
-
-                tmpPredictor.Initialize(CurrentCars[i].color, i * 2, targetPosition);
+                CurrentCars[i].GetNextPath();
+                pFlag = pFlag || !CurrentCars[i].stopFlag;
             }
 
-        isPredictorInstantiated = true;
+            if (!pFlag) break;
+        }
+        for (int i = 0; i < CurrentCars.Count; i++) // 차 이동 가능 체크
+            isPlayable = CurrentCars[i].isOperatable || isPlayable;
 
         #endregion
+
+        DrawPathPredictor();
 
         Vars.instance.AfterChange.Raise();
     }
@@ -353,6 +343,20 @@ public class MapSystem : MonoBehaviour
 
     private void DrawPathPredictor() // 예상 경로를 그려줌
     {
-        
+        foreach (Transform child in predictTile.transform)
+            Destroy(child.gameObject);
+
+        for (int i = 0; i < CurrentCars.Count; i++)
+            for (int j = 1; j < CurrentCars[i].path.Count; j++)
+            {
+                Vector3Int targetPosition = CurrentCars[i].path[j].position;
+                Predictor tmpPredictor = Instantiate(predictor, predictTile.transform).gameObject.GetComponent<Predictor>();
+                tmpPredictor.Initialize(CurrentCars[i].color, j * 2, targetPosition);
+
+                tmpPredictor = Instantiate(predictor, predictTile.transform).gameObject.GetComponent<Predictor>();
+                tmpPredictor.Initialize(CurrentCars[i].color, j * 2 - 1, (Vector3)(CurrentCars[i].path[j - 1].position + targetPosition) * 0.5f, true);
+            }
+
+        isPredictorInstantiated = true;
     }
 }

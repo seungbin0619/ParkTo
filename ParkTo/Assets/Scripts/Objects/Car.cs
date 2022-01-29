@@ -7,6 +7,18 @@ public class Car : MonoBehaviour
     private const float fixedDuration = 0.3f; // 1칸을 움직이는데 걸리는 시간
     private const float damage = 1f; // 충돌 시 충격을 얼마나 크게 할지
 
+    public struct PathData
+    {
+        public Vector3Int position;
+        public int rotation;
+
+        public PathData(Vector3Int position, int rotation)
+        {
+            this.position = position;
+            this.rotation = rotation;
+        }
+    }
+
     private static Vector3Int[] direction = new Vector3Int[4]
     {
         Vector3Int.up,
@@ -26,7 +38,8 @@ public class Car : MonoBehaviour
     public Vector3Int position { private set; get; }
     private List<Vector3Int> trace; // 이동 자취(undo 구현 시 사용)
 
-    public List<Vector3Int> path;
+    public List<PathData> path;
+    public bool stopFlag = false;
 
     //private Vector3 velocity;
 
@@ -71,35 +84,49 @@ public class Car : MonoBehaviour
         trace.Add(position);
     }
 
-    public void GetNextPath() // 다음 재생시 경로 구하기
+    public void InitPath()
     {
-        int tmpRotation = rotation;
+        stopFlag = false;
 
-        path = new List<Vector3Int>();
-        path.Add(position);
-
-        while (true)
-        {
-            Vector3Int tmp = GetFront(path[path.Count - 1], tmpRotation);
-            if (!MapSystem.IsValidPosition(tmp)) break;
-
-            /*
-            switch(MapSystem.CurrentTriggers[tmp.y, tmp.x]) // 바닥에 따라 방향이 달라질 수 있음
-            {
-
-            }
-            */
-
-            path.Add(tmp);
-        }
+        path = new List<PathData>();
+        path.Add(new PathData(position, rotation));
     }
 
-    private Vector3Int GetFront(Vector3Int? position = null, int? rotation = null)
+    public void GetNextPath() // 다음 재생시 경로 구하기
     {
-        if (position == null) position = this.position;
-        if (rotation == null) rotation = this.rotation;
+        if (stopFlag) return;
 
-        return (Vector3Int)position + direction[(int)rotation];
+        PathData tmp = GetFront(path[path.Count - 1]);
+        if (!MapSystem.IsValidPosition(tmp.position))
+        {
+            stopFlag = true;
+            return;
+        }
+
+        //switch (MapSystem.CurrentTriggers[tmp.position.y, tmp.position.x]) // 바닥에 따라 방향이 달라질 수 있음
+        //{
+
+        //}
+
+        for(int i = 0; i < MapSystem.CurrentCars.Count; i++)
+        {
+            Car dif = MapSystem.CurrentCars[i];
+            PathData difPos = dif.path[Mathf.Min(path.Count, dif.path.Count) - 1];
+
+            if (dif == this) continue;
+            if (difPos.position != tmp.position) continue;
+            if (MapSystem.IsValidPosition(GetFront(difPos).position)) continue;
+
+            stopFlag = true;
+            return;
+        }
+
+        path.Add(tmp);
+    }
+
+    private PathData GetFront(PathData bef)
+    {
+        return new PathData(bef.position + direction[bef.rotation], bef.rotation);
     }
 
     public bool MoveTo(float duration)
@@ -132,16 +159,16 @@ public class Car : MonoBehaviour
 
         if (duration >= expDuration) // 종료
         {
-            position = path[path.Count - 1];
+            position = path[path.Count - 1].position;
             trace.Add(position);
 
-            transform.localPosition = path[path.Count - 1];
+            transform.localPosition = path[path.Count - 1].position;
             transform.localPosition += new Vector3(0.5f, 0.5f); // 위치 조정
 
             return false;
         }
 
-        Vector3 tmpPosition = path[index];
+        Vector3 tmpPosition = path[index].position;
         Vector3 tmpVelocity = direction[rotation];
 
         if (duration < 0.8f) // 처음 가속

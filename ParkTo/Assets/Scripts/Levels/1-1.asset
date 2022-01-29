@@ -24,4 +24,5 @@ MonoBehaviour:
   carRotations: 3,0,0,0,0
   triggers: -1,-1,-1,-1,0
   triggerInformations: 0,0,0,0,0
+  hadTriggers: 010000000200000003000000
   seed: 1
