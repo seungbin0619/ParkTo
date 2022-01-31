@@ -20,8 +20,8 @@ MonoBehaviour:
   groundRotations: 1,0,2,0,0,0,0,0,3
   line: 1,0,1,0,0,0,1,0,1
   lineRotations: 1,0,2,1,0,3,0,0,3
-  cars: 1,0,0,0,0,0,0,0,0
-  carRotations: 0,0,0,0,0,0,0,0,0
+  cars: 1,0,0,0,0,1,0,0,0
+  carRotations: 0,0,0,0,0,1,0,0,0
   triggers: -1,-1,-1,-1,-1,-1,-1,-1,0
   triggerInformations: -1,-1,-1,-1,-1,-1,-1,-1,0
   hadTriggers: 02000000

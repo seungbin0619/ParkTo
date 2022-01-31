@@ -22,6 +22,15 @@ public class MapSystem : MonoBehaviour
 
     #endregion
 
+    public enum TRIGGER
+    {
+        NORMAL = -1,
+        GOAL,
+        TURNLEFT,
+        TURNRIGHT,
+        STOP
+    }
+
     #region [ 맵 정보들 ]
 
     [SerializeField]
@@ -43,7 +52,7 @@ public class MapSystem : MonoBehaviour
     public static ThemeBase CurrentTheme;
 
     public static int[,] CurrentGrounds;
-    public static int[,] CurrentTriggers;
+    public static TRIGGER[,] CurrentTriggers;
 
     public static List<Car> CurrentCars;
     public static List<Goal> CurrentGoals;
@@ -127,7 +136,13 @@ public class MapSystem : MonoBehaviour
         Vars.instance.OnThemeChanged.Raise();
 
         CurrentGrounds = CurrentLevel.ToArray(CurrentLevel.grounds);
-        CurrentTriggers = CurrentLevel.ToArray(CurrentLevel.triggers);
+        CurrentTriggers = new TRIGGER[CurrentLevel.size.y, CurrentLevel.size.x];
+
+        var tmp = CurrentLevel.ToArray(CurrentLevel.triggers);
+
+        for (int y = 0; y < CurrentLevel.size.y; y++)
+            for (int x = 0; x < CurrentLevel.size.x; x++)
+                CurrentTriggers[y, x] = (TRIGGER)tmp[y, x];
     }
 
     private void InitializeLevel()
@@ -211,7 +226,7 @@ public class MapSystem : MonoBehaviour
 
                 if (CurrentTriggers[y, x] == 0)
                 {
-                    triggerTile.SetTile(targetPosition, triggers[CurrentTriggers[y, x]]);
+                    triggerTile.SetTile(targetPosition, triggers[(int)CurrentTriggers[y, x]]);
 
                     Goal tmpGoal = triggerTile.GetInstantiatedObject(targetPosition).GetComponent<Goal>();
                     tmpGoal.Initialize(targetPosition, tmpTriggerInfo[y, x]);
@@ -268,7 +283,7 @@ public class MapSystem : MonoBehaviour
                 completeFlag = true;
 
                 for (int i = 0; i < CurrentCars.Count; i++)
-                    completeFlag = !CurrentCars[i].MoveTo(progress) && completeFlag;
+                    completeFlag = !CurrentCars[i].MoveTo2(progress) && completeFlag;
 
                 yield return delay;
                 progress += Time.deltaTime;

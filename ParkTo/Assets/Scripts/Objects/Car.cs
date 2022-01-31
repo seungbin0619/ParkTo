@@ -46,6 +46,12 @@ public class Car : MonoBehaviour
     public bool collided;
     public bool isOperatable { get { return path.Count > 1; } } // 다음에 움직일 수 있는지
 
+    private int moveIndex;
+    private float currentProgress;
+    private float targetDuration;
+
+    private const float accelDuration = 1f;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -86,6 +92,11 @@ public class Car : MonoBehaviour
 
     public void InitPath()
     {
+        moveIndex = 0;
+
+        currentProgress = 0;
+        targetDuration = accelDuration;
+
         stopFlag = false;
 
         path = new List<PathData>();
@@ -178,6 +189,7 @@ public class Car : MonoBehaviour
         else tmpPosition += clamp * tmpVelocity; //s = t
 
         //velocity = tmpPosition - transform.localPosition - new Vector3(0.5f, 0.5f);
+        //if (duration >= 1.4f) return false;
 
         position = Vector3Int.RoundToInt(tmpPosition);
 
@@ -187,6 +199,68 @@ public class Car : MonoBehaviour
         #endregion
 
         //Debug.Log(position);
+
+        return true;
+    }
+
+    public bool MoveTo2(float duration)
+    {
+        if (collided) return false;
+        if (path.Count == 1) return false;
+
+        duration /= fixedDuration;
+        if (duration > targetDuration)
+        {
+            moveIndex++;
+
+            currentProgress = targetDuration;
+            targetDuration += 1f;
+        }
+
+        Vector3 position;
+        float clamp = duration - currentProgress;
+
+        if (moveIndex == 0)  // 처음 출발 시
+        {
+            position = path[0].position;
+            position += 0.5f * Mathf.Pow(clamp, 2) * (Vector3)direction[path[0].rotation];
+        }
+        else if (moveIndex >= path.Count) return false; // 종료
+        else
+        {
+            PathData bef = path[moveIndex - 1], cur = path[moveIndex];
+
+            position = bef.position + cur.position;
+            position *= 0.5f;
+
+            if (moveIndex == path.Count - 1) // 감속
+            {
+                position += (clamp - 0.5f * Mathf.Pow(clamp, 2)) * (Vector3)direction[bef.rotation];
+            }
+            else // 중간
+            {
+                switch (MapSystem.CurrentTriggers[cur.position.y, cur.position.x]) // 바닥에 따라 방향이 달라질 수 있음
+                {
+                    case MapSystem.TRIGGER.TURNLEFT: // 우회전
+
+
+                        break;
+                    case MapSystem.TRIGGER.TURNRIGHT: // 좌회전
+
+
+                        break;
+                    default: // 직진
+                        position += clamp * (Vector3)direction[bef.rotation];
+
+                        break;
+                }
+            }
+        }
+
+        transform.localPosition = position;
+        transform.localPosition += new Vector3(0.5f, 0.5f); // 위치 조정
+
+        this.position = Vector3Int.RoundToInt(position);
 
         return true;
     }

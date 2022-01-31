@@ -62,6 +62,6 @@ public class TriggerSystem : MonoBehaviour
         int cnt = triggers.Count;
         noTrigger.SetActive(cnt == 0);
 
-        barRect.sizeDelta = new Vector2(Mathf.Clamp(cnt, 1, 3.5f) * 200 + 80, 240);
+        barRect.sizeDelta = new Vector2(Mathf.Clamp(cnt, 1, 3.5f) * 200 + 40, 240);
     }
 }
