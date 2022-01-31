@@ -226,7 +226,7 @@ public class MapSystem : MonoBehaviour
 
                 if (CurrentTriggers[y, x] == 0)
                 {
-                    triggerTile.SetTile(targetPosition, triggers[(int)CurrentTriggers[y, x]]);
+                    triggerTile.SetTile(targetPosition, triggers[0]);
 
                     Goal tmpGoal = triggerTile.GetInstantiatedObject(targetPosition).GetComponent<Goal>();
                     tmpGoal.Initialize(targetPosition, tmpTriggerInfo[y, x]);
@@ -235,7 +235,10 @@ public class MapSystem : MonoBehaviour
                 }
                 else if (CurrentTriggers[y, x] > 0)
                 {
+                    triggerTile.SetTile(targetPosition, triggers[1]);
+                    TileTrigger tile = triggerTile.GetInstantiatedObject(targetPosition).GetComponent<TileTrigger>();
 
+                    tile.Initialize((int)CurrentTriggers[y, x]);
                 }
             }
         #endregion

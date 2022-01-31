@@ -19,12 +19,20 @@ public class Car : MonoBehaviour
         }
     }
 
-    private static Vector3Int[] direction = new Vector3Int[4]
+    private readonly static Vector3Int[] direction = new Vector3Int[4]
     {
         Vector3Int.up,
         Vector3Int.left,
         Vector3Int.down,
         Vector3Int.right
+    };
+    private readonly static Vector3[] rotate = new Vector3[5]
+    {
+        new Vector3(0, 0, 0),
+        new Vector3(0, 0, 90f),
+        new Vector3(0, 0, 180f),
+        new Vector3(0, 0, 270f),
+        new Vector3(0, 0, 360f)
     };
 
     [System.NonSerialized]
@@ -114,10 +122,23 @@ public class Car : MonoBehaviour
             return;
         }
 
-        //switch (MapSystem.CurrentTriggers[tmp.position.y, tmp.position.x]) // 바닥에 따라 방향이 달라질 수 있음
-        //{
+        switch (MapSystem.CurrentTriggers[tmp.position.y, tmp.position.x]) // 바닥에 따라 방향이 달라질 수 있음
+        {
+            case MapSystem.TRIGGER.TURNLEFT: // 우회전
+                tmp.rotation += 1;
+                tmp.rotation %= 4;
 
-        //}
+                break;
+            case MapSystem.TRIGGER.TURNRIGHT: // 좌회전
+                tmp.rotation -= 1;
+                if (tmp.rotation < 0) tmp.rotation += 4;
+
+                tmp.rotation %= 4;
+
+                break;
+            default: // 직진
+                break;
+        }
 
         for(int i = 0; i < MapSystem.CurrentCars.Count; i++)
         {
@@ -241,14 +262,8 @@ public class Car : MonoBehaviour
             {
                 switch (MapSystem.CurrentTriggers[cur.position.y, cur.position.x]) // 바닥에 따라 방향이 달라질 수 있음
                 {
-                    case MapSystem.TRIGGER.TURNLEFT: // 우회전
-
-
-                        break;
-                    case MapSystem.TRIGGER.TURNRIGHT: // 좌회전
-
-
-                        break;
+                    case MapSystem.TRIGGER.TURNLEFT: position = GetTurnPosition(bef, cur, position, clamp, 1); break;
+                    case MapSystem.TRIGGER.TURNRIGHT: position = GetTurnPosition(bef, cur, position, clamp, -1); break;
                     default: // 직진
                         position += clamp * (Vector3)direction[bef.rotation];
 
@@ -263,5 +278,38 @@ public class Car : MonoBehaviour
         this.position = Vector3Int.RoundToInt(position);
 
         return true;
+    }
+
+    private Vector3 GetTurnPosition(PathData bef, PathData cur, Vector3 position, float clamp, int dir)
+    {
+        Vector3 nxt = cur.position + (Vector3)direction[cur.rotation] * 0.5f;
+
+        if (bef.rotation == 3 && cur.rotation == 0) cur.rotation = 4;
+        if (bef.rotation == 0 && cur.rotation == 3) bef.rotation = 4;
+
+        transform.eulerAngles = Vector3.Lerp(rotate[bef.rotation], rotate[cur.rotation], clamp);
+
+        Vector3 center = new Vector3();
+        float A = Mathf.PI;
+
+        if((position.y - nxt.y) / (position.x - nxt.x) * dir > 0)
+        {
+            center.x = position.x;
+            center.y = nxt.y;
+
+            A *= center.y < position.y ? 0.5f : 1.5f;
+        }else
+        {
+            center.x = nxt.x;
+            center.y = position.y;
+
+            A *= center.x < position.x ? 0f : 1f;
+        }
+
+        float angle = A + 0.5f * Mathf.PI * dir * clamp;
+        position.x = center.x + Mathf.Cos(angle) * 0.5f;
+        position.y = center.y + Mathf.Sin(angle) * 0.5f;
+
+        return position;
     }
 }

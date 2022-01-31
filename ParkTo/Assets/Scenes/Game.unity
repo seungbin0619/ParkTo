@@ -661,6 +661,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ba6a5e9554d3ea3468f57d7c21af7466, type: 2}
   triggers:
   - {fileID: 11400000, guid: 1850a8036b9f1fe4b84954f6671aaaf2, type: 2}
+  - {fileID: 11400000, guid: 8bc9f11d5b1daf342995791d2c0bcad0, type: 2}
   car: {fileID: 11400000, guid: 7f1e638c188ffa44db7d64f2a3ba162f, type: 2}
   predictor: {fileID: 1394673494731206544, guid: de3d85e46c029b24384faf7975d41a91,
     type: 3}
