@@ -35,14 +35,17 @@ public class Car : MonoBehaviour
         new Vector3(0, 0, 360f)
     };
 
+    #region [ 기타 변수 ]
+
     [System.NonSerialized]
     public SpriteRenderer spriteRenderer;
     private Rigidbody2D rigid2d;
     private PolygonCollider2D pcollider2D;
 
-    private int rotation;
+    public int rotation;
 
     public Color32 color { private set; get; }
+
     public Vector3Int position { private set; get; }
     private List<Vector3Int> trace; // 이동 자취(undo 구현 시 사용)
 
@@ -60,6 +63,10 @@ public class Car : MonoBehaviour
 
     private const float accelDuration = 1f;
 
+    #endregion
+
+    private Vector3 targetScale = Vector3.one * 0.8f;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -69,14 +76,6 @@ public class Car : MonoBehaviour
 
         trace = new List<Vector3Int>();
         //velocity = Vector3.zero;
-    }
-
-    private void Update()
-    {
-        if (!collided) return;
-        
-        rigid2d.velocity *= 0.95f;
-        rigid2d.angularVelocity *= 0.95f;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -97,6 +96,8 @@ public class Car : MonoBehaviour
         transform.eulerAngles = new Vector3(0, 0, rotation * 90f);
         trace.Add(position);
     }
+
+    #region [ 경로 계산 ]
 
     public void InitPath()
     {
@@ -161,70 +162,11 @@ public class Car : MonoBehaviour
         return new PathData(bef.position + direction[bef.rotation], bef.rotation);
     }
 
+    #endregion
+
+    #region [ 이동 ]
+
     public bool MoveTo(float duration)
-    {
-        if (collided) return false;
-        if (path.Count == 1) return false;
-
-        duration /= fixedDuration;
-        float expDuration = path.Count - 0.2f; // 0.8(가감속) - 1(타일 수 -1만큼 이동)
-
-        #region [ 차가 움직이는 수식들 ]
-        // 처음 0.8초, 마지막 0.8초는 가감속(원래보다 0.4초 길게 계산됨)
-
-        int index; float clamp;
-        if (duration < 0.8f) // 가속
-        {
-            index = 0;
-            clamp = duration - index;
-        }
-        else if(duration > expDuration - 0.8f) // 감속
-        {
-            index = path.Count - 2;
-            clamp = duration - (int)duration;
-        }
-        else // 중간
-        {
-            index = (int)(duration - 0.4f);
-            clamp = duration - 0.4f - index;
-        }
-
-        if (duration >= expDuration) // 종료
-        {
-            position = path[path.Count - 1].position;
-            trace.Add(position);
-
-            transform.localPosition = path[path.Count - 1].position;
-            transform.localPosition += new Vector3(0.5f, 0.5f); // 위치 조정
-
-            return false;
-        }
-
-        Vector3 tmpPosition = path[index].position;
-        Vector3 tmpVelocity = direction[rotation];
-
-        if (duration < 0.8f) // 처음 가속
-            tmpPosition += 5f / 8f * Mathf.Pow(clamp, 2) * tmpVelocity; //s = 5/8t^2
-        else if(duration > expDuration - 0.8f)
-            tmpPosition += (0.6f + clamp - 5f / 8f * Mathf.Pow(clamp, 2)) * tmpVelocity; //s = t - 5/8t^2
-        else tmpPosition += clamp * tmpVelocity; //s = t
-
-        //velocity = tmpPosition - transform.localPosition - new Vector3(0.5f, 0.5f);
-        //if (duration >= 1.4f) return false;
-
-        position = Vector3Int.RoundToInt(tmpPosition);
-
-        transform.localPosition = tmpPosition;
-        transform.localPosition += new Vector3(0.5f, 0.5f); // 위치 조정
-
-        #endregion
-
-        //Debug.Log(position);
-
-        return true;
-    }
-
-    public bool MoveTo2(float duration)
     {
         if (collided) return false;
         if (path.Count == 1) return false;
@@ -257,6 +199,23 @@ public class Car : MonoBehaviour
             if (moveIndex == path.Count - 1) // 감속
             {
                 position += (clamp - 0.5f * Mathf.Pow(clamp, 2)) * (Vector3)direction[bef.rotation];
+
+                switch (MapSystem.CurrentTriggers[cur.position.y, cur.position.x]) // 바닥에 따라 방향이 달라질 수 있음
+                {
+                    case MapSystem.TRIGGER.TURNLEFT:
+                    case MapSystem.TRIGGER.TURNRIGHT:
+                        rotation = cur.rotation;
+
+                        if (bef.rotation == 3 && cur.rotation == 0) cur.rotation = 4;
+                        if (bef.rotation == 0 && cur.rotation == 3) bef.rotation = 4;
+
+                        transform.eulerAngles = Vector3.Lerp(rotate[bef.rotation], rotate[cur.rotation],
+                            LineAnimation.Lerp(0, 1, clamp, 1, 0, 0.5f));
+
+                        break;
+                    default: // 직진
+                        break;
+                }
             }
             else // 중간
             {
@@ -283,6 +242,7 @@ public class Car : MonoBehaviour
     private Vector3 GetTurnPosition(PathData bef, PathData cur, Vector3 position, float clamp, int dir)
     {
         Vector3 nxt = cur.position + (Vector3)direction[cur.rotation] * 0.5f;
+        rotation = cur.rotation;
 
         if (bef.rotation == 3 && cur.rotation == 0) cur.rotation = 4;
         if (bef.rotation == 0 && cur.rotation == 3) bef.rotation = 4;
@@ -312,4 +272,67 @@ public class Car : MonoBehaviour
 
         return position;
     }
+
+    public void AfterMove()
+    {
+        transform.localPosition = position;
+        transform.localPosition += new Vector3(0.5f, 0.5f); // 위치 조정
+        transform.eulerAngles = rotate[rotation];
+    }
+
+    #endregion
+
+    #region [ 트리거 적용 ]
+
+    public void SetTrigger(Trigger trigger)
+    {
+        switch ((MapSystem.TRIGGER)trigger.index)
+        {
+            case MapSystem.TRIGGER.TURNLEFT:
+                rotation += 1;
+
+                break;
+            case MapSystem.TRIGGER.TURNRIGHT:
+                rotation -= 1;
+                if (rotation < 0) rotation += 4;
+                break;
+            default:
+
+                break;
+        }
+
+        rotation %= 4;
+        transform.eulerAngles = rotate[rotation];
+    }
+
+    private void Update()
+    {
+        PreviewUpdate();
+        //spriteRenderer.color = Color.Lerp(spriteRenderer.color, targetColor, Time.deltaTime * 5f);
+
+        if (!collided) return;
+
+        rigid2d.velocity *= 0.95f;
+        rigid2d.angularVelocity *= 0.95f;
+    }
+
+    private void PreviewUpdate()
+    {
+        if (MapSystem.MoveFlag) return;
+
+        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * 10f);
+    }
+
+    public void PreviewTrigger(float size)
+    {
+        targetScale = Vector3.one * size;
+    }
+
+    public void OnTriggerCancel()
+    {
+        targetScale = Vector3.one * 0.8f;
+        transform.eulerAngles = rotate[rotation];
+    }
+
+    #endregion
 }

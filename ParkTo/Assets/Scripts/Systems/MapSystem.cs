@@ -57,6 +57,8 @@ public class MapSystem : MonoBehaviour
     public static List<Car> CurrentCars;
     public static List<Goal> CurrentGoals;
 
+    public static bool MoveFlag = false;
+
     #endregion
 
     #region [ 변수 ]
@@ -120,6 +122,8 @@ public class MapSystem : MonoBehaviour
         foreach (Transform child in predictTile.transform)
             Destroy(child.gameObject);
 
+        TriggerSystem.instance.ResetTriggers();
+
         isDrawed = false;
 
         yield return null;
@@ -170,8 +174,10 @@ public class MapSystem : MonoBehaviour
         int[,] tmpCars = CurrentLevel.ToArray(CurrentLevel.cars);
         int[,] tmpCarRotation = CurrentLevel.ToArray(CurrentLevel.carRotations);
 
-        Color32[] shuffle = CurrentTheme.carColors;
-        for(int i = 0; i < 10; i++)
+        Color32[] shuffle = new Color32[CurrentTheme.carColors.Length];
+        System.Array.Copy(CurrentTheme.carColors, shuffle, shuffle.Length);
+
+        for (int i = 0; i < 10; i++)
         {
             int r1 = Random.Range(0, CurrentTheme.carColors.Length);
             int r2 = Random.Range(0, CurrentTheme.carColors.Length);
@@ -233,13 +239,8 @@ public class MapSystem : MonoBehaviour
 
                     CurrentGoals.Add(tmpGoal);
                 }
-                else if (CurrentTriggers[y, x] > 0)
-                {
-                    triggerTile.SetTile(targetPosition, triggers[1]);
-                    TileTrigger tile = triggerTile.GetInstantiatedObject(targetPosition).GetComponent<TileTrigger>();
-
-                    tile.Initialize((int)CurrentTriggers[y, x]);
-                }
+                else if (CurrentTriggers[y, x] > 0) 
+                    SetTrigger(targetPosition, (int)CurrentTriggers[targetPosition.y, targetPosition.x]);
             }
         #endregion
 
@@ -250,6 +251,16 @@ public class MapSystem : MonoBehaviour
         isDrawed = true;
 
         Vars.instance.OnChanged.Raise();
+    }
+
+    public void SetTrigger(Vector3Int targetPosition, int index)
+    {
+        triggerTile.SetTile(targetPosition, triggers[1]);
+        TileTrigger tile = triggerTile.GetInstantiatedObject(targetPosition).GetComponent<TileTrigger>();
+
+        tile.Initialize(index);
+
+        CurrentTriggers[targetPosition.y, targetPosition.x] = (TRIGGER)index;
     }
 
     public static bool IsValidPosition(Vector3Int position)
@@ -286,7 +297,7 @@ public class MapSystem : MonoBehaviour
                 completeFlag = true;
 
                 for (int i = 0; i < CurrentCars.Count; i++)
-                    completeFlag = !CurrentCars[i].MoveTo2(progress) && completeFlag;
+                    completeFlag = !CurrentCars[i].MoveTo(progress) && completeFlag;
 
                 yield return delay;
                 progress += Time.deltaTime;
@@ -294,6 +305,8 @@ public class MapSystem : MonoBehaviour
 
             Vars.instance.AfterMove.Raise();
         }
+
+        MoveFlag = true;
         StartCoroutine(CMove());
     }
 
@@ -308,6 +321,9 @@ public class MapSystem : MonoBehaviour
         }
 
         Vars.instance.OnChanged.Raise();
+
+        MoveFlag = false;
+        TriggerBar.instance.IsHide = false;
     }
 
     public void OnChanged() // 어떠한 변화가 생긴 경우

@@ -11,6 +11,6 @@ public class Main : MonoBehaviour
 
     private void Start()
     {
-        MapSystem.instance.PrevSelectLevel(1);
+        MapSystem.instance.PrevSelectLevel(3);
     }
 }

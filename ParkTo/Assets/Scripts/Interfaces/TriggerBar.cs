@@ -5,17 +5,32 @@ using UnityEngine.EventSystems;
 
 public class TriggerBar : MonoBehaviour
 {
+    #region [ 인스턴스 초기화 ]
+
+    public static TriggerBar instance;
+    private void Awake()
+    {
+        if (instance == null) instance = this;
+
+        rect = GetComponent<RectTransform>();
+
+        targetPosition = barPosition[1];
+    }
+
+    #endregion
+
     private readonly Vector2[] barPosition = new Vector2[2]
     {
         new Vector2(0, 40f), new Vector2(0, 160f)
     };
 
     private bool _isHide = false;
-    private bool IsHide
+    public bool IsHide
     {
         get { return _isHide; }
         set
         {
+            if (TriggerSystem.instance.selectedTrigger != null) return;
             _isHide = value;
 
             targetPosition = barPosition[_isHide ? 0 : 1];
@@ -24,13 +39,6 @@ public class TriggerBar : MonoBehaviour
     }
     private RectTransform rect;
     private Vector2 targetPosition;
-
-    private void Awake()
-    {
-        rect = GetComponent<RectTransform>();
-
-        targetPosition = barPosition[1];
-    }
 
     private void Start()
     {
@@ -48,6 +56,8 @@ public class TriggerBar : MonoBehaviour
             if(Input.GetMouseButtonDown(0)) // 바깥 부분 클릭하면
                 IsHide = true;
         }
+
+        if (MapSystem.MoveFlag) return;
 
         rect.anchoredPosition = Vector2.Lerp(rect.anchoredPosition, targetPosition, Time.deltaTime * 5f);
     }

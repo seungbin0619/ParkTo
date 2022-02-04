@@ -9,7 +9,7 @@ public class Trigger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragH
     [SerializeField]
     private Image image;
 
-    private int index;
+    public int index;
     private Vector3 targetScale = Vector3.one;
     private ScrollRect parentRect;
 
@@ -30,6 +30,8 @@ public class Trigger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragH
     public void Select()
     {
         //Debug.Log("test");
+
+        TriggerSystem.instance.Select(this);
     }
 
     private void Update()

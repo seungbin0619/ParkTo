@@ -11,6 +11,9 @@ GameObject:
   - component: {fileID: 6840516569481141830}
   - component: {fileID: 6840516569481141831}
   - component: {fileID: -7789422461180007955}
+  - component: {fileID: -7120163350391194383}
+  - component: {fileID: 627131249402547828}
+  - component: {fileID: 3056121023221736184}
   m_Layer: 0
   m_Name: goal
   m_TagString: Untagged
@@ -70,9 +73,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -959262249
-  m_SortingLayer: 4
-  m_SortingOrder: 5
+  m_SortingLayerID: -1600691839
+  m_SortingLayer: 3
+  m_SortingOrder: 30
   m_Sprite: {fileID: -450626115122990272, guid: 2d935dc4892fe034482e671ac42a9121,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -97,6 +100,78 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5263be4794cf876458298619fd44d154, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-7120163350391194383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6840516569481141828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 418bbe46b8365ce4291b0824bae1c626, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: 6840516569481141831}
+  - {fileID: 6840516570182200983}
+  - {fileID: 6840516569873383683}
+  mode: 0
+  gen: 1
+--- !u!114 &627131249402547828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6840516569481141828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b07f3a63fbba1f4d80e83bad0b67951, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventSO: {fileID: 11400000, guid: 4ffb9d7db958fda42a69ef95d7731f5a, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -7120163350391194383}
+        m_MethodName: OnTriggerStateChange
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &3056121023221736184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6840516569481141828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b07f3a63fbba1f4d80e83bad0b67951, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventSO: {fileID: 11400000, guid: a8080e7db60017d44bcc4600f3d71179, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -7120163350391194383}
+        m_MethodName: OnTriggerCancel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6840516569873383681
 GameObject:
   m_ObjectHideFlags: 0
@@ -165,9 +240,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -642374563
+  m_SortingLayerID: -1600691839
   m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingOrder: 29
   m_Sprite: {fileID: 8068679884802788160, guid: 2d935dc4892fe034482e671ac42a9121,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -261,9 +336,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -959262249
-  m_SortingLayer: 4
-  m_SortingOrder: 6
+  m_SortingLayerID: -1600691839
+  m_SortingLayer: 3
+  m_SortingOrder: 31
   m_Sprite: {fileID: -1437076740777403353, guid: 2d935dc4892fe034482e671ac42a9121,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

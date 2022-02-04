@@ -10,9 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 5297816154688659208}
   - component: {fileID: 5297816154688659207}
-  - component: {fileID: 8203474160247768564}
   - component: {fileID: 1218077136465021214}
   - component: {fileID: -1771048170044573086}
+  - component: {fileID: 8203474160247768564}
+  - component: {fileID: -1377121402042916405}
+  - component: {fileID: -8993292820863217692}
+  - component: {fileID: 4459989872519112503}
+  - component: {fileID: 840482372753094398}
   m_Layer: 0
   m_Name: Car
   m_TagString: Untagged
@@ -72,9 +76,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 107534663
-  m_SortingLayer: 5
-  m_SortingOrder: 0
+  m_SortingLayerID: -1600691839
+  m_SortingLayer: 3
+  m_SortingOrder: 20
   m_Sprite: {fileID: -4579075332724739835, guid: 81f4444bfa423054e9e761e0774f42dd,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -87,20 +91,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8203474160247768564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5297816154688659206}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b720eb1a5a6c1c0409962ef55a2d64a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  path: []
-  collided: 0
 --- !u!50 &1218077136465021214
 Rigidbody2D:
   serializedVersion: 4
@@ -162,6 +152,120 @@ PolygonCollider2D:
       - {x: 0.242581, y: 0.3322822}
       - {x: 0.2011507, y: 0.3695641}
       - {x: 0.1189714, y: 0.3938431}
+--- !u!114 &8203474160247768564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5297816154688659206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b720eb1a5a6c1c0409962ef55a2d64a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotation: 0
+  stopFlag: 0
+  collided: 0
+--- !u!114 &-1377121402042916405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5297816154688659206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 418bbe46b8365ce4291b0824bae1c626, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: 5297816154688659207}
+  - {fileID: 5297816154733217953}
+  - {fileID: 2341858979243230443}
+  mode: 0
+  gen: 0
+--- !u!114 &-8993292820863217692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5297816154688659206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b07f3a63fbba1f4d80e83bad0b67951, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventSO: {fileID: 11400000, guid: 4ffb9d7db958fda42a69ef95d7731f5a, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -1377121402042916405}
+        m_MethodName: OnTriggerStateChange
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &4459989872519112503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5297816154688659206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b07f3a63fbba1f4d80e83bad0b67951, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventSO: {fileID: 11400000, guid: a8080e7db60017d44bcc4600f3d71179, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -1377121402042916405}
+        m_MethodName: OnTriggerCancel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &840482372753094398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5297816154688659206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b07f3a63fbba1f4d80e83bad0b67951, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventSO: {fileID: 11400000, guid: 67bbb2477bc405d47b8d589e341de277, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8203474160247768564}
+        m_MethodName: AfterMove
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5297816154733217951
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,9 +333,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 107534663
-  m_SortingLayer: 5
-  m_SortingOrder: 1
+  m_SortingLayerID: -1600691839
+  m_SortingLayer: 3
+  m_SortingOrder: 21
   m_Sprite: {fileID: 6685363280679911277, guid: 81f4444bfa423054e9e761e0774f42dd,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -312,9 +416,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -642374563
+  m_SortingLayerID: -1600691839
   m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: -4579075332724739835, guid: 81f4444bfa423054e9e761e0774f42dd,
     type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 0.2}

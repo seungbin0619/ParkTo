@@ -44,21 +44,9 @@ TagManager:
   - name: Background
     uniqueID: 1344443055
     locked: 0
-  - name: MapTile
-    uniqueID: 2694275457
-    locked: 0
-  - name: Shadow
-    uniqueID: 3652592733
-    locked: 0
-  - name: Triggers
-    uniqueID: 3335705047
-    locked: 0
-  - name: Cars
-    uniqueID: 107534663
-    locked: 0
-  - name: Predictor
-    uniqueID: 3752125411
-    locked: 0
   - name: UIBtns
     uniqueID: 2241489827
+    locked: 0
+  - name: Map
+    uniqueID: 2694275457
     locked: 0

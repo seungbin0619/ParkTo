@@ -24,4 +24,8 @@ public class Vars : MonoBehaviour
 
     public GameEvent OnTriggerShow;
     public GameEvent OnTriggerHide;
+
+    public GameEvent OnTriggerClick;
+    public GameEvent OnTriggerCancel;
+    public GameEvent OnTriggerStateChange;
 }
