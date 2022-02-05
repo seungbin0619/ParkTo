@@ -7,13 +7,19 @@ public class FollowTheme : MonoBehaviour
     private UnityEngine.UI.Image image;
     [SerializeField]
     private int index = -1;
-    private void Start()
+    private void Awake()
     {
         image = GetComponent<UnityEngine.UI.Image>();
     }
 
+    public void Start()
+    {
+        if (ThemeSystem.CurrentTheme != null)
+            OnThemeChanged();
+    }
+
     public void OnThemeChanged()
     {
-        image.color = MapSystem.CurrentTheme.colors[index];
+        image.color = ThemeSystem.CurrentTheme.colors[index];
     }
 }

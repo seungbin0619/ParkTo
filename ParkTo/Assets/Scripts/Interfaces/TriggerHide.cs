@@ -17,6 +17,8 @@ public class TriggerHide : MonoBehaviour
     {
         color = hide.color;
         canvas = GetComponent<Canvas>();
+
+        panel.gameObject.SetActive(false);
     }
 
     public void OnTriggerClick()

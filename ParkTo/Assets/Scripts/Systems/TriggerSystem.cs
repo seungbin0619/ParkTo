@@ -108,6 +108,14 @@ public class TriggerSystem : MonoBehaviour
         Vars.instance.OnTriggerStateChange.Raise();
     }
 
+    public void UnSelect()
+    {
+        prevTrigger.gameObject.SetActive(false);
+        selectedTrigger = null;
+
+        Vars.instance.OnTriggerCancel.Raise();
+    }
+
     public void UseTrigger(Trigger trigger)
     {
         prevTrigger.gameObject.SetActive(false);

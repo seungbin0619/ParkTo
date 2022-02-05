@@ -14,6 +14,8 @@ public class DataSystem : MonoBehaviour
     {
         if (instance == null) instance = this;
         else if (instance != this) Destroy(gameObject);
+
+        data = LoadData();
     }
 
     #endregion
@@ -23,13 +25,6 @@ public class DataSystem : MonoBehaviour
 
     private Dictionary<string, Dictionary<string, int>> data;
     private static readonly string[] parts = new string[] { "Puzzle", "Setting"};
-
-    private void Start()
-    {
-        data = LoadData();
-
-        //SaveData();
-    }
 
     public static void Load(bool flag = false)
     {

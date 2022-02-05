@@ -83,7 +83,10 @@ public class Car : MonoBehaviour
         pcollider2D.isTrigger = false;
         collided = true;
 
-        transform.position += new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * 0.1f;
+        //Debug.Log(pcollider2D.points[0]);
+        //Debug.Log(points[0].point);
+
+        //transform.position += new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * 0.1f;
     }
 
     public void Initialize(Vector3Int position, int rotation, Color32 color)
@@ -148,7 +151,7 @@ public class Car : MonoBehaviour
 
             if (dif == this) continue;
             if (difPos.position != tmp.position) continue;
-            if (MapSystem.IsValidPosition(GetFront(difPos).position)) continue;
+            if (MapSystem.IsValidPosition(GetFront(difPos).position) && !dif.stopFlag) continue;
 
             stopFlag = true;
             return;
@@ -275,6 +278,8 @@ public class Car : MonoBehaviour
 
     public void AfterMove()
     {
+        if (collided) return;
+
         transform.localPosition = position;
         transform.localPosition += new Vector3(0.5f, 0.5f); // 위치 조정
         transform.eulerAngles = rotate[rotation];
@@ -326,6 +331,11 @@ public class Car : MonoBehaviour
     public void PreviewTrigger(float size)
     {
         targetScale = Vector3.one * size;
+    }
+
+    public void OnTriggerStateChange()
+    {
+        if (!TriggerSystem.instance.triggerMode) targetScale = Vector3.one * 0.8f;
     }
 
     public void OnTriggerCancel()

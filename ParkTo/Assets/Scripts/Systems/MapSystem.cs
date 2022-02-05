@@ -34,9 +34,6 @@ public class MapSystem : MonoBehaviour
     #region [ 맵 정보들 ]
 
     [SerializeField]
-    private ThemeBase[] themes;
-
-    [SerializeField]
     private LevelBase[] levels;
 
     [SerializeField]
@@ -49,7 +46,6 @@ public class MapSystem : MonoBehaviour
     private GameObject predictor;
 
     public static LevelBase CurrentLevel;
-    public static ThemeBase CurrentTheme;
 
     public static int[,] CurrentGrounds;
     public static TRIGGER[,] CurrentTriggers;
@@ -135,9 +131,7 @@ public class MapSystem : MonoBehaviour
 
         MapIndex = index;
         CurrentLevel = levels[index];
-        CurrentTheme = themes[CurrentLevel.theme];
-
-        Vars.instance.OnThemeChanged.Raise();
+        ThemeSystem.instance.SetTheme(levels[index].theme);
 
         CurrentGrounds = CurrentLevel.ToArray(CurrentLevel.grounds);
         CurrentTriggers = new TRIGGER[CurrentLevel.size.y, CurrentLevel.size.x];
@@ -174,13 +168,13 @@ public class MapSystem : MonoBehaviour
         int[,] tmpCars = CurrentLevel.ToArray(CurrentLevel.cars);
         int[,] tmpCarRotation = CurrentLevel.ToArray(CurrentLevel.carRotations);
 
-        Color32[] shuffle = new Color32[CurrentTheme.carColors.Length];
-        System.Array.Copy(CurrentTheme.carColors, shuffle, shuffle.Length);
+        Color32[] shuffle = new Color32[ThemeSystem.CurrentTheme.carColors.Length];
+        System.Array.Copy(ThemeSystem.CurrentTheme.carColors, shuffle, shuffle.Length);
 
         for (int i = 0; i < 10; i++)
         {
-            int r1 = Random.Range(0, CurrentTheme.carColors.Length);
-            int r2 = Random.Range(0, CurrentTheme.carColors.Length);
+            int r1 = Random.Range(0, ThemeSystem.CurrentTheme.carColors.Length);
+            int r2 = Random.Range(0, ThemeSystem.CurrentTheme.carColors.Length);
 
             Color32 tmp = shuffle[r1];
             shuffle[r1] = shuffle[r2];
@@ -198,8 +192,8 @@ public class MapSystem : MonoBehaviour
 
                 if (CurrentGrounds[y, x] >= 0)
                 {
-                    mapTile.SetTile(targetPosition, CurrentTheme.grounds[CurrentGrounds[y, x]]);
-                    lineTile.SetTile(targetPosition, CurrentTheme.outlines[tmpLines[y, x]]);
+                    mapTile.SetTile(targetPosition, ThemeSystem.CurrentTheme.grounds[CurrentGrounds[y, x]]);
+                    lineTile.SetTile(targetPosition, ThemeSystem.CurrentTheme.outlines[tmpLines[y, x]]);
 
                     Matrix4x4 targetMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, 0, tmpGroundRotation[y, x] * 90f), Vector3.one);
                     mapTile.SetTransformMatrix(targetPosition, targetMatrix);
@@ -392,5 +386,12 @@ public class MapSystem : MonoBehaviour
             }
 
         isPredictorInstantiated = true;
+    }
+
+    public void ReloadMap()
+    {
+        if (MoveFlag) return;
+
+        PrevSelectLevel(MapIndex);
     }
 }
