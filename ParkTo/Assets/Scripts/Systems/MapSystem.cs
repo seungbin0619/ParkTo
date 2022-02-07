@@ -34,9 +34,6 @@ public class MapSystem : MonoBehaviour
     #region [ 맵 정보들 ]
 
     [SerializeField]
-    private LevelBase[] levels;
-
-    [SerializeField]
     private Tile[] triggers;
 
     [SerializeField]
@@ -59,12 +56,14 @@ public class MapSystem : MonoBehaviour
 
     #region [ 변수 ]
 
-    public static int MapIndex = -1; // 현재 맵 인덱스
+    public static int MapIndex = -1;
     private static bool isDrawed; // 맵이 그려져있는가?
     public static bool isPlayable; // 재생 가능한가?
     public static bool isAnimated; // 애니메이션 재생중인가?
+    public static bool isGameOver;
+    public static bool isReload;
 
-    private static bool isPredictorInstantiated; // 경로 표시 중인가
+    private static bool themeMove = false;
 
     #endregion
 
@@ -90,15 +89,97 @@ public class MapSystem : MonoBehaviour
 
     #endregion
 
-    public void PrevSelectLevel(int index)
+    #region [ 언두 구현을 위한 변수 ]
+
+    public struct Behavior
+    {
+        public enum BehaviorType
+        {
+            MOVE,    // 차의 이동
+            TRIGGER, // 트리거 배치
+            STATE    // 트리거에 의한 상태 변경
+        }
+
+        public BehaviorType type;
+        public List<object> args;
+    }
+
+    private List<Behavior> behaviors;
+
+    public void AddBehavior(Behavior.BehaviorType type, params object[] args)
+    {
+        Behavior beh = new Behavior();
+        beh.type = type;
+        beh.args = new List<object>();
+        beh.args.AddRange(args);
+
+        behaviors.Add(beh);
+    }
+    #endregion
+
+    private void Start()
+    {
+        MapIndex = -1;
+
+        int selectedLevel = LevelSystem.instance.SelectedLevel;
+        if (selectedLevel == -1) return;
+
+        PrevSelectLevel(selectedLevel, themeMove);
+        themeMove = false;
+    }
+
+    private void SelectLevel(int index)
+    {
+        if (index < 0 || index >= LevelSystem.instance.levels.Length) return;
+
+        isGameOver = false;
+
+        MapIndex = index;
+        CurrentLevel = LevelSystem.instance.levels[index];
+        ThemeSystem.instance.SetTheme(LevelSystem.instance.levels[index].theme);
+
+        CurrentGrounds = CurrentLevel.ToArray(CurrentLevel.grounds);
+        CurrentTriggers = new TRIGGER[CurrentLevel.size.y, CurrentLevel.size.x];
+
+        var tmp = CurrentLevel.ToArray(CurrentLevel.triggers);
+
+        for (int y = 0; y < CurrentLevel.size.y; y++)
+            for (int x = 0; x < CurrentLevel.size.x; x++)
+                CurrentTriggers[y, x] = (TRIGGER)tmp[y, x];
+
+        behaviors = new List<Behavior>();
+
+        Vars.instance.OnLevelLoaded.Raise();
+    }
+
+    public void PrevSelectLevel(int index, bool eff = true)
     {
         IEnumerator CPrevSelectLevel()
         {
             if (isDrawed) StartCoroutine(PrevResetLevel());
+
+            if (MapIndex != -1)
+            {
+                // 테마가 달라지는 지점
+                if (LevelSystem.instance.levels[MapIndex].theme != LevelSystem.instance.levels[index].theme)
+                {
+                    themeMove = true;
+                    LevelSystem.instance.SelectedLevel = index;
+
+                    ActionSystem.instance.AddAction(ActionSystem.Action.ActionType.Fade, 1);
+                    ActionSystem.instance.AddAction(ActionSystem.Action.ActionType.Move, "Game");
+                    ActionSystem.instance.AddAction(ActionSystem.Action.ActionType.Fade, 0);
+
+                    ActionSystem.instance.Play();
+
+                    yield break;
+                }
+            }
+
             yield return drawFlag; // 기존 맵이 지워질 때까지 기다리기
 
             SelectLevel(index);
-            InitializeLevel();
+            InitializeLevel(eff);
         }
 
         StartCoroutine(CPrevSelectLevel());
@@ -125,25 +206,7 @@ public class MapSystem : MonoBehaviour
         yield return null;
     }
 
-    private void SelectLevel(int index)
-    {
-        if (index < 0 || index >= levels.Length) return;
-
-        MapIndex = index;
-        CurrentLevel = levels[index];
-        ThemeSystem.instance.SetTheme(levels[index].theme);
-
-        CurrentGrounds = CurrentLevel.ToArray(CurrentLevel.grounds);
-        CurrentTriggers = new TRIGGER[CurrentLevel.size.y, CurrentLevel.size.x];
-
-        var tmp = CurrentLevel.ToArray(CurrentLevel.triggers);
-
-        for (int y = 0; y < CurrentLevel.size.y; y++)
-            for (int x = 0; x < CurrentLevel.size.x; x++)
-                CurrentTriggers[y, x] = (TRIGGER)tmp[y, x];
-    }
-
-    private void InitializeLevel()
+    private void InitializeLevel(bool eff = true)
     {
         if (CurrentLevel == null) return;
 
@@ -242,17 +305,50 @@ public class MapSystem : MonoBehaviour
 
         #endregion
 
-        isDrawed = true;
+        IEnumerator CoInitializeLevel()
+        {
+            Vector3 currentPosition = mapGrid.transform.position, targetPosition = currentPosition;
+            targetPosition.x += 20f;
 
-        Vars.instance.OnChanged.Raise();
+            if (eff)
+            {
+                float duration = 1f;
+                float progress = 0;
+                WaitForEndOfFrame wait = new WaitForEndOfFrame();
+
+                while (true)
+                {
+                    progress += Time.deltaTime;
+                    float clamp = Mathf.Clamp(progress / duration, 0, 1);
+
+                    clamp = LineAnimation.Lerp(0, 1, clamp, 1, 0, 1);
+
+                    mapGrid.transform.position = Vector3.Lerp(targetPosition, currentPosition, clamp);
+
+                    yield return wait;
+                    if (progress > duration) break;
+                }
+            }
+
+            mapGrid.transform.position = currentPosition;
+
+            isDrawed = true;
+            Vars.instance.OnChanged.Raise();
+        }
+
+        StartCoroutine(CoInitializeLevel());
     }
 
     public void SetTrigger(Vector3Int targetPosition, int index)
     {
-        triggerTile.SetTile(targetPosition, triggers[1]);
-        TileTrigger tile = triggerTile.GetInstantiatedObject(targetPosition).GetComponent<TileTrigger>();
+        if (index == -1) triggerTile.SetTile(targetPosition, null);
+        else
+        {
+            triggerTile.SetTile(targetPosition, triggers[1]);
+            TileTrigger tile = triggerTile.GetInstantiatedObject(targetPosition).GetComponent<TileTrigger>();
 
-        tile.Initialize(index);
+            tile.Initialize(index);
+        }
 
         CurrentTriggers[targetPosition.y, targetPosition.x] = (TRIGGER)index;
     }
@@ -306,18 +402,19 @@ public class MapSystem : MonoBehaviour
 
     public void AfterMove() // 이동이 종료되었을 때
     {
-        if(CurrentCars.FindAll(k => k.collided).Count > 0) // 충돌이 일어난 경우
+        MoveFlag = false;
+        AddBehavior(Behavior.BehaviorType.MOVE);
+
+        if (CurrentCars.FindAll(k => k.collided).Count > 0) // 충돌이 일어난 경우
         {
             // 다시 시작하기
-            Debug.Log("실패!");
+            //Debug.Log("실패!");
+            isGameOver = true;
 
             return;
         }
 
         Vars.instance.OnChanged.Raise();
-
-        MoveFlag = false;
-        TriggerBar.instance.IsHide = false;
     }
 
     public void OnChanged() // 어떠한 변화가 생긴 경우
@@ -329,8 +426,10 @@ public class MapSystem : MonoBehaviour
         if (CurrentGoals.FindAll(k => k.IsArrived).Count == CurrentGoals.Count)
         {
             // 클리어
-            Debug.Log("클리어!");
-            PrevSelectLevel(MapIndex + 1);
+            //Debug.Log("클리어!");
+            LevelSystem.instance.ClearedLevelSave(MapIndex);
+
+            StartCoroutine(CoReloadMap(MapIndex + 1));
 
             return;
         }
@@ -361,12 +460,13 @@ public class MapSystem : MonoBehaviour
         DrawPathPredictor();
 
         Vars.instance.AfterChange.Raise();
+        TriggerBar.instance.IsHide = false;
     }
 
     private void Update()
     {
-        if (!isPredictorInstantiated) return;
-
+        if (Input.GetKeyDown(KeyCode.R)) ReloadMap();
+        if(Input.GetKeyDown(KeyCode.Z)) Undo();
     }
 
     private void DrawPathPredictor() // 예상 경로를 그려줌
@@ -384,14 +484,83 @@ public class MapSystem : MonoBehaviour
                 tmpPredictor = Instantiate(predictor, predictTile.transform).gameObject.GetComponent<Predictor>();
                 tmpPredictor.Initialize(CurrentCars[i].color, j * 2 - 1, (Vector3)(CurrentCars[i].path[j - 1].position + targetPosition) * 0.5f, true);
             }
-
-        isPredictorInstantiated = true;
     }
 
     public void ReloadMap()
     {
         if (MoveFlag) return;
+        if (!isDrawed) return;
+        if (isReload) return;
+        if (behaviors.Count == 0) return;
 
-        PrevSelectLevel(MapIndex);
+        StartCoroutine(CoReloadMap(MapIndex));
+    }
+
+    IEnumerator CoReloadMap(int index)
+    {
+        isReload = true;
+
+        Vector3 currentPosition = mapGrid.transform.position, targetPosition = currentPosition;
+        targetPosition.x -= 20f;
+
+        float duration = 1f;
+        float progress = 0;
+        WaitForEndOfFrame wait = new WaitForEndOfFrame();
+
+        while (true)
+        {
+            progress += Time.deltaTime;
+            float clamp = Mathf.Clamp(progress / duration, 0, 1);
+
+            clamp = LineAnimation.Lerp(0, 1, clamp, 1, 1, 0);
+
+            mapGrid.transform.position = Vector3.Lerp(currentPosition, targetPosition, clamp);
+
+            yield return wait;
+            if (progress > duration) break;
+        }
+
+        isReload = false;
+        PrevSelectLevel(index);
+    }
+
+    public void Undo()
+    {
+        if (MoveFlag) return;
+        if (!isDrawed) return;
+        if (isReload) return;
+        if (behaviors.Count == 0) return;
+
+        Behavior behavior = behaviors[behaviors.Count - 1];
+
+        switch(behavior.type)
+        {
+            case Behavior.BehaviorType.MOVE:
+                foreach (Car car in CurrentCars)
+                    car.Undo();
+                if (isGameOver) isGameOver = false;
+
+                break;
+            case Behavior.BehaviorType.TRIGGER:
+                int tTriggerIndex = int.Parse(behavior.args[0].ToString());
+                int tBarIndex = int.Parse(behavior.args[1].ToString());
+                Vector3Int tPos = (Vector3Int)behavior.args[2];
+
+                SetTrigger(tPos, -1); // 타일 지우고
+                TriggerSystem.instance.AddTrigger(tTriggerIndex, tBarIndex);
+
+                break;
+            case Behavior.BehaviorType.STATE:
+                int sTriggerIndex = int.Parse(behavior.args[0].ToString());
+                int sBarIndex = int.Parse(behavior.args[1].ToString());
+                Car sCar = (Car)behavior.args[2];
+
+                sCar.UndoTrigger(sTriggerIndex);
+                TriggerSystem.instance.AddTrigger(sTriggerIndex, sBarIndex);
+
+                break;
+        }
+
+        behaviors.Remove(behavior);
     }
 }

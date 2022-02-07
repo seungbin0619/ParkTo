@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdfd342c5da8eb247af57fed9f91c2e3, type: 3}
   m_Name: City
   m_EditorClassIdentifier: 
+  name: City
   colors:
   - serializedVersion: 2
     rgba: 4283213446

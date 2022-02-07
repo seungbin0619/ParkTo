@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdfd342c5da8eb247af57fed9f91c2e3, type: 3}
+  m_Name: Desert
+  m_EditorClassIdentifier: 
+  name: Desert
+  index: 1
+  colors:
+  - serializedVersion: 2
+    rgba: 4283875292
+  - serializedVersion: 2
+    rgba: 4282557910
+  carColors:
+  - serializedVersion: 2
+    rgba: 4283008985
+  - serializedVersion: 2
+    rgba: 4285941424
+  - serializedVersion: 2
+    rgba: 4291010405
+  - serializedVersion: 2
+    rgba: 4286496623
+  - serializedVersion: 2
+    rgba: 4287209129
+  grounds:
+  - {fileID: 11400000, guid: 9afdb232033210e4ab582504526c310e, type: 2}
+  - {fileID: 11400000, guid: 85f4265833f8c1645ae2c66ab42ee4e7, type: 2}
+  - {fileID: 11400000, guid: 78550df0c99cd2d429fb1e14722b81dd, type: 2}
+  outlines:
+  - {fileID: 11400000, guid: 34cb2c25c392ef248b6fa8ef1aa72768, type: 2}
+  - {fileID: 11400000, guid: d83d38d28af77bc45b6553cc83e9c442, type: 2}
+  - {fileID: 11400000, guid: 1be6a540444b52949a84d930809b80ce, type: 2}
+  decorates: []

@@ -13,6 +13,8 @@ public class Goal : MonoBehaviour
         get
         {
             if (targetIndex == -1) return false;
+            if (MapSystem.CurrentCars[targetIndex].collided) return false;
+
             return position == MapSystem.CurrentCars[targetIndex].position;
         }
     }

@@ -14,6 +14,8 @@ public class Vars : MonoBehaviour
 
     #endregion
 
+    public GameEvent OnLevelLoaded;
+
     public GameEvent PrevMove;
     public GameEvent AfterMove;
 

@@ -53,3 +53,6 @@ TagManager:
   - name: Setting
     uniqueID: 3004153669
     locked: 0
+  - name: Front
+    uniqueID: 1811473325
+    locked: 0

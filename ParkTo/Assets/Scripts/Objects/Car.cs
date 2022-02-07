@@ -47,7 +47,7 @@ public class Car : MonoBehaviour
     public Color32 color { private set; get; }
 
     public Vector3Int position { private set; get; }
-    private List<Vector3Int> trace; // 이동 자취(undo 구현 시 사용)
+    private List<PathData> trace; // 이동 자취(undo 구현 시 사용)
 
     public List<PathData> path;
     public bool stopFlag = false;
@@ -63,6 +63,8 @@ public class Car : MonoBehaviour
 
     private const float accelDuration = 1f;
 
+    public bool triggerStop;
+
     #endregion
 
     private Vector3 targetScale = Vector3.one * 0.8f;
@@ -74,7 +76,7 @@ public class Car : MonoBehaviour
         rigid2d = GetComponent<Rigidbody2D>();
         pcollider2D = GetComponent<PolygonCollider2D>();
 
-        trace = new List<Vector3Int>();
+        trace = new List<PathData>();
         //velocity = Vector3.zero;
     }
 
@@ -85,8 +87,6 @@ public class Car : MonoBehaviour
 
         //Debug.Log(pcollider2D.points[0]);
         //Debug.Log(points[0].point);
-
-        //transform.position += new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f)) * 0.1f;
     }
 
     public void Initialize(Vector3Int position, int rotation, Color32 color)
@@ -97,7 +97,7 @@ public class Car : MonoBehaviour
 
         spriteRenderer.color = color;
         transform.eulerAngles = new Vector3(0, 0, rotation * 90f);
-        trace.Add(position);
+        //trace.Add(new PathData(position, rotation));
     }
 
     #region [ 경로 계산 ]
@@ -117,6 +117,11 @@ public class Car : MonoBehaviour
 
     public void GetNextPath() // 다음 재생시 경로 구하기
     {
+        if (triggerStop)
+        {
+            stopFlag = true;
+            return;
+        }
         if (stopFlag) return;
 
         PathData tmp = GetFront(path[path.Count - 1]);
@@ -138,6 +143,9 @@ public class Car : MonoBehaviour
                 if (tmp.rotation < 0) tmp.rotation += 4;
 
                 tmp.rotation %= 4;
+                break;
+            case MapSystem.TRIGGER.STOP:
+                stopFlag = true;
 
                 break;
             default: // 직진
@@ -150,6 +158,7 @@ public class Car : MonoBehaviour
             PathData difPos = dif.path[Mathf.Min(path.Count, dif.path.Count) - 1];
 
             if (dif == this) continue;
+
             if (difPos.position != tmp.position) continue;
             if (MapSystem.IsValidPosition(GetFront(difPos).position) && !dif.stopFlag) continue;
 
@@ -217,6 +226,8 @@ public class Car : MonoBehaviour
 
                         break;
                     default: // 직진
+                        transform.eulerAngles = rotate[bef.rotation];
+
                         break;
                 }
             }
@@ -228,6 +239,7 @@ public class Car : MonoBehaviour
                     case MapSystem.TRIGGER.TURNRIGHT: position = GetTurnPosition(bef, cur, position, clamp, -1); break;
                     default: // 직진
                         position += clamp * (Vector3)direction[bef.rotation];
+                        transform.eulerAngles = rotate[bef.rotation];
 
                         break;
                 }
@@ -276,6 +288,12 @@ public class Car : MonoBehaviour
         return position;
     }
 
+    public void PrevMove()
+    {
+        trace.Add(new PathData(position, rotation));
+        triggerStop = false;
+    }
+
     public void AfterMove()
     {
         if (collided) return;
@@ -300,6 +318,36 @@ public class Car : MonoBehaviour
             case MapSystem.TRIGGER.TURNRIGHT:
                 rotation -= 1;
                 if (rotation < 0) rotation += 4;
+                break;
+            case MapSystem.TRIGGER.STOP:
+                triggerStop = true;
+
+                break;
+            default:
+
+                break;
+        }
+
+        rotation %= 4;
+        transform.eulerAngles = rotate[rotation];
+    }
+
+    public void UndoTrigger(int trigger)
+    {
+        switch ((MapSystem.TRIGGER)trigger)
+        {
+            case MapSystem.TRIGGER.TURNLEFT:
+                rotation -= 1;
+                if (rotation < 0) rotation += 4;
+
+                break;
+            case MapSystem.TRIGGER.TURNRIGHT:
+                rotation += 1;
+
+                break;
+            case MapSystem.TRIGGER.STOP:
+                triggerStop = false;
+
                 break;
             default:
 
@@ -345,4 +393,21 @@ public class Car : MonoBehaviour
     }
 
     #endregion
+
+    public void Undo()
+    {
+        if (trace.Count == 0) return;
+        PathData pathData = trace[trace.Count - 1];
+
+        position = pathData.position;
+        rotation = pathData.rotation;
+
+        transform.localPosition = position;
+        transform.localPosition += new Vector3(0.5f, 0.5f);
+
+        transform.eulerAngles = rotate[rotation];
+        if(collided) collided = false;
+
+        trace.Remove(pathData);
+    }
 }

@@ -40,6 +40,8 @@ public class TriggerBar : MonoBehaviour
     private RectTransform rect;
     private Vector2 targetPosition;
 
+    public Vector3 targetSizeDelta;
+
     private void Start()
     {
         
@@ -56,6 +58,8 @@ public class TriggerBar : MonoBehaviour
             if(Input.GetMouseButtonDown(0)) // 바깥 부분 클릭하면
                 IsHide = true;
         }
+
+        rect.sizeDelta = Vector3.Lerp(rect.sizeDelta, targetSizeDelta, Time.deltaTime * 5f);
 
         if (MapSystem.MoveFlag) return;
 

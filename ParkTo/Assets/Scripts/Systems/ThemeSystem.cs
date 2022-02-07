@@ -35,6 +35,13 @@ public class ThemeSystem : MonoBehaviour
     {
         CurrentTheme = themes[index];
 
+        int theme = DataSystem.GetData("Setting", "Theme");
+        if (theme < index)
+        {
+            DataSystem.SetData("Setting", "Theme", index);
+            DataSystem.SaveData();
+        }
+
         Vars.instance.OnThemeChanged.Raise();
     }
 }

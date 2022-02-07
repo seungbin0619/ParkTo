@@ -75,12 +75,18 @@ public class TriggerSystem : MonoBehaviour
         TriggerBar.instance.IsHide = triggers.Length == 0;
     }
 
-    public void AddTrigger(int trigger)
+    public void AddTrigger(int trigger, int index = -1)
     {
         Trigger trig = Instantiate(this.trigger, barContent);
         trig.Initialize(trigger, scrollRect);
 
-        triggers.Add(trig);
+        if (index == -1)
+            triggers.Add(trig);
+        else
+        {
+            triggers.Insert(index, trig);
+            trig.transform.SetSiblingIndex(index);
+        }
 
         UpdateTriggerBar();
     }
@@ -90,11 +96,13 @@ public class TriggerSystem : MonoBehaviour
         int cnt = triggers.Count;
         noTrigger.SetActive(cnt == 0);
 
-        barRect.sizeDelta = new Vector2(Mathf.Clamp(cnt, 1, 3.5f) * 200 + 40, 240);
+        bar.targetSizeDelta = new Vector2(Mathf.Clamp(cnt, 1, 3.5f) * 200 + 40, 240);
     }
 
     public void Select(Trigger trigger)
     {
+        if (MapSystem.isGameOver) return;
+
         prevTrigger.gameObject.SetActive(true);
         selectedTrigger = trigger;
 
@@ -176,15 +184,23 @@ public class TriggerSystem : MonoBehaviour
             {
                 if (!mb0Click)
                 {
-                    // 효과 적용
                     prevTrigger.gameObject.SetActive(false);
 
                     car.PreviewTrigger(1f);
-                }else
+                }
+                else
                 {
+                    // 효과 적용
                     car.SetTrigger(selectedTrigger);
-                    UseTrigger(selectedTrigger);
 
+                    //
+                    MapSystem.instance.AddBehavior(
+                        MapSystem.Behavior.BehaviorType.TRIGGER, 
+                        selectedTrigger.index, 
+                        triggers.IndexOf(selectedTrigger),
+                        car);
+
+                    UseTrigger(selectedTrigger);
                     Vars.instance.OnTriggerCancel.Raise();
                 }
             }
@@ -204,11 +220,19 @@ public class TriggerSystem : MonoBehaviour
                 {
                     prevTrigger.transform.localPosition = tilePosition + new Vector3(0.5f, 0.5f, 0);
                     tileValid = MapSystem.CurrentTriggers[tilePosition.y, tilePosition.x] < 0;
-                }else if(MapSystem.CurrentTriggers[tilePosition.y, tilePosition.x] < 0)
+                }
+                else if(MapSystem.CurrentTriggers[tilePosition.y, tilePosition.x] < 0)
                 {
                     MapSystem.instance.SetTrigger(tilePosition, selectedTrigger.index);
-                    UseTrigger(selectedTrigger);
 
+                    //
+                    MapSystem.instance.AddBehavior(
+                        MapSystem.Behavior.BehaviorType.TRIGGER,
+                        selectedTrigger.index,
+                        triggers.IndexOf(selectedTrigger),
+                        tilePosition);
+
+                    UseTrigger(selectedTrigger);
                     Vars.instance.OnTriggerCancel.Raise();
                 }
             }
