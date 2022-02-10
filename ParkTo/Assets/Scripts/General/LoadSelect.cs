@@ -31,12 +31,14 @@ public class LoadSelect : MonoBehaviour
 
     private int genIndex;
     private int levelIndex;
+    //private int page;
+
     private Vector3 targetPosition;
 
     [SerializeField]
     private Button[] moveTheme;
 
-    private static int tmpIndex = -1;
+    public static int tmpIndex = -1;
 
     private void Awake()
     {
@@ -73,7 +75,7 @@ public class LoadSelect : MonoBehaviour
             {
                 OnThemeChanged();
 
-                if (tmpIndex > 0) SetLevelBase(tmpIndex, false);
+                if (tmpIndex >= 0) SetLevelBase(tmpIndex, false);
                 else
                 {
                     int cleared = DataSystem.GetData("Puzzle", ThemeSystem.CurrentTheme.name, -1);
@@ -191,6 +193,7 @@ public class LoadSelect : MonoBehaviour
         car.transform.position = Vector3.Lerp(car.transform.position, targetPosition, Time.deltaTime * 5f);
 
         if (!ActionSystem.instance.IsCompleted) return;
+        if (SettingSystem.IsOpen) return;
 
         Key_LevelChange();
         Key_LevelEnter();

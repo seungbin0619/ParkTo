@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdfd342c5da8eb247af57fed9f91c2e3, type: 3}
+  m_Name: Coast
+  m_EditorClassIdentifier: 
+  name: Coast
+  index: 2
+  colors:
+  - serializedVersion: 2
+    rgba: 4291281771
+  - serializedVersion: 2
+    rgba: 4289307713
+  carColors:
+  - serializedVersion: 2
+    rgba: 4291281771
+  - serializedVersion: 2
+    rgba: 4289307713
+  - serializedVersion: 2
+    rgba: 4283405539
+  grounds:
+  - {fileID: 11400000, guid: 0ebda83dc4160e44fa24ac2d5cd5da41, type: 2}
+  - {fileID: 11400000, guid: 311db0b1aa99c614080814f7f64648a1, type: 2}
+  - {fileID: 11400000, guid: 08227dafb1ccc5949bdd7a155b1d234f, type: 2}
+  outlines:
+  - {fileID: 11400000, guid: 74478d2cd3ecb224f82121ba39648760, type: 2}
+  - {fileID: 11400000, guid: 5391d6b9c374c8144a43e99d9671eb86, type: 2}
+  - {fileID: 11400000, guid: 36ba3243ca5fb9347971f6c99d62d185, type: 2}
+  decorates: []

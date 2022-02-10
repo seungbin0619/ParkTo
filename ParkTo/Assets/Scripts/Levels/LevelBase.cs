@@ -26,6 +26,7 @@ public class LevelBase : ScriptableObject
     public int[] hadTriggers;
 
     public int seed;
+    public int help = -1; // 도움말 번호
 
     public int[,] ToArray(string data)
     {

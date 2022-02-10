@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Car : MonoBehaviour
 {
+    private const int MAX_COUNT = 100;
     private const float fixedDuration = 0.3f; // 1칸을 움직이는데 걸리는 시간
     private const float damage = 1f; // 충돌 시 충격을 얼마나 크게 할지
 
@@ -11,11 +12,12 @@ public class Car : MonoBehaviour
     {
         public Vector3Int position;
         public int rotation;
-
-        public PathData(Vector3Int position, int rotation)
+        public bool backward;
+        public PathData(Vector3Int position, int rotation, bool backward)
         {
             this.position = position;
             this.rotation = rotation;
+            this.backward = backward;
         }
     }
 
@@ -64,6 +66,7 @@ public class Car : MonoBehaviour
     private const float accelDuration = 1f;
 
     public bool triggerStop;
+    public bool isBackward;
 
     #endregion
 
@@ -112,7 +115,7 @@ public class Car : MonoBehaviour
         stopFlag = false;
 
         path = new List<PathData>();
-        path.Add(new PathData(position, rotation));
+        path.Add(new PathData(position, rotation, isBackward));
     }
 
     public void GetNextPath() // 다음 재생시 경로 구하기
@@ -134,18 +137,18 @@ public class Car : MonoBehaviour
         switch (MapSystem.CurrentTriggers[tmp.position.y, tmp.position.x]) // 바닥에 따라 방향이 달라질 수 있음
         {
             case MapSystem.TRIGGER.TURNLEFT: // 우회전
-                tmp.rotation += 1;
-                tmp.rotation %= 4;
-
+                tmp.rotation = Rotate(tmp.rotation, !tmp.backward ? 1 : -1);
                 break;
             case MapSystem.TRIGGER.TURNRIGHT: // 좌회전
-                tmp.rotation -= 1;
-                if (tmp.rotation < 0) tmp.rotation += 4;
-
-                tmp.rotation %= 4;
+                tmp.rotation = Rotate(tmp.rotation, !tmp.backward ? -1 : 1);
                 break;
             case MapSystem.TRIGGER.STOP:
                 stopFlag = true;
+
+                break;
+            case MapSystem.TRIGGER.BACKWARD:
+                tmp.backward = true;
+                //tmp.rotation = Rotate(tmp.rotation, 2);
 
                 break;
             default: // 직진
@@ -158,20 +161,24 @@ public class Car : MonoBehaviour
             PathData difPos = dif.path[Mathf.Min(path.Count, dif.path.Count) - 1];
 
             if (dif == this) continue;
-
             if (difPos.position != tmp.position) continue;
-            if (MapSystem.IsValidPosition(GetFront(difPos).position) && !dif.stopFlag) continue;
+            if (MapSystem.IsValidPosition(GetFront(difPos).position) && (path.Count < dif.path.Count || !dif.stopFlag)) continue;
+
+            // tmp => 나의 다음 경로
+            // difPos => 다음 경로 상에 있는 다른 차의 위치
+            // 그 차가 앞으로 갈 수 있다 => 앞이 비어있고 멈추지 않은 상태여야 함. -> path가 더 크면 움직인거임.
 
             stopFlag = true;
             return;
         }
 
         path.Add(tmp);
+        if (path.Count > MAX_COUNT) stopFlag = true;
     }
 
     private PathData GetFront(PathData bef)
     {
-        return new PathData(bef.position + direction[bef.rotation], bef.rotation);
+        return new PathData(bef.position + direction[Rotate(bef.rotation, back:bef.backward)], bef.rotation, bef.backward);
     }
 
     #endregion
@@ -198,7 +205,7 @@ public class Car : MonoBehaviour
         if (moveIndex == 0)  // 처음 출발 시
         {
             position = path[0].position;
-            position += 0.5f * Mathf.Pow(clamp, 2) * (Vector3)direction[path[0].rotation];
+            position += 0.5f * Mathf.Pow(clamp, 2) * (Vector3)direction[Rotate(path[0].rotation, back: path[0].backward)];
         }
         else if (moveIndex >= path.Count) return false; // 종료
         else
@@ -210,13 +217,16 @@ public class Car : MonoBehaviour
 
             if (moveIndex == path.Count - 1) // 감속
             {
-                position += (clamp - 0.5f * Mathf.Pow(clamp, 2)) * (Vector3)direction[bef.rotation];
+                position += (clamp - 0.5f * Mathf.Pow(clamp, 2)) * (Vector3)direction[Rotate(bef.rotation, back: bef.backward)];
 
                 switch (MapSystem.CurrentTriggers[cur.position.y, cur.position.x]) // 바닥에 따라 방향이 달라질 수 있음
                 {
                     case MapSystem.TRIGGER.TURNLEFT:
                     case MapSystem.TRIGGER.TURNRIGHT:
                         rotation = cur.rotation;
+
+                        //bef.rotation = Rotate(bef.rotation, back: bef.backward);
+                        //cur.rotation = Rotate(cur.rotation, back: cur.backward);
 
                         if (bef.rotation == 3 && cur.rotation == 0) cur.rotation = 4;
                         if (bef.rotation == 0 && cur.rotation == 3) bef.rotation = 4;
@@ -225,6 +235,7 @@ public class Car : MonoBehaviour
                             LineAnimation.Lerp(0, 1, clamp, 1, 0, 0.5f));
 
                         break;
+                    case MapSystem.TRIGGER.BACKWARD:
                     default: // 직진
                         transform.eulerAngles = rotate[bef.rotation];
 
@@ -235,10 +246,11 @@ public class Car : MonoBehaviour
             {
                 switch (MapSystem.CurrentTriggers[cur.position.y, cur.position.x]) // 바닥에 따라 방향이 달라질 수 있음
                 {
-                    case MapSystem.TRIGGER.TURNLEFT: position = GetTurnPosition(bef, cur, position, clamp, 1); break;
-                    case MapSystem.TRIGGER.TURNRIGHT: position = GetTurnPosition(bef, cur, position, clamp, -1); break;
+                    case MapSystem.TRIGGER.TURNLEFT: position = GetTurnPosition(bef, cur, position, clamp, !bef.backward ? 1 : -1); break;
+                    case MapSystem.TRIGGER.TURNRIGHT: position = GetTurnPosition(bef, cur, position, clamp, !bef.backward ? -1 : 1); break;
+                    case MapSystem.TRIGGER.BACKWARD: position += (clamp - Mathf.Pow(clamp, 2)) * (Vector3)direction[bef.rotation]; break;
                     default: // 직진
-                        position += clamp * (Vector3)direction[bef.rotation];
+                        position += clamp * (Vector3)direction[Rotate(bef.rotation, back: bef.backward)];
                         transform.eulerAngles = rotate[bef.rotation];
 
                         break;
@@ -256,8 +268,11 @@ public class Car : MonoBehaviour
 
     private Vector3 GetTurnPosition(PathData bef, PathData cur, Vector3 position, float clamp, int dir)
     {
-        Vector3 nxt = cur.position + (Vector3)direction[cur.rotation] * 0.5f;
+        Vector3 nxt = cur.position + (Vector3)direction[Rotate(cur.rotation, back: cur.backward)] * 0.5f;
         rotation = cur.rotation;
+
+        //bef.rotation = Rotate(bef.rotation, back: bef.backward);
+        //cur.rotation = Rotate(cur.rotation, back: cur.backward);
 
         if (bef.rotation == 3 && cur.rotation == 0) cur.rotation = 4;
         if (bef.rotation == 0 && cur.rotation == 3) bef.rotation = 4;
@@ -290,17 +305,24 @@ public class Car : MonoBehaviour
 
     public void PrevMove()
     {
-        trace.Add(new PathData(position, rotation));
+        trace.Add(new PathData(position, rotation, isBackward));
         triggerStop = false;
     }
 
     public void AfterMove()
     {
         if (collided) return;
+        if(isBackward)
+        {
+            isBackward = false;
+            
+            //
+        }
 
         transform.localPosition = position;
         transform.localPosition += new Vector3(0.5f, 0.5f); // 위치 조정
-        transform.eulerAngles = rotate[rotation];
+
+        transform.eulerAngles = rotate[Rotate(rotation)];
     }
 
     #endregion
@@ -312,20 +334,22 @@ public class Car : MonoBehaviour
         switch ((MapSystem.TRIGGER)trigger.index)
         {
             case MapSystem.TRIGGER.TURNLEFT:
-                rotation += 1;
+                rotation = Rotate(rotation, 1);
 
                 break;
             case MapSystem.TRIGGER.TURNRIGHT:
-                rotation -= 1;
-                if (rotation < 0) rotation += 4;
+                rotation = Rotate(rotation, -1);
+
                 break;
             case MapSystem.TRIGGER.STOP:
                 triggerStop = true;
 
                 break;
-            default:
+            case MapSystem.TRIGGER.BACKWARD:
+                isBackward = !isBackward;
 
                 break;
+            default: break;
         }
 
         rotation %= 4;
@@ -337,25 +361,26 @@ public class Car : MonoBehaviour
         switch ((MapSystem.TRIGGER)trigger)
         {
             case MapSystem.TRIGGER.TURNLEFT:
-                rotation -= 1;
-                if (rotation < 0) rotation += 4;
+                rotation = Rotate(rotation, -1);
 
                 break;
             case MapSystem.TRIGGER.TURNRIGHT:
-                rotation += 1;
+                rotation = Rotate(rotation, 1);
 
                 break;
             case MapSystem.TRIGGER.STOP:
                 triggerStop = false;
 
                 break;
-            default:
+            case MapSystem.TRIGGER.BACKWARD:
+                isBackward = !isBackward;
 
                 break;
+            default: break;
         }
 
         rotation %= 4;
-        transform.eulerAngles = rotate[rotation];
+        transform.eulerAngles = rotate[Rotate(rotation, back: isBackward)];
     }
 
     private void Update()
@@ -389,7 +414,7 @@ public class Car : MonoBehaviour
     public void OnTriggerCancel()
     {
         targetScale = Vector3.one * 0.8f;
-        transform.eulerAngles = rotate[rotation];
+        transform.eulerAngles = rotate[Rotate(rotation)];
     }
 
     #endregion
@@ -405,9 +430,24 @@ public class Car : MonoBehaviour
         transform.localPosition = position;
         transform.localPosition += new Vector3(0.5f, 0.5f);
 
-        transform.eulerAngles = rotate[rotation];
-        if(collided) collided = false;
+        transform.eulerAngles = rotate[Rotate(rotation, back:isBackward)];
+        if (collided)
+        {
+            collided = false;
+            pcollider2D.isTrigger = true;
+        }
 
         trace.Remove(pathData);
+    }
+
+    private int Rotate(int rotation, int delta = 0, bool back = false)
+    {
+        rotation += delta;
+        if (rotation < 0) rotation += 4;
+        if (back) rotation += 2;
+
+        rotation %= 4;
+
+        return rotation;
     }
 }

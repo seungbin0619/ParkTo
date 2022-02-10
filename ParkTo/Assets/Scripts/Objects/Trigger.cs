@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Trigger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class Trigger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IScrollHandler
 {
     [SerializeField]
     private Image image;
@@ -62,6 +62,11 @@ public class Trigger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragH
     public void OnEndDrag(PointerEventData e)
     {
         parentRect.OnEndDrag(e);
+    }
+
+    public void OnScroll(PointerEventData e)
+    {
+        parentRect.OnScroll(e);
     }
 
     #endregion

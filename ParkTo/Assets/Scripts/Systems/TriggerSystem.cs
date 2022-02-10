@@ -35,7 +35,8 @@ public class TriggerSystem : MonoBehaviour
     private UnityEngine.Tilemaps.Tilemap triggerTile;
 
     [SerializeField]
-    private Transform barContent;
+    private RectTransform barContent;
+
     [SerializeField]
     private GameObject noTrigger;
 
@@ -73,6 +74,7 @@ public class TriggerSystem : MonoBehaviour
 
         UpdateTriggerBar();
         TriggerBar.instance.IsHide = triggers.Length == 0;
+        //scrollRect.movementType = UnityEngine.UI.ScrollRect.MovementType.
     }
 
     public void AddTrigger(int trigger, int index = -1)
@@ -97,6 +99,16 @@ public class TriggerSystem : MonoBehaviour
         noTrigger.SetActive(cnt == 0);
 
         bar.targetSizeDelta = new Vector2(Mathf.Clamp(cnt, 1, 3.5f) * 200 + 40, 240);
+    }
+
+    public void OnLevelLoaded()
+    {
+        IEnumerator Co()
+        {
+            yield return new WaitForEndOfFrame();
+            barContent.anchoredPosition = new Vector2(barContent.sizeDelta.x * 0.5f, 0);
+        }
+        StartCoroutine(Co());
     }
 
     public void Select(Trigger trigger)
@@ -195,7 +207,7 @@ public class TriggerSystem : MonoBehaviour
 
                     //
                     MapSystem.instance.AddBehavior(
-                        MapSystem.Behavior.BehaviorType.TRIGGER, 
+                        MapSystem.Behavior.BehaviorType.STATE, 
                         selectedTrigger.index, 
                         triggers.IndexOf(selectedTrigger),
                         car);

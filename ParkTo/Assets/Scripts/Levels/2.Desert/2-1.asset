@@ -15,14 +15,15 @@ MonoBehaviour:
   id: 2-1
   description: 
   theme: 1
-  size: {x: 3, y: 3}
-  grounds: 1,0,1,0,0,0,1,0,1
-  groundRotations: 1,0,2,0,0,0,0,0,3
-  line: 1,0,1,0,0,0,1,0,1
-  lineRotations: 1,0,2,1,0,3,0,0,3
-  cars: 0,0,1,0,0,0,1,0,0
-  carRotations: 0,0,0,0,0,0,3,0,0
-  triggers: -1,-1,-1,-1,-1,-1,-1,-1,0
-  triggerInformations: -1,-1,-1,-1,-1,-1,-1,-1,1
-  hadTriggers: 03000000
-  seed: 34233
+  size: {x: 5, y: 1}
+  grounds: 2,0,0,0,2
+  groundRotations: 1,0,0,0,3
+  line: 2,0,0,0,2
+  lineRotations: 1,0,0,0,3
+  cars: 1,0,0,0,0
+  carRotations: 3,0,0,0,0
+  triggers: -1,-1,3,-1,0
+  triggerInformations: -1,-1,-1,-1,0
+  hadTriggers: 
+  seed: 0
+  help: -1

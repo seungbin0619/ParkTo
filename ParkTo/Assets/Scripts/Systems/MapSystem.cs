@@ -28,7 +28,8 @@ public class MapSystem : MonoBehaviour
         GOAL,
         TURNLEFT,
         TURNRIGHT,
-        STOP
+        STOP,
+        BACKWARD,
     }
 
     #region [ 맵 정보들 ]
@@ -465,6 +466,8 @@ public class MapSystem : MonoBehaviour
 
     private void Update()
     {
+        if (SettingSystem.IsOpen) return;
+
         if (Input.GetKeyDown(KeyCode.R)) ReloadMap();
         if(Input.GetKeyDown(KeyCode.Z)) Undo();
     }
@@ -505,6 +508,7 @@ public class MapSystem : MonoBehaviour
 
         float duration = 1f;
         float progress = 0;
+
         WaitForEndOfFrame wait = new WaitForEndOfFrame();
 
         while (true)
@@ -521,6 +525,8 @@ public class MapSystem : MonoBehaviour
         }
 
         isReload = false;
+        LevelSystem.instance.SelectedLevel = index;
+
         PrevSelectLevel(index);
     }
 
@@ -562,5 +568,6 @@ public class MapSystem : MonoBehaviour
         }
 
         behaviors.Remove(behavior);
+        Vars.instance.OnChanged.Raise();
     }
 }
