@@ -20,8 +20,8 @@ public class DataSystem : MonoBehaviour
 
     #endregion
 
-    //private static readonly string path = Application.persistentDataPath;
-    private static readonly string path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + @"\";
+    private static readonly string path = Application.persistentDataPath;
+    //private static readonly string path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + @"\";
 
     private Dictionary<string, Dictionary<string, int>> data;
     private static readonly string[] parts = new string[] { "Puzzle", "Setting"};

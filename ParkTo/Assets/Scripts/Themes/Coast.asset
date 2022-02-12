@@ -25,7 +25,9 @@ MonoBehaviour:
   - serializedVersion: 2
     rgba: 4289307713
   - serializedVersion: 2
-    rgba: 4283405539
+    rgba: 4288467552
+  - serializedVersion: 2
+    rgba: 4290602323
   grounds:
   - {fileID: 11400000, guid: 0ebda83dc4160e44fa24ac2d5cd5da41, type: 2}
   - {fileID: 11400000, guid: 311db0b1aa99c614080814f7f64648a1, type: 2}

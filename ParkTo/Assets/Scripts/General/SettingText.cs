@@ -9,20 +9,10 @@ public class SettingText : MonoBehaviour
     {
         text = GetComponent<TMPro.TMP_Text>();
     }
-    void Start()
-    {
-        SetText();
 
-    }
-
-    private void SetText()
+    private void Update()
     {
         if (MapSystem.CurrentLevel != null)
             text.text = MapSystem.CurrentLevel.id;
-    }
-
-    public void OnLevelLoaded()
-    {
-        SetText();
     }
 }

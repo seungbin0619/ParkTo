@@ -83,13 +83,12 @@ public class Car : MonoBehaviour
         //velocity = Vector3.zero;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        pcollider2D.isTrigger = false;
         collided = true;
+        Vector2 hitPoint = collision.contacts[0].point;
 
-        //Debug.Log(pcollider2D.points[0]);
-        //Debug.Log(points[0].point);
+        MapSystem.instance.AddCollision(hitPoint);
     }
 
     public void Initialize(Vector3Int position, int rotation, Color32 color)
@@ -248,7 +247,13 @@ public class Car : MonoBehaviour
                 {
                     case MapSystem.TRIGGER.TURNLEFT: position = GetTurnPosition(bef, cur, position, clamp, !bef.backward ? 1 : -1); break;
                     case MapSystem.TRIGGER.TURNRIGHT: position = GetTurnPosition(bef, cur, position, clamp, !bef.backward ? -1 : 1); break;
-                    case MapSystem.TRIGGER.BACKWARD: position += (clamp - Mathf.Pow(clamp, 2)) * (Vector3)direction[bef.rotation]; break;
+                    case MapSystem.TRIGGER.BACKWARD:
+                        if (bef.backward != cur.backward)
+                            position += (clamp - Mathf.Pow(clamp, 2)) * (Vector3)direction[bef.rotation];
+                        else position += clamp * (Vector3)direction[Rotate(bef.rotation, back: bef.backward)];
+                        transform.eulerAngles = rotate[bef.rotation];
+
+                        break;
                     default: // 직진
                         position += clamp * (Vector3)direction[Rotate(bef.rotation, back: bef.backward)];
                         transform.eulerAngles = rotate[bef.rotation];
@@ -307,17 +312,12 @@ public class Car : MonoBehaviour
     {
         trace.Add(new PathData(position, rotation, isBackward));
         triggerStop = false;
+        isBackward = false;
     }
 
     public void AfterMove()
     {
         if (collided) return;
-        if(isBackward)
-        {
-            isBackward = false;
-            
-            //
-        }
 
         transform.localPosition = position;
         transform.localPosition += new Vector3(0.5f, 0.5f); // 위치 조정
@@ -346,7 +346,7 @@ public class Car : MonoBehaviour
 
                 break;
             case MapSystem.TRIGGER.BACKWARD:
-                isBackward = !isBackward;
+                isBackward = true;
 
                 break;
             default: break;
@@ -373,14 +373,14 @@ public class Car : MonoBehaviour
 
                 break;
             case MapSystem.TRIGGER.BACKWARD:
-                isBackward = !isBackward;
+                isBackward = false;
 
                 break;
             default: break;
         }
 
         rotation %= 4;
-        transform.eulerAngles = rotate[Rotate(rotation, back: isBackward)];
+        transform.eulerAngles = rotate[rotation];
     }
 
     private void Update()
@@ -430,11 +430,13 @@ public class Car : MonoBehaviour
         transform.localPosition = position;
         transform.localPosition += new Vector3(0.5f, 0.5f);
 
-        transform.eulerAngles = rotate[Rotate(rotation, back:isBackward)];
+        transform.eulerAngles = rotate[Rotate(rotation)];
         if (collided)
         {
             collided = false;
-            pcollider2D.isTrigger = true;
+            //pcollider2D.isTrigger = true;
+
+            MapSystem.instance.RemoveAllParticles();
         }
 
         trace.Remove(pathData);

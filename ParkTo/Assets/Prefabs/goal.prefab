@@ -116,8 +116,8 @@ MonoBehaviour:
   - {fileID: 6840516569481141831}
   - {fileID: 6840516570182200983}
   - {fileID: 6840516569873383683}
-  mode: 0
-  gen: 1
+  mode: 1
+  gen: 0
 --- !u!114 &627131249402547828
 MonoBehaviour:
   m_ObjectHideFlags: 0

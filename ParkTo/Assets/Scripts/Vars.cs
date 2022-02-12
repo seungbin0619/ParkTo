@@ -24,10 +24,9 @@ public class Vars : MonoBehaviour
 
     public GameEvent OnThemeChanged;
 
-    public GameEvent OnTriggerShow;
-    public GameEvent OnTriggerHide;
-
     public GameEvent OnTriggerClick;
     public GameEvent OnTriggerCancel;
     public GameEvent OnTriggerStateChange;
+
+    public GameEvent OnSoundChanged;
 }

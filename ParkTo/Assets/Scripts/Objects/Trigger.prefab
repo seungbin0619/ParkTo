@@ -11,6 +11,9 @@ GameObject:
   - component: {fileID: 7856840082259917887}
   - component: {fileID: 1135969707635098163}
   - component: {fileID: 7190948357101505911}
+  - component: {fileID: -7227392921958725589}
+  - component: {fileID: -6124649118854128159}
+  - component: {fileID: 7167385687490926049}
   m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
@@ -94,3 +97,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58fd46761394c41438f452b617c45021, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-7227392921958725589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7665899774001134446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 418bbe46b8365ce4291b0824bae1c626, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: 1135969707635098163}
+  mode: 1
+  gen: 0
+--- !u!114 &-6124649118854128159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7665899774001134446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b07f3a63fbba1f4d80e83bad0b67951, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventSO: {fileID: 11400000, guid: a8080e7db60017d44bcc4600f3d71179, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -7227392921958725589}
+        m_MethodName: OnTriggerCancel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &7167385687490926049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7665899774001134446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b07f3a63fbba1f4d80e83bad0b67951, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventSO: {fileID: 11400000, guid: 4ffb9d7db958fda42a69ef95d7731f5a, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -7227392921958725589}
+        m_MethodName: OnTriggerStateChange
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

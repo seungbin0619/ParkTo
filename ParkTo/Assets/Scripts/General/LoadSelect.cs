@@ -64,6 +64,8 @@ public class LoadSelect : MonoBehaviour
             }
         }
         #endregion
+
+        HelpSystem.instance.SaveHelp(0);
     }
 
     private void Start()
@@ -80,8 +82,7 @@ public class LoadSelect : MonoBehaviour
                 {
                     int cleared = DataSystem.GetData("Puzzle", ThemeSystem.CurrentTheme.name, -1);
                     if (cleared == LevelSystem.instance.levelCount[ThemeSystem.CurrentTheme.index] - 1)
-                        cleared = -1;
-
+                        cleared -= 1;
                     SetLevelBase(cleared + 1, false);
                 }
 
@@ -110,7 +111,9 @@ public class LoadSelect : MonoBehaviour
         const int RANGE = 10;
 
         this.index = index;
-        theme = ThemeSystem.instance.themes[index];
+        ThemeSystem.CurrentTheme = theme = ThemeSystem.instance.themes[index];
+
+        SFXSystem.instance.OnThemeChanged();
 
         Random.InitState((int)(Time.deltaTime * 1000));
 
@@ -170,6 +173,8 @@ public class LoadSelect : MonoBehaviour
 
         targetPosition = buttons[levelIndex].transform.position;
         if (!move) car.transform.position = targetPosition;
+
+        SFXSystem.instance.PlaySound(0);
     }
 
     public void ChangeTheme(int delta)

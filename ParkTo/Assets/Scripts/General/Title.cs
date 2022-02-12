@@ -7,6 +7,8 @@ public class Title : MonoBehaviour
     public void StartGame()
     {
         //DataSystem.Load(true);
+        SFXSystem.instance.PlaySound(3);
+
         ActionSystem.instance.AddAction(ActionSystem.Action.ActionType.Fade, 1);
         ActionSystem.instance.AddAction(ActionSystem.Action.ActionType.Move, "Select");
         ActionSystem.instance.AddAction(ActionSystem.Action.ActionType.Fade, 0);

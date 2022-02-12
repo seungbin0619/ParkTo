@@ -55,6 +55,7 @@ public class TriggerSystem : MonoBehaviour
     public bool triggerMode = false;
     private bool tileValid = false;
 
+    public Sprite banTrigger;
 
     public void ResetTriggers()
     {
@@ -82,7 +83,7 @@ public class TriggerSystem : MonoBehaviour
         Trigger trig = Instantiate(this.trigger, barContent);
         trig.Initialize(trigger, scrollRect);
 
-        if (index == -1)
+        if (index == -1 || triggers.Count < index)
             triggers.Add(trig);
         else
         {
@@ -191,6 +192,8 @@ public class TriggerSystem : MonoBehaviour
             {
                 prevTrigger.transform.position = mousePosition;
                 tileValid = false;
+
+                if(mb0Click) SFXSystem.instance.PlaySound(8);
             }
             else
             {
@@ -209,10 +212,12 @@ public class TriggerSystem : MonoBehaviour
                     MapSystem.instance.AddBehavior(
                         MapSystem.Behavior.BehaviorType.STATE, 
                         selectedTrigger.index, 
-                        triggers.IndexOf(selectedTrigger),
+                        selectedTrigger.transform.GetSiblingIndex(),
                         car);
 
                     UseTrigger(selectedTrigger);
+                    SFXSystem.instance.PlaySound(7);
+
                     Vars.instance.OnTriggerCancel.Raise();
                 }
             }
@@ -231,9 +236,9 @@ public class TriggerSystem : MonoBehaviour
                 if (!mb0Click)
                 {
                     prevTrigger.transform.localPosition = tilePosition + new Vector3(0.5f, 0.5f, 0);
-                    tileValid = MapSystem.CurrentTriggers[tilePosition.y, tilePosition.x] < 0;
+                    tileValid = MapSystem.CurrentTriggers[tilePosition.y, tilePosition.x] == MapSystem.TRIGGER.NORMAL;
                 }
-                else if(MapSystem.CurrentTriggers[tilePosition.y, tilePosition.x] < 0)
+                else if (MapSystem.CurrentTriggers[tilePosition.y, tilePosition.x] == MapSystem.TRIGGER.NORMAL)
                 {
                     MapSystem.instance.SetTrigger(tilePosition, selectedTrigger.index);
 
@@ -241,12 +246,15 @@ public class TriggerSystem : MonoBehaviour
                     MapSystem.instance.AddBehavior(
                         MapSystem.Behavior.BehaviorType.TRIGGER,
                         selectedTrigger.index,
-                        triggers.IndexOf(selectedTrigger),
+                        selectedTrigger.transform.GetSiblingIndex(),
                         tilePosition);
 
                     UseTrigger(selectedTrigger);
+                    SFXSystem.instance.PlaySound(7);
+
                     Vars.instance.OnTriggerCancel.Raise();
                 }
+                else SFXSystem.instance.PlaySound(8);
             }
             #endregion
         }

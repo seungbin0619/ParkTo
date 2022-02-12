@@ -26,3 +26,4 @@ MonoBehaviour:
   triggerInformations: 0,0,0,0,0
   hadTriggers: 
   seed: 234243
+  help: 1

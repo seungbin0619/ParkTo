@@ -14,11 +14,13 @@ public class TriggerObject : MonoBehaviour
     [SerializeField]
     private bool gen;
 
-    private void Start()
+    private void Awake()
     {
         alpha = new float[sprites.Length];
         for (int i = 0; i < sprites.Length; i++)
+        {
             alpha[i] = sprites[i].color.a;
+        }
     }
 
     public void OnTriggerStateChange()

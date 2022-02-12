@@ -24,6 +24,12 @@ public class SettingSystem : MonoBehaviour
     private const float duration = 0.5f;
     public static bool isAnimate;
 
+    private void Start()
+    {
+        if(!DataSystem.HasData("Setting", "Bgm")) DataSystem.SetData("Setting", "Bgm", 50);
+        if (!DataSystem.HasData("Setting", "Sound")) DataSystem.SetData("Setting", "Sound", 50);
+    }
+
     public void SetCanvas(Canvas canvas)
     {
         IsOpen = false;
@@ -41,6 +47,8 @@ public class SettingSystem : MonoBehaviour
         if (CurrentCanvas == null) return;
         IsOpen = true;
 
+        SFXSystem.instance.PlaySound(4);
+
         CurrentCanvas.gameObject.SetActive(true);
         StartCoroutine(CoSetting(true));
     }
@@ -51,7 +59,10 @@ public class SettingSystem : MonoBehaviour
         if (CurrentCanvas == null) return;
         IsOpen = false;
 
+        SFXSystem.instance.PlaySound(3);
         StartCoroutine(CoSetting(false));
+
+        DataSystem.SaveData();
     }
 
     private IEnumerator CoSetting(bool flag)

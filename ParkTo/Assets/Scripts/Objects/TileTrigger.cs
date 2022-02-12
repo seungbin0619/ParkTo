@@ -12,6 +12,11 @@ public class TileTrigger : MonoBehaviour
 
     public void Initialize(int index)
     {
+        if(index == -2) {
+            spriteRenderer.sprite = TriggerSystem.instance.banTrigger;
+            return;
+        }
+
         spriteRenderer.sprite = TriggerSystem.instance.triggerSprites[index];
     }
 }

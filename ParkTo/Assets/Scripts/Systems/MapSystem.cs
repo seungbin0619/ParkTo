@@ -24,6 +24,7 @@ public class MapSystem : MonoBehaviour
 
     public enum TRIGGER
     {
+        BAN = -2,
         NORMAL = -1,
         GOAL,
         TURNLEFT,
@@ -118,8 +119,19 @@ public class MapSystem : MonoBehaviour
     }
     #endregion
 
+    [SerializeField]
+    private ParticleSystem particle;
+    [SerializeField]
+    private ParticleSystem clearParticle;
+
+    private List<ParticleSystem> particles;
+    private List<ParticleSystem> clearParticles;
+
     private void Start()
     {
+        particles = new List<ParticleSystem>();
+        clearParticles = new List<ParticleSystem>();
+
         MapIndex = -1;
 
         int selectedLevel = LevelSystem.instance.SelectedLevel;
@@ -183,6 +195,19 @@ public class MapSystem : MonoBehaviour
             InitializeLevel(eff);
         }
 
+        if(index >= LevelSystem.instance.levels.Length)
+        {
+            LoadSelect.tmpIndex = 7;
+
+            ActionSystem.instance.AddAction(ActionSystem.Action.ActionType.Fade, 1);
+            ActionSystem.instance.AddAction(ActionSystem.Action.ActionType.Move, "Select");
+            ActionSystem.instance.AddAction(ActionSystem.Action.ActionType.Fade, 0);
+
+            ActionSystem.instance.Play();
+
+            return;
+        }
+
         StartCoroutine(CPrevSelectLevel());
     }
 
@@ -191,6 +216,9 @@ public class MapSystem : MonoBehaviour
         // 초기화 애니메이션
 
         yield return AnimateFlag;
+
+        RemoveAllParticles(particles);
+        RemoveAllParticles(clearParticles);
 
         carTile.ClearAllTiles();
         mapTile.ClearAllTiles();
@@ -288,7 +316,7 @@ public class MapSystem : MonoBehaviour
             {
                 Vector3Int targetPosition = new Vector3Int(x, y, 0);
 
-                if (CurrentTriggers[y, x] == 0)
+                if (CurrentTriggers[y, x] == TRIGGER.GOAL)
                 {
                     triggerTile.SetTile(targetPosition, triggers[0]);
 
@@ -297,7 +325,11 @@ public class MapSystem : MonoBehaviour
 
                     CurrentGoals.Add(tmpGoal);
                 }
-                else if (CurrentTriggers[y, x] > 0) 
+                else if (CurrentTriggers[y, x] == TRIGGER.BAN)
+                {
+                    SetTrigger(targetPosition, -2);
+                }
+                else if (CurrentTriggers[y, x] > 0)
                     SetTrigger(targetPosition, (int)CurrentTriggers[targetPosition.y, targetPosition.x]);
             }
         #endregion
@@ -335,6 +367,14 @@ public class MapSystem : MonoBehaviour
 
             isDrawed = true;
             Vars.instance.OnChanged.Raise();
+
+            if (CurrentLevel.help > DataSystem.GetData("Setting", "Help"))
+            {
+                DataSystem.SetData("Setting", "Help", CurrentLevel.help);
+                DataSystem.SaveData();
+
+                HelpSystem.instance.OpenCanvas();
+            }
         }
 
         StartCoroutine(CoInitializeLevel());
@@ -398,6 +438,8 @@ public class MapSystem : MonoBehaviour
         }
 
         MoveFlag = true;
+        SFXSystem.instance.PlaySound(5);
+
         StartCoroutine(CMove());
     }
 
@@ -430,7 +472,19 @@ public class MapSystem : MonoBehaviour
             //Debug.Log("클리어!");
             LevelSystem.instance.ClearedLevelSave(MapIndex);
 
-            StartCoroutine(CoReloadMap(MapIndex + 1));
+            SFXSystem.instance.PlaySound(2);
+
+            IEnumerator CoWait()
+            {
+                int rnd = Random.Range(5, 8);
+                for (int i = 0; i < rnd; i++)
+                    AddClear();
+
+                yield return new WaitForSeconds(1.5f);
+
+                StartCoroutine(CoReloadMap(MapIndex + 1));
+            }
+            StartCoroutine(CoWait());
 
             return;
         }
@@ -497,6 +551,7 @@ public class MapSystem : MonoBehaviour
         if (behaviors.Count == 0) return;
 
         StartCoroutine(CoReloadMap(MapIndex));
+        SFXSystem.instance.PlaySound(9);
     }
 
     IEnumerator CoReloadMap(int index)
@@ -569,5 +624,60 @@ public class MapSystem : MonoBehaviour
 
         behaviors.Remove(behavior);
         Vars.instance.OnChanged.Raise();
+
+        SFXSystem.instance.PlaySound(6);
     }
+
+    #region [ 파티클 ]
+
+    public void AddCollision(Vector2 position)
+    {
+        ParticleSystem p = Instantiate(particle, mapGrid.transform);
+        p.transform.position = position;
+
+        p.Play();
+
+        particles.Add(p);
+    }
+
+    private readonly Color32[] colors = new Color32[]
+    {
+        new Color32(212, 75, 152, 255),
+        new Color32(124, 99, 215, 255),
+        new Color32(234, 215, 76, 255),
+        new Color32(98, 216, 126, 255),
+        new Color32(92, 125, 218, 255)
+    };
+
+    public void AddClear()
+    {
+        ParticleSystem p = Instantiate(clearParticle, mapGrid.transform);
+        float rx = Random.Range(-1.5f, 1.5f), ry = Random.Range(-1.5f, 1.5f);
+
+        p.transform.position = new Vector2(rx, ry);
+        ParticleSystem.MainModule main = p.main;
+
+        main.startColor = new ParticleSystem.MinMaxGradient(colors[Random.Range(0, colors.Length)]);
+
+        IEnumerator CoPlay()
+        {
+            yield return new WaitForSeconds(Random.Range(0f, 1.5f));
+
+            p.GetComponent<AudioSource>().Play();
+            p.Play();
+        }
+
+        StartCoroutine(CoPlay());
+        clearParticles.Add(p);
+    }
+    public void RemoveAllParticles(List<ParticleSystem> particles = null)
+    {
+        if (particles == null) particles = this.particles;
+        foreach (ParticleSystem p in particles)
+            Destroy(p);
+
+        particles.Clear();
+    }
+
+    #endregion
 }

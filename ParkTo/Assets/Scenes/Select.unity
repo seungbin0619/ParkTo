@@ -347,7 +347,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 660.5139, y: -64}
+  m_AnchoredPosition: {x: 660.54626, y: -64}
   m_SizeDelta: {x: 88, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &28756454
@@ -994,7 +994,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1410.5139, y: -64}
+  m_AnchoredPosition: {x: 1410.5463, y: -64}
   m_SizeDelta: {x: 88, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &105563169
@@ -1512,10 +1512,21 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.752
+  m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 677380399}
+        m_MethodName: OnSoundChanged
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &237892110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2226,7 +2237,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1260.5139, y: -64}
+  m_AnchoredPosition: {x: 1260.5463, y: -64}
   m_SizeDelta: {x: 88, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &472355213
@@ -3015,6 +3026,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e209d908ffca43d408aaab0cc68c70db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bgm: {fileID: 1321594517}
+  sound: {fileID: 237892109}
 --- !u!114 &677380400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5179,6 +5192,7 @@ GameObject:
   - component: {fileID: 966373593}
   - component: {fileID: 966373591}
   - component: {fileID: 966373592}
+  - component: {fileID: 966373597}
   m_Layer: 5
   m_Name: Help
   m_TagString: Untagged
@@ -5319,8 +5333,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: OpenSetting
+      - m_Target: {fileID: 966373597}
+        m_MethodName: OpenHelp
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5368,6 +5382,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 966373589}
   m_CullTransparentMesh: 0
+--- !u!114 &966373597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 966373589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 503ba5d6f99d62745a2637642298d990, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &983749274
 GameObject:
   m_ObjectHideFlags: 0
@@ -5482,7 +5508,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 810.5139, y: -64}
+  m_AnchoredPosition: {x: 810.54626, y: -64}
   m_SizeDelta: {x: 88, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &996006397
@@ -6315,10 +6341,21 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.633
+  m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 677380399}
+        m_MethodName: OnBGMChanged
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1321594518
 MonoBehaviour:
   m_ObjectHideFlags: 0
