@@ -7,7 +7,8 @@ public class HelpButton : MonoBehaviour
     public void OpenHelp()
     {
         int index = 0;
-        if (MapSystem.CurrentLevel != null) index = MapSystem.CurrentLevel.help;
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Select") index = 0;
+        else if (MapSystem.CurrentLevel != null) index = MapSystem.CurrentLevel.help;
 
         HelpSystem.instance.OpenCanvas(index);
     }

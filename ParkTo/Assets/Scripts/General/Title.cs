@@ -24,4 +24,13 @@ public class Title : MonoBehaviour
         Application.Quit();
 #endif
     }
+
+    private void Update()
+    {
+        if (SettingSystem.IsOpen)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape)) SettingSystem.instance.CloseSetting();
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape)) SettingSystem.instance.OpenSetting();
+    }
 }

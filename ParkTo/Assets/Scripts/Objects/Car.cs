@@ -311,6 +311,7 @@ public class Car : MonoBehaviour
     public void PrevMove()
     {
         trace.Add(new PathData(position, rotation, isBackward));
+
         triggerStop = false;
         isBackward = false;
     }
@@ -439,7 +440,7 @@ public class Car : MonoBehaviour
             MapSystem.instance.RemoveAllParticles();
         }
 
-        trace.Remove(pathData);
+        trace.RemoveAt(trace.Count - 1);
     }
 
     private int Rotate(int rotation, int delta = 0, bool back = false)

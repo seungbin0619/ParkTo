@@ -415,6 +415,9 @@ public class MapSystem : MonoBehaviour
 
     public void Move()
     {
+        //if (!isPlayable) return;
+        //if (!TriggerBar.instance.IsHide) return;
+
         WaitForEndOfFrame delay = new WaitForEndOfFrame();
         float progress = 0;
 
@@ -520,10 +523,16 @@ public class MapSystem : MonoBehaviour
 
     private void Update()
     {
-        if (SettingSystem.IsOpen) return;
+        if (SettingSystem.IsOpen)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape)) SettingSystem.instance.CloseSetting();
+            return;
+        }else if (Input.GetKeyDown(KeyCode.Escape)) SettingSystem.instance.OpenSetting();
 
+        //if (Input.GetKeyDown(KeyCode.Space)) Move();
         if (Input.GetKeyDown(KeyCode.R)) ReloadMap();
         if(Input.GetKeyDown(KeyCode.Z)) Undo();
+
     }
 
     private void DrawPathPredictor() // 예상 경로를 그려줌

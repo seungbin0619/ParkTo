@@ -115,6 +115,7 @@ public class TriggerSystem : MonoBehaviour
     public void Select(Trigger trigger)
     {
         if (MapSystem.isGameOver) return;
+        if (MapSystem.MoveFlag) return;
 
         prevTrigger.gameObject.SetActive(true);
         selectedTrigger = trigger;

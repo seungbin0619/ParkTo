@@ -65,7 +65,11 @@ public class LoadSelect : MonoBehaviour
         }
         #endregion
 
-        HelpSystem.instance.SaveHelp(0);
+        if (DataSystem.GetData("Setting", "Help") < 0)
+        {
+            HelpSystem.instance.SaveHelp(0);
+            HelpSystem.instance.OpenCanvas(0);
+        }
     }
 
     private void Start()
@@ -198,7 +202,11 @@ public class LoadSelect : MonoBehaviour
         car.transform.position = Vector3.Lerp(car.transform.position, targetPosition, Time.deltaTime * 5f);
 
         if (!ActionSystem.instance.IsCompleted) return;
-        if (SettingSystem.IsOpen) return;
+        if (SettingSystem.IsOpen)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape)) SettingSystem.instance.CloseSetting();
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape)) SettingSystem.instance.OpenSetting();
 
         Key_LevelChange();
         Key_LevelEnter();
