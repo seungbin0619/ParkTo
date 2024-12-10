@@ -10,7 +10,7 @@ public partial class Ground : IAssignable<Trigger>
         Trigger = trigger;
     }
 
-    public bool IsAssignable()
+    public bool IsAssignable(Trigger trigger)
     {
         return !HasTrigger;
     }

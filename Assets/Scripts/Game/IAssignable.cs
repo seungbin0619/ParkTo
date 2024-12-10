@@ -1,4 +1,4 @@
 public interface IAssignable<T> {
-    bool IsAssignable();
+    bool IsAssignable(T t);
     void Assign(T t);
 }
