@@ -14,7 +14,16 @@ public struct CarProperty {
 
 public partial class Car : PhysicsObject
 {
-    public CarProperty Property { get; private set; }
+    private CarProperty _property;
+    
+    public CarProperty Property { 
+        get => _property; 
+        private set {
+            _property = value;
+
+            ApplyVisualProperty();
+        }
+    }
 
     private void ApplyVisualProperty() {
         // direction, position...
