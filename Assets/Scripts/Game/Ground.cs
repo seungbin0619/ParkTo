@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public partial class Ground : IAssignable<Trigger>
+public partial class Ground : MonoBehaviour, IAssignable<Trigger>
 {
     public Trigger Trigger { get; private set; } = null;
     public bool HasTrigger => Trigger != null;
