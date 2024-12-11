@@ -6,7 +6,7 @@ public struct CarProperty {
     public Vector2 position;
 
     [Range(0, 4)]
-    public int direction;
+    public Direction direction;
     public float speed;
     public bool isStop;
     public bool isBackUp; 
