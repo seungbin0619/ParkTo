@@ -1,4 +1,4 @@
-public class Trigger {
+public abstract class Trigger {
     public enum Type {
         None = -1,
         TurnRight = 0,
@@ -7,16 +7,14 @@ public class Trigger {
         BackUp,
     }
 
-    protected IAssignable<Trigger> target;
-    public readonly Type type;
-
-    public Trigger(Type type) {
-        this.type = type;
-    }
+    public abstract Type type { get; }
 
     public void Assign(IAssignable<Trigger> target) {
-        this.target = target;
-
+        if(!target.IsAssignable(this)) return;
+        
         target.Assign(this);
     }
+
+    public abstract void Execute(Car car);
+    // public abstract void Undo();
 }

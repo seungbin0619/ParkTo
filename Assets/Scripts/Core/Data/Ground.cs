@@ -8,4 +8,8 @@ public partial class Ground
     public void SetTrigger(Trigger trigger) {
         Trigger = trigger;
     }
+
+    public void Enter(Car car) {
+        Trigger.Execute(car);
+    }
 }

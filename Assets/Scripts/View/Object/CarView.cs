@@ -36,7 +36,7 @@ public partial class CarView : PhysicsObject
 public partial class CarView : IAssignable<Trigger> {
     public void Assign(Trigger trigger)
     {
-        
+        trigger.Execute(Car);
     }
 
     public bool IsAssignable(Trigger trigger)

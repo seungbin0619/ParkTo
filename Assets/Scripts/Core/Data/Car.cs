@@ -1,45 +1,6 @@
 using System;
 using UnityEngine;
 
-[Serializable]
-public struct CarVariables {
-    public Vector2Int position;
-
-    [Range(0, 4)]
-    public Direction direction;
-    public float speed; // speed: ground per second
-    public bool isStop;
-    public bool isBackUp; 
-    public bool isBroken;
-
-    public void Reset() {
-        speed = 1f;
-        isStop = false;
-        isBackUp = false;
-        isBroken = false;
-    }
-
-    public void Translate(Vector2Int position) {
-        this.position = position;
-    }
-
-    public void SetSpeed(float speed) {
-        this.speed = speed;
-    }
-
-    public void Stop() {
-        isStop = true;
-    }
-
-    public void BackUp() {
-        isBackUp = true;
-    }
-
-    public void Broke() {
-        isBroken = true;
-    }
-}
-
 public partial class Car
 {
     public Color Color { get; }
@@ -54,6 +15,7 @@ public partial class Car
         Variables = variables;
     }
 
+    // 차는 무조건 직진만 한다.
     public void Move() {
         if(Variables.isStop) return;
         if(!CanMove()) {
@@ -61,10 +23,14 @@ public partial class Car
             return;
         }
 
-        Variables.Translate(GetNextPosition());
+        Vector2Int nextPosition = GetNextPosition();
+        Ground nextGround = Grid.GroundAt(nextPosition);
+
+        Variables.Translate(nextPosition);
+        nextGround.Enter(this);
     }
 
-    public void Stop() {
+    private void Stop() {
         Variables.Stop();
     }
 
