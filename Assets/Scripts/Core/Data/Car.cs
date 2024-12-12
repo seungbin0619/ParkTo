@@ -24,7 +24,7 @@ public partial class Car
         }
 
         Vector2Int nextPosition = GetNextPosition();
-        Ground nextGround = Grid.GroundAt(nextPosition);
+        Ground nextGround = Grid[nextPosition];
 
         Variables.Translate(nextPosition);
         nextGround.Enter(this);
@@ -43,7 +43,7 @@ public partial class Car
     }
 
     public bool CanMove() {
-        if(Grid.GroundAt(GetNextPosition()) == null) return false;
+        if(Grid[GetNextPosition()] == null) return false;
 
         return true;
     }

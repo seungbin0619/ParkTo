@@ -16,7 +16,7 @@ public partial class CarView : PhysicsObject
         ApplyVisual();
     }
 
-    private void ApplyVisual() {
+    public void ApplyVisual() {
         // direction, position...
         
         Vector3 position = transform.localPosition;

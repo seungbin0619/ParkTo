@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Grid {
     public Vector2Int Size { get; }
@@ -10,6 +11,8 @@ public class Grid {
         _grounds = new Ground[size.y, size.x];
 
     }
+
+    public Ground this[Vector2Int position] => GroundAt(position);
 
     public Ground GroundAt(Vector2Int position) {
         if(!IsValidPosition(position)) return null;
