@@ -8,7 +8,7 @@ public class PhysicsObject : MonoBehaviour
     [field: SerializeField]
     public Vector3 Size { get; private set; } = Vector3.one;
 
-    void Awake() {
+    protected virtual void Awake() {
         RB = GetComponent<Rigidbody>();
     }
 

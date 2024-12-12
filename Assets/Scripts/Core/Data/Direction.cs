@@ -11,13 +11,13 @@ public enum Direction {
 }
 
 public static class DirectionExtensionMethod {
-    private static readonly IDictionary<Direction, Vector3> vectors = 
-        new Dictionary<Direction, Vector3>() {
-            { Direction.Up, Vector3.up },
-            { Direction.Down, Vector3.down },
-            { Direction.Left, Vector3.left },
-            { Direction.Right, Vector3.right },
-            { Direction.None, Vector3.zero }
+    private static readonly IDictionary<Direction, Vector2Int> vectors = 
+        new Dictionary<Direction, Vector2Int>() {
+            { Direction.Up, Vector2Int.up },
+            { Direction.Down, Vector2Int.down },
+            { Direction.Left, Vector2Int.left },
+            { Direction.Right, Vector2Int.right },
+            { Direction.None, Vector2Int.zero }
         };
 
     private static readonly IDictionary<Direction, Quaternion> rotations = 
@@ -59,7 +59,7 @@ public static class DirectionExtensionMethod {
             { Direction.None, Direction.None },
         };
 
-    public static Vector3 Vector(this Direction direction) {
+    public static Vector2Int Vector(this Direction direction) {
         return vectors[direction];
     }
 

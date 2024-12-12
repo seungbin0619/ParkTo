@@ -1,17 +1,11 @@
 using UnityEngine;
 
-public partial class Ground : MonoBehaviour, IAssignable<Trigger>
+public partial class Ground
 {
     public Trigger Trigger { get; private set; } = null;
     public bool HasTrigger => Trigger != null;
 
-    public void Assign(Trigger trigger)
-    {
+    public void SetTrigger(Trigger trigger) {
         Trigger = trigger;
-    }
-
-    public bool IsAssignable(Trigger trigger)
-    {
-        return !HasTrigger;
     }
 }

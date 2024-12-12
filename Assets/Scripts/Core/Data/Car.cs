@@ -2,50 +2,83 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public struct CarProperty {
-    public Vector2 position;
+public struct CarVariables {
+    public Vector2Int position;
 
     [Range(0, 4)]
     public Direction direction;
-    public float speed;
+    public float speed; // speed: ground per second
     public bool isStop;
     public bool isBackUp; 
+    public bool isBroken;
+
+    public void Reset() {
+        speed = 1f;
+        isStop = false;
+        isBackUp = false;
+        isBroken = false;
+    }
+
+    public void Translate(Vector2Int position) {
+        this.position = position;
+    }
+
+    public void SetSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    public void Stop() {
+        isStop = true;
+    }
+
+    public void BackUp() {
+        isBackUp = true;
+    }
+
+    public void Broke() {
+        isBroken = true;
+    }
 }
 
-public partial class Car : PhysicsObject
+public partial class Car
 {
-    private CarProperty _property;
-    
-    public CarProperty Property { 
-        get => _property; 
-        private set {
-            _property = value;
+    public Color Color { get; }
+    public Grid Grid { get; }
+    public CarVariables Variables { get; private set; }
 
-            ApplyVisualProperty();
+    public Car(CarVariables variables) {
+        SetVariables(variables);
+    }
+
+    public void SetVariables(CarVariables variables) {
+        Variables = variables;
+    }
+
+    public void Move() {
+        if(Variables.isStop) return;
+        if(!CanMove()) {
+            Stop();
+            return;
         }
+
+        Variables.Translate(GetNextPosition());
     }
 
-    private void ApplyVisualProperty() {
-        // direction, position...
-        
-    }
-}
-
-public partial class Car : IAssignable<Trigger>
-{
-    public void Assign(Trigger trigger)
-    {
-        
+    public void Stop() {
+        Variables.Stop();
     }
 
-    public bool IsAssignable(Trigger trigger)
-    {
-        // Can't it be done more neatly?
-        return trigger.type switch
-        {
-            Trigger.Type.Stop => !Property.isStop,
-            Trigger.Type.BackUp => !Property.isBackUp,
-            _ => true,
-        };
+    public void Reset() {
+        Variables.Reset();
+    }
+
+    private Vector2Int GetNextPosition() {
+        return Variables.position + Variables.direction.Vector();
+    }
+
+    public bool CanMove() {
+        if(Grid.GroundAt(GetNextPosition()) == null) return false;
+
+        return true;
     }
 }
