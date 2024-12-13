@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9279e896f33dcd74b841c929d01ab57e, type: 3}
   m_Name: PackDump
   m_EditorClassIdentifier: 
-  Name: Dump
-  Description: Dump Level Pack
-  Index: 0
-  Levels:
+  name: Dump pack
+  description: dump
+  index: 0
+  levels:
   - {fileID: 11400000, guid: aade7c20812a898438d1eeda9ca4c397, type: 2}
-  Style: {fileID: 11400000, guid: e2927f7ad8d80de4e9b8cae80f0e2568, type: 2}
+  style: {fileID: 11400000, guid: e2927f7ad8d80de4e9b8cae80f0e2568, type: 2}

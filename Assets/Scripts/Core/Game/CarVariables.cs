@@ -3,7 +3,7 @@ using UnityEngine;
 
 [Serializable]
 public struct CarVariables {
-    public Vector2Int position;
+    public Point position;
     [Range(0, 4)] public Direction direction;
 
     [HideInInspector] public float speed; // speed: ground per second
@@ -18,7 +18,7 @@ public struct CarVariables {
         isBroken = false;
     }
 
-    public void Translate(Vector2Int position) {
+    public void Translate(Point position) {
         this.position = position;
     }
 

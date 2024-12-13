@@ -23,7 +23,7 @@ public partial class Car
             return;
         }
 
-        Vector2Int nextPosition = GetNextPosition();
+        Point nextPosition = GetNextPosition();
         Ground nextGround = Grid[nextPosition];
 
         Variables.Translate(nextPosition);
@@ -38,8 +38,8 @@ public partial class Car
         Variables.Reset();
     }
 
-    private Vector2Int GetNextPosition() {
-        return Variables.position + Variables.direction.Vector();
+    private Point GetNextPosition() {
+        return Variables.position.Next(Variables.direction);
     }
 
     public bool CanMove() {

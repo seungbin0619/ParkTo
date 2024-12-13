@@ -9,7 +9,6 @@ public enum Direction {
     Left, 
     Right,
 }
-
 public static class DirectionExtensionMethod {
     private static readonly IDictionary<Direction, Vector2Int> vectors = 
         new Dictionary<Direction, Vector2Int>() {
@@ -18,6 +17,15 @@ public static class DirectionExtensionMethod {
             { Direction.Left, Vector2Int.left },
             { Direction.Right, Vector2Int.right },
             { Direction.None, Vector2Int.zero }
+        };
+
+    private static readonly IDictionary<Direction, Point> points = 
+        new Dictionary<Direction, Point>() {
+            { Direction.Up, Point.Up },
+            { Direction.Down, Point.Down },
+            { Direction.Left, Point.Left },
+            { Direction.Right, Point.Right },
+            { Direction.None, Point.Zero }
         };
 
     private static readonly IDictionary<Direction, Quaternion> rotations = 
@@ -85,11 +93,15 @@ public static class DirectionExtensionMethod {
         return opposites[direction];
     }
 
-    public static bool IsVertical(this Direction direction) {
-        return direction == Direction.Up || direction == Direction.Down;
+    public static Point ToPoint(this Direction direction) {
+        return points[direction];
     }
 
-    public static bool IsHorizontal(this Direction direction) {
-        return direction == Direction.Left || direction == Direction.Right;
-    }
+    // public static bool IsVertical(this Direction direction) {
+    //     return direction == Direction.Up || direction == Direction.Down;
+    // }
+
+    // public static bool IsHorizontal(this Direction direction) {
+    //     return direction == Direction.Left || direction == Direction.Right;
+    // }
 }

@@ -8,17 +8,15 @@ using System.Linq;
 /// ex) 클리어 여부, 차, 트리거, ...
 /// </summary>
 public class LevelState : MonoBehaviour {
+    private LevelData _levelData;
     private LevelView _levelView;
-    private List<CarView> _carViews;
-    private bool _isPlaying;
-
-    public IEnumerable<CarView> CarViews => _carViews;
 
     void Awake() {
+        _levelData = GetComponent<LevelData>();
         _levelView = GetComponent<LevelView>();
     }
 
-    public bool IsPlaying() {
-        return _isPlaying && CarViews.Where(view => !view.Car.Variables.isStop).Count() > 0;
+    public void Initialize() {
+        
     }
 }
