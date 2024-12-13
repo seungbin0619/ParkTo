@@ -26,12 +26,8 @@ public partial class Car
             return;
         }
 
-        Point nextPosition = GetNextPosition();
-        Debug.Log(Variables.position + " " + nextPosition);
-        Ground nextGround = Grid[nextPosition];
-
-        Variables.Translate(Variables.direction.ToPoint());
-        nextGround.Enter(this);
+        Variables.position += Variables.direction.ToPoint();
+        Grid[Variables.position].Enter(this);
     }
 
     private void Stop() {

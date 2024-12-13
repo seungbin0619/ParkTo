@@ -18,8 +18,7 @@ public partial class CarView : PhysicsObject
 
     public void ApplyVisual() {
         // direction, position...
-        transform.localPosition = Car.Variables.position;
-        transform.Translate(Vector3.up);
+        transform.localPosition = Car.Variables.position + Vector3.up;
 
         transform.rotation = Car.Variables.direction.Rotation();
     }

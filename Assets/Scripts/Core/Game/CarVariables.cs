@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public struct CarVariables {
+public class CarVariables {
     public Point position;
     [Range(0, 4)] public Direction direction;
 
@@ -46,16 +46,8 @@ public struct CarVariables {
         isBroken = false;
     }
 
-    public void Translate(Point position) {
-        this.position += position;
-    }
-
     public void Rotate(int dir) {
         direction = direction.Rotated(dir);
-    }
-
-    public void SetSpeed(float speed) {
-        this.speed = speed;
     }
 
     public void Stop() {
