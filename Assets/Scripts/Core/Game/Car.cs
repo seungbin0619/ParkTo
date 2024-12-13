@@ -7,8 +7,9 @@ public partial class Car
     public Grid Grid { get; }
     public CarVariables Variables { get; private set; }
 
-    public Car(CarVariables variables) {
-        SetVariables(variables);
+    public Car(CarSerializer serilizer) {
+        Color = serilizer.color;
+        SetVariables(new CarVariables(serilizer));
     }
 
     public void SetVariables(CarVariables variables) {

@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 
-public readonly struct Point { 
-    public readonly int x;
-    public readonly int z;
+[Serializable]
+public struct Point { 
+    public int x;
+    public int z;
 
     public Point(int x, int z) {
         this.x = x;

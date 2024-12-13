@@ -1,25 +1,22 @@
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class Grid {
-    public Vector2Int Size { get; }
-    private readonly Dictionary<Point, Ground> _grounds;
-
-    public Grid(Point size) {
-        Size = size;
-        _grounds = new();
-    }
+    private readonly Dictionary<Point, Ground> _grounds = new();
+    public IEnumerable<Ground> Grounds => _grounds.Values;
 
     public Ground this[Point position] => GroundAt(position);
 
-    public Ground GroundAt(Point position) {
-        if(!IsValidPosition(position)) return null;
-
-        return _grounds[position];
+    public Grid(IEnumerable<Ground> grounds) {
+        _grounds.AddRange(grounds.Select(g => KeyValuePair.Create(g.Position, g) ));
     }
 
-    private bool IsValidPosition(Point position) {
-        return _grounds.ContainsKey(position);
+    private Ground GroundAt(Point position) {
+        _grounds.TryGetValue(position, out Ground ground);
+        
+        return ground;
     }
 }

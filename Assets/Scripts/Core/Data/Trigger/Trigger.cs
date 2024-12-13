@@ -1,6 +1,7 @@
 public abstract class Trigger {
     public enum Type {
-        None = -1,
+        None = -2,
+        Ban = -1,
         TurnRight = 0,
         TurnLeft,
         Stop,

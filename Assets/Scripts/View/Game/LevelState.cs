@@ -8,15 +8,22 @@ using System.Linq;
 /// ex) 클리어 여부, 차, 트리거, ...
 /// </summary>
 public class LevelState : MonoBehaviour {
-    private LevelData _levelData;
-    private LevelView _levelView;
+    private LevelGenerator _generator;
+    private LevelView _view;
 
     void Awake() {
-        _levelData = GetComponent<LevelData>();
-        _levelView = GetComponent<LevelView>();
+        _generator = GetComponent<LevelGenerator>();
+        _view = GetComponent<LevelView>();
     }
 
-    public void Initialize() {
-        
+    public void Initialize(LevelPack levelPack, int index) {
+        if(index < 0 || index >= levelPack.levels.Count) {
+            return;
+        }
+
+        _generator.Initialize(levelPack, index);
+
+        _view.Initialize(levelPack.style);
+        _view.CreateView();
     }
 }

@@ -8,28 +8,30 @@ public class Level : ScriptableObject
     public new string name;
     public string description; 
     public int index;
-    public List<CarSerilizer> cars;
-    public List<TriggerSerilizer> triggers;
+
+    public List<GroundSerializer> grounds;
+    public List<CarSerializer> cars;
+    public List<TriggerSerializer> triggers;
 
     // public List<GameObject> decorators;
 }
 
 [Serializable]
-public struct CarSerilizer {
+public struct CarSerializer {
     public Color color;
-    public Vector2Int size;
-    public Vector2Int position;
+    public Point size;
+    public Point position;
     public Direction direction;
 }
 
 [Serializable]
-public struct GroundSerilizer {
-    public Vector2Int position;
+public struct GroundSerializer {
+    public Point position;
     
 }
 
 [Serializable]
-public struct TriggerSerilizer {
+public struct TriggerSerializer {
     public int count;
     public Trigger.Type type;
 }
