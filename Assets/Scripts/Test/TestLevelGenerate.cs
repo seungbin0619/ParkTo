@@ -19,4 +19,10 @@ public class TestLevelGenerate : MonoBehaviour
             view.ApplyVisual();
         }
     }
+
+    void Update() {
+        foreach(var view in levelView.CarViews) {
+            Debug.DrawLine(view.transform.position, view.transform.position + view.transform.forward * 2f, Color.red);
+        }
+    }
 }
