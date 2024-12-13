@@ -4,9 +4,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "LevelPack", menuName = "Level/Level Pack")]
 public class LevelPack : ScriptableObject
 {
-    public string Name;
-    public string Description; 
-    public int Index;
-    public List<Level> Levels;
-    public LevelStyle Style;
+    public new string name;
+    public string description; 
+    public int index;
+    public List<Level> levels;
+    public LevelStyle style;
 }

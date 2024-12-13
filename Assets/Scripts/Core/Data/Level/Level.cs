@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Level", menuName = "Level/Level")]
 public class Level : ScriptableObject
 {
-    public string Name;
-    public string Description; 
-    public int Index;
+    public new string name;
+    public string description; 
+    public int index;
 }
