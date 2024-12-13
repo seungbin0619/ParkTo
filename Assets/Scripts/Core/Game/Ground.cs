@@ -11,7 +11,7 @@ public partial class Ground
     }
 
     public void Enter(Car car) {
-        Trigger.Execute(car);
+        Trigger?.Execute(car);
     }
 
     public Ground(Point position, Trigger trigger = null) {

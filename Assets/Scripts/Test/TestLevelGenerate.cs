@@ -7,4 +7,8 @@ public class TestLevelGenerate : MonoBehaviour
     void Start() {
         levelState.Initialize(pack, 0);
     }
+
+    public void Go() {
+        levelState.Move();
+    }
 }

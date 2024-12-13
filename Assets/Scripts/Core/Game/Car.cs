@@ -7,8 +7,10 @@ public partial class Car
     public Grid Grid { get; }
     public CarVariables Variables { get; private set; }
 
-    public Car(CarSerializer serilizer) {
+    public Car(CarSerializer serilizer, Grid grid) {
         Color = serilizer.color;
+        Grid = grid;
+
         SetVariables(new CarVariables(serilizer));
     }
 
@@ -25,9 +27,10 @@ public partial class Car
         }
 
         Point nextPosition = GetNextPosition();
+        Debug.Log(Variables.position + " " + nextPosition);
         Ground nextGround = Grid[nextPosition];
 
-        Variables.Translate(Variables.direction);
+        Variables.Translate(Variables.direction.ToPoint());
         nextGround.Enter(this);
     }
 

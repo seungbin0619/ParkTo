@@ -26,4 +26,11 @@ public class LevelState : MonoBehaviour {
         _view.Initialize(levelPack.style);
         _view.CreateView();
     }
+
+    public void Move() {
+        foreach(var view in _view.CarViews) {
+            view.Car.Move();
+            view.ApplyVisual();
+        }
+    }
 }

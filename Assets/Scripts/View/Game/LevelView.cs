@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -13,6 +14,8 @@ public class LevelView : MonoBehaviour {
 
     private readonly List<CarView> _carViews = new();
     private readonly Dictionary<Point, GroundView> _groundViews = new();
+
+    public IEnumerable<CarView> CarViews => _carViews;
 
     void Awake() {
         _generator = GetComponent<LevelGenerator>();

@@ -9,8 +9,10 @@ using UnityEngine;
 public class LevelGenerator : MonoBehaviour {
     private Level _level;
     private LevelPack _pack;
-    public IEnumerable<Car> Cars => _level.cars.Select(c => new Car(c)) ?? Enumerable.Empty<Car>();
-    public Grid Grid => new(_level.grounds.Select(g => new Ground(g)) ?? Enumerable.Empty<Ground>());
+
+    private Grid _grid;
+    public Grid Grid => _grid ??= new(_level.grounds.Select(g => new Ground(g)) ?? Enumerable.Empty<Ground>());
+    public IEnumerable<Car> Cars => _level.cars.Select(c => new Car(c, Grid)) ?? Enumerable.Empty<Car>();
 
     public int LevelIndex { get; private set; }
 
