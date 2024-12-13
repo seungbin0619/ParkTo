@@ -31,10 +31,10 @@ public static class DirectionExtensionMethod {
     private static readonly IDictionary<Direction, Quaternion> rotations = 
         new Dictionary<Direction, Quaternion>
         {
-            { Direction.Up, Quaternion.Euler(0, 0, 90) },
-            { Direction.Down, Quaternion.Euler(0, 0, 270) },
-            { Direction.Left, Quaternion.Euler(0, 0, 180) },
-            { Direction.Right, Quaternion.Euler(0, 0, 0) },
+            { Direction.Up, Quaternion.Euler(0, 0, 0) },
+            { Direction.Down, Quaternion.Euler(0, 180, 0) },
+            { Direction.Left, Quaternion.Euler(0, 270, 0) },
+            { Direction.Right, Quaternion.Euler(0, 90, 0) },
             { Direction.None, Quaternion.Euler(0, 0, 0) }
         };
 

@@ -21,6 +21,7 @@ public partial class Car
     // 차는 무조건 직진만 한다.
     public void Move() {
         if(Variables.isStop) return;
+        //Debug.Log(GetNextPosition());
         if(!CanMove()) {
             Stop();
             return;
