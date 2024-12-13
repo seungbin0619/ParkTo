@@ -47,7 +47,7 @@ public struct CarVariables {
     }
 
     public void Translate(Point position) {
-        this.position = position;
+        this.position += position;
     }
 
     public void Rotate(int dir) {

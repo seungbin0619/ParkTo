@@ -27,7 +27,7 @@ public partial class Car
         Point nextPosition = GetNextPosition();
         Ground nextGround = Grid[nextPosition];
 
-        Variables.Translate(nextPosition);
+        Variables.Translate(Variables.direction);
         nextGround.Enter(this);
     }
 

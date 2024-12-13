@@ -48,9 +48,14 @@ public class LevelView : MonoBehaviour {
 
     private void InstantiateGroundViews() {
         foreach(var ground in _generator.Grid.Grounds) {
-            groundTile.SetTile(ground.Position, _style.groundTile);
+            // TODO : clean up this...
+            Vector3Int position = ground.Position;
+            position.y = position.z;
+            position.z = 0;
 
-            var view = groundTile.GetTile(ground.Position).GetComponent<GroundView>();
+            groundTile.SetTile(position, _style.groundTile);
+
+            var view = groundTile.GetInstantiatedObject(position).GetComponent<GroundView>();
             view.Initialize(ground);
             
             _groundViews.Add(ground.Position, view);
