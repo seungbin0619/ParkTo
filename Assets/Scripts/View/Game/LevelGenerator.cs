@@ -12,7 +12,7 @@ public class LevelGenerator : MonoBehaviour {
 
     private Grid _grid;
     public Grid Grid => _grid ??= new(_level.grounds.Select(g => new Ground(g)) ?? Enumerable.Empty<Ground>());
-    public IEnumerable<Car> Cars => _level.cars.Select(c => new Car(c, Grid)) ?? Enumerable.Empty<Car>();
+    public IEnumerable<Car> Cars => _level.cars.Select(c => new Car(c, Grid[c.position])) ?? Enumerable.Empty<Car>();
 
     public int LevelIndex { get; private set; }
 
