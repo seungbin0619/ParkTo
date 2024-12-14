@@ -3,13 +3,13 @@ using UnityEngine;
 
 public partial class Car
 {
-    public Color Color { get; }
-    public Grid Grid { get; }
     public CarVariables Variables { get; private set; }
+    public Color Color { get; }
+    private Ground _ground;
 
-    public Car(CarSerializer serilizer, Grid grid) {
+    public Car(CarSerializer serilizer, Ground ground) {
         Color = serilizer.color;
-        Grid = grid;
+        _ground = ground;
 
         SetVariables(new CarVariables(serilizer));
     }
@@ -18,17 +18,19 @@ public partial class Car
         Variables = variables;
     }
 
-    // 차는 무조건 직진만 한다.
     public void Move() {
         if(Variables.isStop) return;
-        //Debug.Log(GetNextPosition());
+
         if(!CanMove()) {
             Stop();
             return;
         }
 
+        _ground.Exit();
+
         Variables.position += Variables.direction.ToPoint();
-        Grid[Variables.position].Enter(this);
+        _ground = _ground.Next(Variables.direction);
+        _ground.Enter();
     }
 
     private void Stop() {
@@ -39,12 +41,8 @@ public partial class Car
         Variables.Reset();
     }
 
-    private Point GetNextPosition() {
-        return Variables.position.Next(Variables.direction);
-    }
-
     public bool CanMove() {
-        if(Grid[GetNextPosition()] == null) return false;
+        if(_ground.Next(Variables.direction) == null) return false;
 
         return true;
     }

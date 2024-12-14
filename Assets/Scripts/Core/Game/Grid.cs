@@ -11,6 +11,7 @@ public class Grid {
     public Ground this[Point position] => GroundAt(position);
 
     public Grid(IEnumerable<Ground> grounds) {
+        _grounds.Clear();
         _grounds.AddRange(grounds.Select(g => KeyValuePair.Create(g.Position, g) ));
     }
 
