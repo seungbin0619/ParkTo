@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
 public class LevelEditorWindow : EditorWindow
 {
@@ -31,9 +32,19 @@ public class LevelEditorWindow : EditorWindow
         DrawCanvasGrid();
     }
 
+    private void GridView_OnSelectionChange(Vector2 position) {
+        var ground = _level.grounds.FindAll(g => g.position == position);
+
+        if(ground.Count == 0) {
+            _level.grounds.Add(new GroundSerializer(new(position.x, position.y)));
+        } else {
+            _level.grounds.Remove(ground.First());
+        }
+    }
+
     private void DrawCanvasGrid() {
         canvasSize = new(padding, padding + 20f, position.width - padding * 2, canvasHeight - padding * 2);
-        gridView.Draw(canvasSize, _level);
+        gridView.Draw(canvasSize);
 
         float lineY = canvasSize.yMax + 8f;
         EditorGUI.DrawRect(new Rect(canvasSize.xMin, lineY, canvasSize.width, 1f), Color.white);
@@ -83,6 +94,7 @@ public class LevelEditorWindow : EditorWindow
     public void Initialize(Level level) {
         Rect rect = EditorGUIUtility.GetMainWindowPosition();
         Vector2 windowSize = new(DefaultWidth, DefaultHeight);
+
         rect.position = new(
             rect.x + (rect.width - windowSize.x) * 0.5f, 
             rect.y + (rect.height - windowSize.y) * 0.5f);
@@ -92,7 +104,10 @@ public class LevelEditorWindow : EditorWindow
         position = rect;
 
         _level = level;
-        gridView = new();
+
+        gridView?.OnSelectionChange?.RemoveAllListeners();
+        gridView = new(_level);
+        gridView.OnSelectionChange?.AddListener(GridView_OnSelectionChange);
     }
 
     private void OnEnable()
@@ -116,7 +131,7 @@ public class LevelEditorWindow : EditorWindow
     {
         if (Selection.activeObject is Level selectedLevel && selectedLevel != _level)
         {
-            _level = selectedLevel;
+            Initialize(selectedLevel);
             Repaint();
         }
     }

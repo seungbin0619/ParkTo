@@ -11,6 +11,11 @@ public struct Point {
         this.z = z;
     }
 
+    public Point(float x, float z) {
+        this.x = (int)x;
+        this.z = (int)z;
+    }
+
     public Point(Point point) {
         x = point.x;
         z = point.z;

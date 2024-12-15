@@ -1,25 +1,28 @@
+using System;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 
 public partial class LevelEditorGridView {
     private Rect rect;
-    private Level level;
+    private readonly Level level;
     private Vector2 position;
     private bool selectFlag = false;
     private Vector2 selectedCell;
     private Rect viewRect;
     private Vector2 viewStandardPosition;
     private Vector2 CellSize => new(cellSize, cellSize);
-
     private float cellSize = 72f;
+
+    public UnityEvent<Vector2> OnSelectionChange = new();
     
-    public LevelEditorGridView() {
-        position = Vector2.zero;
+    public LevelEditorGridView(Level level) {
+        this.level = level;
+        position = level.grounds.Count == 0 ? Vector2.zero : level.Rect.position + (level.Rect.size - Vector2.one) * 0.5f;
     }
 
-    public void Draw(Rect rect, Level level) {
+    public void Draw(Rect rect) {
         this.rect = rect;
-        this.level = level;
 
         EditorGUI.DrawRect(this.rect, new Color32(44, 44, 44, 255));
         GUI.BeginGroup(rect);
@@ -160,6 +163,8 @@ public partial class LevelEditorGridView
 
             selectFlag = true;
             selectedCell = preSelectedCell;
+
+            OnSelectionChange?.Invoke(selectedCell);
         } else {
             isDragging = false;
         }
@@ -167,7 +172,7 @@ public partial class LevelEditorGridView
         e.Use();
     }
 
-    private Vector2 CellToPosition(Vector2 position) {
+    public Vector2 CellToPosition(Vector2 position) {
         Vector2 ret = viewStandardPosition - position;
         ret /= cellSize;
 
@@ -177,7 +182,7 @@ public partial class LevelEditorGridView
         return viewRect.position - ret;
     }
 
-    private Vector2 PositionToCell(Vector2 position) {
+    public Vector2 PositionToCell(Vector2 position) {
         position -= viewRect.position;
         position *= cellSize;
         position += viewStandardPosition;
