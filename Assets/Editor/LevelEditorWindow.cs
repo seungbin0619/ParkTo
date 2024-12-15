@@ -10,7 +10,6 @@ public class LevelEditorWindow : EditorWindow
     private bool isDraggingLine = false;
     private float lastMouseY = 0f;
     private Level _level;
-
     private LevelEditorGridView gridView;
 
     private void OnGUI()
@@ -63,57 +62,6 @@ public class LevelEditorWindow : EditorWindow
             isDraggingLine = false;
             currentEvent.Use();
         }
-    }
-
-    /*
-    private void DrawCanvasGrid() {
-        for (int row = 0; row < gridSize; row++) {
-            for (int col = 0; col < gridSize; col++) {
-                Rect cellRect = new(col * cellSize, row * cellSize + 20, cellSize, cellSize);
-
-                if (selectedCellRect.HasValue && selectedCellRect.Value == cellRect) {
-                    //Debug.Log(Event.current.mousePosition + " " + dragOffset);
-                    cellRect.position = Event.current.mousePosition + dragOffset;
-                }
-
-                GUI.color = Color.gray;
-                GUI.DrawTexture(cellRect, Texture2D.whiteTexture);
-                GUI.color = Color.white;
-                GUI.Label(cellRect, $"({row},{col})", EditorStyles.boldLabel);
-
-                DrawCellBorder(cellRect, Color.black);
-
-                HandleCellInteraction(cellRect, row, col);
-            }
-        }
-    }
-
-    private void HandleCellInteraction(Rect cellRect, int row, int col) {
-        Event currentEvent = Event.current;
-
-        if (cellRect.Contains(currentEvent.mousePosition)) {
-            if (currentEvent.type == EventType.MouseDown && currentEvent.button == 0) {
-                selectedCellRect = cellRect;
-                dragOffset = selectedCellRect.Value.position - currentEvent.mousePosition;
-                currentEvent.Use();
-            } else if (currentEvent.type == EventType.MouseDrag && selectedCellRect.HasValue) {
-                selectedCellRect = new Rect(Event.current.mousePosition + dragOffset, new(cellSize, cellSize));
-                Repaint();
-                currentEvent.Use();
-            } else if (currentEvent.type == EventType.MouseUp) {
-                Debug.Log($"Dropped cell at Row: {row}, Column: {col}");
-                selectedCellRect = null;
-                currentEvent.Use();
-            }
-        }
-    }
-    */
-
-    private void DrawCellBorder(Rect rect, Color color, float thickness = 1f) {
-        EditorGUI.DrawRect(new Rect(rect.xMin, rect.yMin, rect.width, thickness), color);
-        EditorGUI.DrawRect(new Rect(rect.xMin, rect.yMax - thickness, rect.width, thickness), color);
-        EditorGUI.DrawRect(new Rect(rect.xMin, rect.yMin, thickness, rect.height), color);
-        EditorGUI.DrawRect(new Rect(rect.xMax - thickness, rect.yMin, thickness, rect.height), color);
     }
 
     // ###################################################################################

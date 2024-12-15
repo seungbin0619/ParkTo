@@ -1,10 +1,16 @@
 using UnityEditor;
 using UnityEngine;
 
-public class LevelEditorGridView {
+public partial class LevelEditorGridView {
     private Rect rect;
     private Level level;
     private Vector2 position;
+    private bool selectFlag = false;
+    private Vector2 selectedCell;
+    private Rect viewRect;
+    private Vector2 viewStandardPosition;
+    private Vector2 CellSize => new(cellSize, cellSize);
+
     private float cellSize = 72f;
     
     public LevelEditorGridView() {
@@ -18,14 +24,33 @@ public class LevelEditorGridView {
         EditorGUI.DrawRect(this.rect, new Color32(44, 44, 44, 255));
         GUI.BeginGroup(rect);
 
+        DrawLevel();
         DrawLines();
+        EventHandler();
+
+        if(preSelectFlag) HighlightCell(preSelectedCell, Color.cyan);
+        if(selectFlag) HighlightCell(selectedCell, Color.white);
 
         GUI.EndGroup();
         DrawBorder(rect, Color.gray);
 
-        EventHandler();
-
         GUILayout.Label($"{position.x}, {position.y}");
+    }
+
+    private void DrawLevel() {
+        DrawGrounds();
+    }
+
+    private void DrawGrounds() {
+        foreach(var ser in level.grounds) {
+            Vector2 position = PositionToCell(ser.position);
+
+            EditorGUI.DrawRect(new(position, CellSize), Color.gray);
+        }
+    }
+
+    private void HighlightCell(Vector2 position, Color color) {
+        DrawBorder(new(PositionToCell(position), CellSize), color, 1f);
     }
 
     private void DrawLines() {
@@ -33,67 +58,39 @@ public class LevelEditorGridView {
         Vector2 ipos = new((int)position.x, (int)position.y);
         Vector2 dpos = position - ipos;
 
-        Rect r = new(target - position * cellSize - Vector2.one * cellSize * 0.5f, Vector2.one * cellSize);
-        EditorGUI.DrawRect(r, Color.yellow);
-        GUI.Label(r, $"({0},{0})", EditorStyles.boldLabel);
+        // debugs /////////////////////////////////////////////////////////
+        Rect r = new(target - position * cellSize - Vector2.one * cellSize * 0.5f, Vector2.one);
+        EditorGUI.DrawRect(r, Color.red);
+        ///////////////////////////////////////////////////////////////////
 
         target -= dpos * cellSize;
         target -= Vector2.one * cellSize * 0.5f;
 
-        Rect tmp = new(target, Vector2.one * cellSize);
-        EditorGUI.DrawRect(tmp, Color.gray);
-        GUI.Label(tmp, $"({ipos.x},{ipos.y})", EditorStyles.boldLabel);
+        Vector2 viewSize = new((int)(target.x / cellSize), (int)(target.y / cellSize));
+        Vector2 viewPosition = ipos - viewSize - Vector2.one;
 
-        Rect line = new(new(target.x, 0), new(1f, rect.size.y));
-        Vector2 gap = new(cellSize, 0);
+        Rect vline = new(target.x - viewSize.x * cellSize, 0, 1f, rect.size.y);
+        Rect hline = new(0, target.y - viewSize.y * cellSize, rect.size.x, 1f);
+
+        viewStandardPosition.x = vline.x - cellSize;
+        viewStandardPosition.y = hline.y - cellSize;
+        
+        viewSize = Vector2.one;
         Color lineWhite = new(1, 1, 1, 0.2f);
 
-        while(line.position.x > 0) {
-            EditorGUI.DrawRect(line, lineWhite);
-            line.position -= gap;
+        while(vline.x < rect.width) {
+            EditorGUI.DrawRect(vline, lineWhite);
+            vline.x += cellSize;
+            viewSize.x++;
+        } 
+
+        while(hline.y < rect.height) {
+            EditorGUI.DrawRect(hline, lineWhite);
+            hline.y += cellSize;
+            viewSize.y++;
         }
 
-        line = new(new(target.x, 0), new(1f, rect.size.y));
-        while(true) {
-            line.position += gap;
-            if(line.position.x > rect.width) break;
-            EditorGUI.DrawRect(line, lineWhite);
-        }
-
-        gap = new(0, cellSize);
-        line = new(new(0, target.y), new(rect.size.x, 1f));
-        while(line.position.y > 0) {
-            EditorGUI.DrawRect(line, lineWhite);
-            line.position -= gap;
-        }
-        
-        line = new(new(0, target.y), new(rect.size.x, 1f));
-        while(true) {
-            line.position += gap;
-            if(line.position.y > rect.height) break;
-            EditorGUI.DrawRect(line, lineWhite);
-        }
-    }
-
-    Vector2 dragOffset = Vector2.zero;
-    Vector2 firstPosition = Vector2.zero;
-    private void EventHandler() {
-        Event e = Event.current;
-        if(!rect.Contains(e.mousePosition)) return;
-
-        if (e.type == EventType.MouseDown && e.button == 0) {
-            dragOffset = e.mousePosition;
-            firstPosition = position;
-
-            e.Use();
-        } else if (e.type == EventType.MouseDrag && dragOffset != Vector2.zero) {
-            position = firstPosition + (e.mousePosition - dragOffset) / cellSize;
-            e.Use();
-        } else if (e.type == EventType.MouseUp) {
-            dragOffset = firstPosition = Vector2.zero;
-
-            e.Use();
-        }
+        viewRect = new(viewPosition, viewSize);
     }
 
     private void DrawBorder(Rect rect, Color color, float thickness = 1f) {
@@ -101,5 +98,90 @@ public class LevelEditorGridView {
         EditorGUI.DrawRect(new Rect(rect.xMin, rect.yMax - thickness, rect.width, thickness), color);
         EditorGUI.DrawRect(new Rect(rect.xMin, rect.yMin, thickness, rect.height), color);
         EditorGUI.DrawRect(new Rect(rect.xMax - thickness, rect.yMin, thickness, rect.height), color);
+    }
+}
+
+public partial class LevelEditorGridView 
+{
+    bool isDragging = false;
+    bool preSelectFlag = false;
+    Vector2 dragOrigPosition = Vector2.zero;
+    Vector2 dragBeginMousePosition = Vector2.zero;
+    Vector2 preSelectedCell;
+
+    private void EventHandler() {
+        Event e = Event.current;
+        if(!new Rect(Vector2.zero, rect.size).Contains(e.mousePosition)) return;
+
+        if (e.type == EventType.MouseDown) {
+            OnMouseDown(e);
+        } else if (e.type == EventType.MouseDrag) 
+            OnMouseDrag(e);
+         else if (e.type == EventType.MouseUp) {
+            OnMouseUp(e);
+        }
+
+        if(e.isScrollWheel) {
+            cellSize -= e.delta.y;
+            e.Use();
+        }
+    }
+
+    private void OnMouseDown(Event e) {
+        if(e.button == 0) {
+            preSelectedCell = CellToPosition(e.mousePosition);
+            preSelectFlag = true;
+        } else {
+            isDragging = true;
+            dragOrigPosition = position;
+            dragBeginMousePosition = e.mousePosition;
+        }
+
+        e.Use();
+    }
+
+    private void OnMouseDrag(Event e) {
+        if(e.button == 0) {
+            preSelectFlag = preSelectedCell == CellToPosition(e.mousePosition);
+        } else {
+            if(!isDragging) return;
+            position = dragOrigPosition - (e.mousePosition - dragBeginMousePosition) / cellSize;
+        }
+
+        e.Use();
+    }
+
+    private void OnMouseUp(Event e) {
+        if(e.button == 0) {
+            preSelectFlag = false;
+            if(preSelectedCell != CellToPosition(e.mousePosition)) {
+                return;
+            }
+
+            selectFlag = true;
+            selectedCell = preSelectedCell;
+        } else {
+            isDragging = false;
+        }
+
+        e.Use();
+    }
+
+    private Vector2 CellToPosition(Vector2 position) {
+        Vector2 ret = viewStandardPosition - position;
+        ret /= cellSize;
+
+        ret.x = (int)ret.x;
+        ret.y = (int)ret.y;
+
+        return viewRect.position - ret;
+    }
+
+    private Vector2 PositionToCell(Vector2 position) {
+        position -= viewRect.position;
+        position *= cellSize;
+        position += viewStandardPosition;
+
+        return position;
     }
 }
