@@ -28,6 +28,7 @@ public class LevelView : MonoBehaviour {
     public void CreateView() {
         DestroyView();
 
+        MoveToCenter();
         InstantiateGroundViews();
         InstantiateCarViews();
     }
@@ -40,9 +41,18 @@ public class LevelView : MonoBehaviour {
         _groundViews.Clear();
     }
 
+    private void MoveToCenter() {
+        Transform transform = groundTile.transform;
+        Rect rect = _generator.ViewRect;
+        Vector3 position = -rect.position - (rect.size - Vector2.one) * 0.5f;
+
+        position.z = position.y; position.y = 0;
+        transform.position = position;
+    }
+
     private void InstantiateCarViews() {
         foreach(var car in _generator.Cars) {
-            var view = Instantiate(_style.carView); // add parent
+            var view = Instantiate(_style.carView, groundTile.transform); // add parent
 
             view.Initialize(car);
             _carViews.Add(view);

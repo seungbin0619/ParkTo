@@ -22,7 +22,6 @@ public class LevelState : MonoBehaviour {
         }
 
         _generator.Initialize(levelPack, index);
-
         _view.Initialize(levelPack.style);
         _view.CreateView();
     }
