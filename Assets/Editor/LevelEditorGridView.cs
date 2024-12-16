@@ -126,6 +126,7 @@ public partial class LevelEditorGridView
 
         if(e.isScrollWheel) {
             cellSize -= e.delta.y;
+            cellSize = Mathf.Clamp(cellSize, 12, 216);
             e.Use();
         }
     }
