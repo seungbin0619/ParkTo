@@ -14,7 +14,6 @@ public class LevelView : MonoBehaviour {
 
     private readonly List<CarView> _carViews = new();
     private readonly Dictionary<Point, GroundView> _groundViews = new();
-
     public IEnumerable<CarView> CarViews => _carViews;
 
     void Awake() {
@@ -28,7 +27,8 @@ public class LevelView : MonoBehaviour {
     public void CreateView() {
         DestroyView();
 
-        MoveToCenter();
+        MoveViewToCenter();
+        
         InstantiateGroundViews();
         InstantiateCarViews();
     }
@@ -41,13 +41,11 @@ public class LevelView : MonoBehaviour {
         _groundViews.Clear();
     }
 
-    private void MoveToCenter() {
-        Transform transform = groundTile.transform;
+    private void MoveViewToCenter() {
         Rect rect = _generator.ViewRect;
         Vector3 position = -rect.position - (rect.size - Vector2.one) * 0.5f;
 
-        position.z = position.y; position.y = 0;
-        transform.position = position;
+        groundTile.transform.position = position.XZY();
     }
 
     private void InstantiateCarViews() {
@@ -61,10 +59,8 @@ public class LevelView : MonoBehaviour {
 
     private void InstantiateGroundViews() {
         foreach(var ground in _generator.Grid.Grounds) {
-            // TODO : clean up this...
             Vector3Int position = ground.Position;
-            position.y = position.z;
-            position.z = 0;
+            position = position.XZY();
 
             groundTile.SetTile(position, _style.groundTile);
 
