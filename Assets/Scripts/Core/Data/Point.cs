@@ -88,4 +88,12 @@ public struct Point {
     public static Point operator *(int n, Point p) {
         return new Point(p.x + n, p.z + n);
     }
+
+    public static bool operator ==(Point p1, Point p2) {
+        return p1.x == p2.x && p1.z == p2.z;
+    }
+
+    public static bool operator !=(Point p1, Point p2) {
+        return p1.x != p2.x || p1.z != p2.z;
+    }
 }

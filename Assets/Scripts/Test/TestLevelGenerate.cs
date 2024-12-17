@@ -10,7 +10,7 @@ public class TestLevelGenerate : MonoBehaviour
     }
 
     public void Go() {
-        levelState.Move();
+        levelState.Play();
     }
     
     public void Rotate() {

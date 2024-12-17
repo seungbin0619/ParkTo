@@ -26,10 +26,10 @@ public class LevelState : MonoBehaviour {
         _view.CreateView();
     }
 
-    public void Move() {
+    public void Play() {
         foreach(var view in _view.CarViews) {
-            view.Car.Move();
-            view.ApplyVisual();
+            view.Play();
+            //view.ApplyVisual();
         }
     }
 }

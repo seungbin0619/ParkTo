@@ -1,3 +1,5 @@
+using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 
 public partial class CarView : PhysicsObject
@@ -17,8 +19,28 @@ public partial class CarView : PhysicsObject
         ApplyVisual();
     }
 
-    public void Move() {
-        Car.Move();
+    public void Play() {
+        StartCoroutine(Move());
+    }
+
+    private IEnumerator Move() {
+        // Vector3 from = Car.Variables.position, to;
+
+        // while(!Car.Variables.isStop) {
+        //     Car.Move();
+        //     to = Car.Variables.position; from.y = to.y = transform.localPosition.y;
+        //     Debug.Log(to);
+
+        //     //transform.localPosition = from.XZY();
+        //     DOTween.To(() => transform.localPosition, x => transform.localPosition = x, to, 1 / Car.Variables.speed);
+
+        //     yield return YieldDictionary.WaitForSeconds(1 / Car.Variables.speed);
+            
+        //     //ApplyVisual();
+        //     from = to;
+        // }
+
+        yield return null;
     }
 
     public void ApplyVisual() {
