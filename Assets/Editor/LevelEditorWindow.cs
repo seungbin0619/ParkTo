@@ -4,6 +4,13 @@ using System.Linq;
 
 public class LevelEditorWindow : EditorWindow
 {
+    public enum BrushType {
+        None = -1,
+        Ground,
+        Car,
+        Trigger,
+    }
+
     private const float DefaultWidth = 700f, DefaultHeight = 500f;
     private float canvasHeight = 400f;
     private const float padding = 4f;
@@ -11,6 +18,7 @@ public class LevelEditorWindow : EditorWindow
     private bool isDraggingLine = false;
     private float lastMouseY = 0f;
     private Level _level;
+    private BrushType activeBrushType = BrushType.None;
     private LevelEditorGridView gridView;
 
     private void OnGUI()
@@ -27,12 +35,82 @@ public class LevelEditorWindow : EditorWindow
             SaveAsset();
         }
 
+        if (GUILayout.Toggle(activeBrushType == BrushType.Ground, new GUIContent("Ground", "Ground"), "Button"))
+        {
+            SetActiveBrush(BrushType.Ground);
+        }
+
+        if (GUILayout.Toggle(activeBrushType == BrushType.Car, new GUIContent("Car", "Car"), "Button"))
+        {
+            SetActiveBrush(BrushType.Car);
+            //ShowDropdownMenu(BrushType.Car);
+        }
+
+        if (GUILayout.Toggle(activeBrushType == BrushType.Trigger, new GUIContent("Trigger", "Trigger"), "Button"))
+        {
+            SetActiveBrush(BrushType.Trigger);
+            //ShowDropdownMenu(BrushType.Trigger);
+        }
+
         GUILayout.EndHorizontal();
 
         DrawCanvasGrid();
     }
 
+    // int selectedCarOption;
+    // int selectedTriggerOption;
+
+    // private void ShowDropdownMenu(BrushType type)
+    // {
+    //     GenericMenu menu = new GenericMenu();
+
+    //     for (int i = 0; i < 4; i++)
+    //     {
+    //         int index = i; // Capture the index
+    //         string option = i+"";
+
+    //         if (type == BrushType.Car)
+    //         {
+    //             menu.AddItem(new GUIContent($"Car {option}"), selectedCarOption == i, () => 
+    //             {
+    //                 selectedCarOption = index;
+    //                 Repaint();
+    //             });
+    //         }
+    //         else if (type == BrushType.Trigger)
+    //         {
+    //             menu.AddItem(new GUIContent($"Trigger {option}"), selectedTriggerOption == i, () =>
+    //             {
+    //                 selectedTriggerOption = index;
+    //                 Repaint();
+    //             });
+    //         }
+    //     }
+
+    //     menu.ShowAsContext();
+    // }
+
     private void GridView_OnSelectionChange(Vector2 position) {
+        switch(activeBrushType) {
+            case BrushType.Ground:
+                DrawGround(position);
+                break;
+            case BrushType.Car:
+                
+                break;
+            case BrushType.Trigger:
+                
+                break;
+            default: break;
+        }
+    }
+
+    private void SetActiveBrush(BrushType type)
+    {
+        activeBrushType = type;
+    }
+
+    private void DrawGround(Vector2 position) {
         var ground = _level.grounds.FindAll(g => g.position == position);
 
         if(ground.Count == 0) {
