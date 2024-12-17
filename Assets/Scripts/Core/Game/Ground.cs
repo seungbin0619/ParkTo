@@ -19,9 +19,7 @@ public partial class Ground
         // ...
     }
 
-    public Ground(Grid grid, Point position, Trigger trigger = null) {
-        _grid = grid;
-
+    public Ground(Point position, Trigger trigger = null) {
         Position = position;
         Trigger = trigger;
     }
@@ -29,6 +27,10 @@ public partial class Ground
     public Ground(GroundSerializer serilizer) {
         Position = serilizer.position;
         Trigger = null;
+    }
+
+    public void Initialize(Grid grid) {
+        _grid = grid;
     }
 
     public Ground Next(Direction direction) {

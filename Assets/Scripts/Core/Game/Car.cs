@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public partial class Car
 {
@@ -46,4 +47,20 @@ public partial class Car
 
         return true;
     }
+
+    // public CarVariables Next(int index) {
+    //     var variables = new CarVariables(Variables);
+    //     Ground ground = _ground;
+
+    //     while(index-- > 0) {
+    //         if(variables.isStop) return null;
+
+    //         ground = ground.Next(variables.direction);
+    //         if(ground == null) return null;
+
+    //         variables.position = ground.Position;
+    //     }
+
+    //     return variables;
+    // }
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public partial class CarView : PhysicsObject
 {
+    // TODO : Hide this
     public Car Car { get; private set; }
 
     protected override void Awake()
@@ -14,6 +15,10 @@ public partial class CarView : PhysicsObject
         Car = car;
 
         ApplyVisual();
+    }
+
+    public void Move() {
+        Car.Move();
     }
 
     public void ApplyVisual() {

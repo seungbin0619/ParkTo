@@ -12,7 +12,11 @@ public class Grid {
 
     public Grid(IEnumerable<Ground> grounds) {
         _grounds.Clear();
-        _grounds.AddRange(grounds.Select(g => KeyValuePair.Create(g.Position, g) ));
+        
+        foreach(var ground in grounds) {
+            ground.Initialize(this);
+            _grounds.Add(ground.Position, ground);
+        }
     }
 
     private Ground GroundAt(Point position) {
