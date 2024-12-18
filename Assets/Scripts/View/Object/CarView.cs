@@ -24,23 +24,25 @@ public partial class CarView : PhysicsObject
     }
 
     private IEnumerator Move() {
-        // Vector3 from = Car.Variables.position, to;
+        CarVariables from = new(Car.Variables), to;
 
-        // while(!Car.Variables.isStop) {
-        //     Car.Move();
-        //     to = Car.Variables.position; from.y = to.y = transform.localPosition.y;
-        //     Debug.Log(to);
+        while(!Car.Variables.isStop) {
+            Car.Move();
+            to = new(Car.Variables);
+        
+            yield return Animate(from, to);
 
-        //     //transform.localPosition = from.XZY();
-        //     DOTween.To(() => transform.localPosition, x => transform.localPosition = x, to, 1 / Car.Variables.speed);
-
-        //     yield return YieldDictionary.WaitForSeconds(1 / Car.Variables.speed);
-            
-        //     //ApplyVisual();
-        //     from = to;
-        // }
-
+            ApplyVisual();
+            from = to;
+        }
+        
         yield return null;
+        Car.Reset();
+    }
+
+    public IEnumerator Animate(CarVariables from, CarVariables to) {
+        
+        yield return YieldDictionary.WaitForSeconds(1 / from.speed);
     }
 
     public void ApplyVisual() {

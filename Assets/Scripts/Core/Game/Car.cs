@@ -46,4 +46,8 @@ public partial class Car
 
         return true;
     }
+
+    public Ground GetNextGround() {
+        return _ground.Next(Variables.direction);
+    }
 }
