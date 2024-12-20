@@ -8,6 +8,8 @@ public interface ICarAnimation {
 }
 
 public class CarAnimation : ICarAnimation {
+    private const float DURATION_FACTOR = 2f;
+
     protected CarVariables from, to;
     protected readonly Transform transform;
     private readonly List<Tween> animations;
@@ -18,11 +20,12 @@ public class CarAnimation : ICarAnimation {
         transform = view.transform;
         animations = new();
 
-        this.from = from;
-        this.to = to;
+        // Why...?
+        this.from = from.Next();
+        this.to = to.Next();
    
         //t = 2s/(v + v0)
-        duration = 2 / (from.speed + to.speed);
+        duration = 2 / (from.speed + to.speed) / DURATION_FACTOR;
     }
 
     public void Play() {

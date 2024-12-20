@@ -9,16 +9,16 @@ public static class CarAnimationGenerator {
         Accelerating
     }
     
-    public static CarAnimation Generate(CarView view, CarVariables from, CarVariables to) {
-        AnimationType type = GetType(from, to);
-        
+    public static CarAnimation Generate(CarView view, CarVariables before, CarVariables current) {
+        AnimationType type = GetType(before, current);
+
         return type switch
         {
-            AnimationType.Starting => new CarStartingAnimation(view, from, to),
-            AnimationType.Stoping => new CarStoppingAnimation(view, from, to),
-            AnimationType.Rotating => new CarRotatingAnimation(view, from, to),
-            AnimationType.Accelerating => new CarAcceleratingAnimation(view, from, to),
-            _ => new CarAnimation(view, from, to)
+            AnimationType.Starting => new CarStartingAnimation(view, before, current),
+            AnimationType.Stoping => new CarStoppingAnimation(view, before, current),
+            AnimationType.Rotating => new CarRotatingAnimation(view, before, current),
+            AnimationType.Accelerating => new CarAcceleratingAnimation(view, before, current),
+            _ => new CarAnimation(view, before, current)
         };
     }
 

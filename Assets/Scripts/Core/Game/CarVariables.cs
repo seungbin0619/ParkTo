@@ -15,7 +15,7 @@ public class CarVariables {
         position = variables.position;
         direction = variables.direction;
         speed = variables.speed;
-        isStart = variables.isStart;
+        isStart = false;
         isStop = variables.isStop;
         isBackUp = variables.isBackUp;
         isBroken = variables.isBroken;
@@ -43,7 +43,10 @@ public class CarVariables {
     }
 
     public CarVariables Next() {
-        return new CarVariables(position.Next(direction), direction, speed, false, isStop, isBackUp, isBroken);
+        CarVariables next = new(this);
+        next.position = isBackUp ? position.Next(direction.Opposite()) : position.Next(direction);
+        
+        return next;
     }
 
     public void Reset() {

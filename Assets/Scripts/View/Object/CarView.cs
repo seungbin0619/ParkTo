@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
@@ -19,23 +20,28 @@ public partial class CarView : PhysicsObject
     }
 
     private IEnumerator Move() {
+        CarVariables before, current;
+        before = current = new(Car.Variables);
+        before.isStart = true;
+        
         // starting animation
-        yield return Animate(Car.Variables);
+        yield return Animate(before, current);
+        before = new(current);
 
         while(Car.CanMove()) {
             Car.Move();
+            current = Car.Variables;
 
-            yield return Animate(Car.Variables);
+            yield return Animate(before, current);
+            before = current;
         }
 
         // ApplyVisual();
         Car.Reset();
     }
 
-    public IEnumerator Animate(CarVariables from) {
-        CarVariables to = Car.Variables.Next();
-
-        currentAnimation = CarAnimationGenerator.Generate(this, from, to);
+    public IEnumerator Animate(CarVariables before, CarVariables current) {
+        currentAnimation = CarAnimationGenerator.Generate(this, before, current);
         currentAnimation.Play();
 
         yield return YieldDictionary.WaitForSeconds(currentAnimation.duration);
