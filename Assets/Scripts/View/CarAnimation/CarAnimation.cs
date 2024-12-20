@@ -4,6 +4,7 @@ using UnityEngine;
 
 public interface ICarAnimation {
     public void Play();
+    public void Stop();
 }
 
 public class CarAnimation : ICarAnimation {
@@ -25,16 +26,17 @@ public class CarAnimation : ICarAnimation {
     }
 
     public void Play() {
-        if(from.position != to.position) { 
-            animations.Add(PositionAnimation.SetEase(positionEase));
-        }
+        animations.Add(PositionAnimation.SetEase(positionEase));
+        animations.Add(RotationAnimation.SetEase(rotationEase));
+    }
 
-        if(from.direction != to.direction) {
-            animations.Add(RotationAnimation.SetEase(rotationEase));
+    public void Stop() {
+        foreach(var animation in animations) {
+            animation.Kill();
         }
     }
 
-    protected virtual Tweener PositionAnimation => transform.DOLocalMove((from.position + to.position) * 0.5f, duration);
+    protected virtual Tweener PositionAnimation => transform.DOLocalMove((Vector3)(from.position + to.position) * 0.5f, duration);
     protected virtual Tweener RotationAnimation => transform.DORotateQuaternion(to.direction.Rotation(), duration);
 }
 
@@ -44,17 +46,17 @@ public class CarMovingAnimation : CarAnimation {
 
 public class CarStartingAnimation : CarAnimation {
     public CarStartingAnimation(CarView view, CarVariables from, CarVariables to) : base(view, from, to) { 
-        positionEase = Ease.InCubic;
+        positionEase = Ease.InQuad;
     }
 }
 
 public class CarStoppingAnimation : CarAnimation {
     public CarStoppingAnimation(CarView view, CarVariables from, CarVariables to) : base(view, from, to) { 
-        positionEase = Ease.OutCubic;
-        rotationEase = Ease.OutCubic;
+        positionEase = Ease.OutQuad;
+        rotationEase = Ease.OutQuad;
     }
 
-    protected override Tweener PositionAnimation => transform.DOLocalMove(to.position, duration).SetEase(positionEase);
+    protected override Tweener PositionAnimation => transform.DOLocalMove(from.position, duration);
 }
 
 public class CarRotatingAnimation : CarAnimation {

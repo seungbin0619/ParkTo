@@ -21,16 +21,16 @@ public partial class Car
     public void Move() {
         if(Variables.isStop) return;
 
+        Variables = Variables.Next();
+
+        _ground.Exit();
+        _ground = _ground.Next(Variables.direction); 
+        _ground.Enter();
+
         if(!CanMove()) {
             Stop();
             return;
         }
-
-        _ground.Exit();
-
-        Variables.position += Variables.direction.ToPoint();
-        _ground = _ground.Next(Variables.direction); 
-        _ground.Enter();
     }
 
     private void Stop() {
@@ -43,6 +43,7 @@ public partial class Car
 
     public bool CanMove() {
         if(Variables.isStop) return false;
+        if(Variables.isBroken) return false;
         if(_ground.Next(Variables.direction) == null) return false;
 
         return true;

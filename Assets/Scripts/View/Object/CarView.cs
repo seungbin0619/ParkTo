@@ -7,60 +7,51 @@ public partial class CarView : PhysicsObject
     // TODO : Hide this
     public Car Car { get; private set; }
     public CarAnimation currentAnimation = null;
-
-    protected override void Awake()
-    {
-        base.Awake();
-        
-    }
-
+    
     public void Initialize(Car car) {
         Car = car;
-
         ApplyVisual();
     }
 
     public void Play() {
+        if(!Car.CanMove()) return;
         StartCoroutine(Move());
     }
 
     private IEnumerator Move() {
-        if(!Car.CanMove()) {
-            yield break;
-        }
+        // starting animation
+        yield return Animate(Car.Variables);
 
-        CarVariables from = new(Car.Variables), to;
-        
-
-        while(!Car.Variables.isStop) {
+        while(Car.CanMove()) {
             Car.Move();
-            to = new(Car.Variables);
-        
-            yield return Animate(from, to);
 
-            ApplyVisual();
-            from = to;
+            yield return Animate(Car.Variables);
         }
-        
-        yield return null;
+
+        // ApplyVisual();
         Car.Reset();
     }
 
-    public IEnumerator Animate(CarVariables from, CarVariables to) {
-        // animate
+    public IEnumerator Animate(CarVariables from) {
+        CarVariables to = Car.Variables.Next();
 
-        yield return YieldDictionary.WaitForSeconds(1 / from.speed);
+        currentAnimation = CarAnimationGenerator.Generate(this, from, to);
+        currentAnimation.Play();
+
+        yield return YieldDictionary.WaitForSeconds(currentAnimation.duration);
     }
 
+    // TODO : Remove this
     public void ApplyVisual() {
         // direction, position...
+
         transform.localPosition = Car.Variables.position;
         transform.rotation = Car.Variables.direction.Rotation();
     }
 
     protected override void OnCollisionEnter(Collision collision)
     {
-        
+        //currentAnimation?.Stop();
     }
 }
 
