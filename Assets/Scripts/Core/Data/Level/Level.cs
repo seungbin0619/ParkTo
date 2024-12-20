@@ -58,5 +58,5 @@ public struct GroundSerializer {
 [Serializable]
 public struct TriggerSerializer {
     public int count;
-    public Trigger.Type type;
+    public TriggerType type;
 }

@@ -12,10 +12,10 @@ public abstract class TurnTrigger : Trigger
 
 public class TurnRightTrigger : TurnTrigger
 {
-    public override Type type => Type.TurnRight;
+    public override TriggerType Type => TriggerType.TurnRight;
 }
 
 public class TurnLeftTrigger : TurnTrigger
 {
-    public override Type type => Type.TurnLeft;
+    public override TriggerType Type => TriggerType.TurnLeft;
 }

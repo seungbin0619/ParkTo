@@ -64,10 +64,10 @@ public partial class CarView : IAssignable<Trigger> {
     public bool IsAssignable(Trigger trigger)
     {
         // Can't it be done more neatly?
-        return trigger.type switch
+        return trigger.Type switch
         {
-            Trigger.Type.Stop => !Car.Variables.isStop,
-            Trigger.Type.BackUp => !Car.Variables.isBackUp,
+            TriggerType.Stop => !Car.Variables.isStop,
+            TriggerType.BackUp => !Car.Variables.isBackUp,
             _ => true,
         };
     }
