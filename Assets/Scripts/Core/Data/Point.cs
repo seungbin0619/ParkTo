@@ -82,11 +82,19 @@ public struct Point {
     }
 
     public static Point operator *(Point p, int n) {
-        return new Point(p.x + n, p.z + n);
+        return new Point(p.x * n, p.z * n);
     }
 
     public static Point operator *(int n, Point p) {
-        return new Point(p.x + n, p.z + n);
+        return new Point(p.x * n, p.z * n);
+    }
+
+    public static Point operator *(Point p, float n) {
+        return new Point(p.x * n, p.z * n);
+    }
+
+    public static Point operator *(float n, Point p) {
+        return new Point(p.x * n, p.z * n);
     }
 
     public static bool operator ==(Point p1, Point p2) {

@@ -6,6 +6,7 @@ public partial class CarView : PhysicsObject
 {
     // TODO : Hide this
     public Car Car { get; private set; }
+    public CarAnimation currentAnimation = null;
 
     protected override void Awake()
     {
@@ -24,7 +25,12 @@ public partial class CarView : PhysicsObject
     }
 
     private IEnumerator Move() {
+        if(!Car.CanMove()) {
+            yield break;
+        }
+
         CarVariables from = new(Car.Variables), to;
+        
 
         while(!Car.Variables.isStop) {
             Car.Move();
@@ -41,14 +47,14 @@ public partial class CarView : PhysicsObject
     }
 
     public IEnumerator Animate(CarVariables from, CarVariables to) {
-        
+        // animate
+
         yield return YieldDictionary.WaitForSeconds(1 / from.speed);
     }
 
     public void ApplyVisual() {
         // direction, position...
-        transform.localPosition = Car.Variables.position + Vector3.up;
-
+        transform.localPosition = Car.Variables.position;
         transform.rotation = Car.Variables.direction.Rotation();
     }
 

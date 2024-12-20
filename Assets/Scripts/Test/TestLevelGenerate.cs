@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class TestLevelGenerate : MonoBehaviour
@@ -16,6 +17,7 @@ public class TestLevelGenerate : MonoBehaviour
     public void Rotate() {
         foreach(var view in levelView.CarViews) {
             view.Car.Variables.Rotate(1);
+            // view.transform.DORotateQuaternion(view.Car.Variables.direction.Rotation(), 1f).SetEase(Ease.Linear);
             view.ApplyVisual();
         }
     }
