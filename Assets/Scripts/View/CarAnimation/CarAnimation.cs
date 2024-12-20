@@ -10,7 +10,7 @@ public interface ICarAnimation {
 public class CarAnimation : ICarAnimation {
     protected CarVariables from, to;
     protected readonly Transform transform;
-    private readonly List<Tweener> animations;
+    private readonly List<Tween> animations;
     protected Ease positionEase = Ease.Linear, rotationEase = Ease.Linear;
     public readonly float duration;
 
@@ -26,8 +26,8 @@ public class CarAnimation : ICarAnimation {
     }
 
     public void Play() {
-        animations.Add(PositionAnimation.SetEase(positionEase));
-        animations.Add(RotationAnimation.SetEase(rotationEase));
+        animations.Add(PositionAnimation());
+        animations.Add(RotationAnimation());
     }
 
     public void Stop() {
@@ -36,33 +36,9 @@ public class CarAnimation : ICarAnimation {
         }
     }
 
-    protected virtual Tweener PositionAnimation => transform.DOLocalMove((Vector3)(from.position + to.position) * 0.5f, duration);
-    protected virtual Tweener RotationAnimation => transform.DORotateQuaternion(to.direction.Rotation(), duration);
-}
+    protected virtual Tween PositionAnimation() => 
+        transform.DOLocalMove((Vector3)(from.position + to.position) * 0.5f, duration).SetEase(positionEase);
 
-public class CarMovingAnimation : CarAnimation {
-    public CarMovingAnimation(CarView view, CarVariables from, CarVariables to) : base(view, from, to) { }
-}
-
-public class CarStartingAnimation : CarAnimation {
-    public CarStartingAnimation(CarView view, CarVariables from, CarVariables to) : base(view, from, to) { 
-        positionEase = Ease.InQuad;
-    }
-}
-
-public class CarStoppingAnimation : CarAnimation {
-    public CarStoppingAnimation(CarView view, CarVariables from, CarVariables to) : base(view, from, to) { 
-        positionEase = Ease.OutQuad;
-        rotationEase = Ease.OutQuad;
-    }
-
-    protected override Tweener PositionAnimation => transform.DOLocalMove(from.position, duration);
-}
-
-public class CarRotatingAnimation : CarAnimation {
-    public CarRotatingAnimation(CarView view, CarVariables from, CarVariables to) : base(view, from, to) { }
-}
-
-public class CarAcceleratingAnimation : CarAnimation {
-    public CarAcceleratingAnimation(CarView view, CarVariables from, CarVariables to) : base(view, from, to) { }
+    protected virtual Tween RotationAnimation() => 
+        transform.DORotateQuaternion(to.direction.Rotation(), duration).SetEase(rotationEase);
 }

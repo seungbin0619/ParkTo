@@ -49,9 +49,11 @@ public struct CarSerializer {
 [Serializable]
 public struct GroundSerializer {
     public Point position;
+    public TriggerType trigger;
     
-    public GroundSerializer(Point position) {
+    public GroundSerializer(Point position, TriggerType trigger) {
         this.position = position;
+        this.trigger = trigger;
     }
 }
 

@@ -6,6 +6,6 @@ public class BackUpTrigger : Trigger
 
     public override void Execute(Car car)
     {
-        
+        car.Variables.BackUp();
     }
 }

@@ -23,9 +23,9 @@ public partial class Car
 
         Variables = Variables.Next();
 
-        _ground.Exit();
+        _ground.Exit(this);
         _ground = _ground.Next(Variables.direction); 
-        _ground.Enter();
+        _ground.Enter(this);
 
         if(!CanMove()) {
             Stop();

@@ -6,6 +6,6 @@ public class StopTrigger : Trigger
 
     public override void Execute(Car car)
     {
-        
+        car.Variables.Stop();
     }
 }

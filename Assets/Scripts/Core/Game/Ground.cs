@@ -11,22 +11,23 @@ public partial class Ground
         Trigger = trigger;
     }
 
-    public void Enter() {
-        //Trigger?.Execute(car);
+    public void Enter(Car car) {
+        Trigger?.Execute(car);
     }
 
-    public void Exit() {
+    public void Exit(Car car) {
         // ...
     }
 
-    public Ground(Point position, Trigger trigger = null) {
+    public Ground(Point position, Trigger trigger) {
         Position = position;
         Trigger = trigger;
     }
 
     public Ground(GroundSerializer serilizer) {
         Position = serilizer.position;
-        Trigger = null;
+        
+        Trigger = TriggerGenerator.Generate(serilizer.trigger);
     }
 
     public void Initialize(Grid grid) {

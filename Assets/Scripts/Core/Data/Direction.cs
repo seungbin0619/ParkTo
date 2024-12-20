@@ -97,11 +97,11 @@ public static class DirectionExtensionMethod {
         return points[direction];
     }
 
-    // public static bool IsVertical(this Direction direction) {
-    //     return direction == Direction.Up || direction == Direction.Down;
-    // }
+    public static bool IsVertical(this Direction direction) {
+        return direction == Direction.Up || direction == Direction.Down;
+    }
 
-    // public static bool IsHorizontal(this Direction direction) {
-    //     return direction == Direction.Left || direction == Direction.Right;
-    // }
+    public static bool IsHorizontal(this Direction direction) {
+        return direction == Direction.Left || direction == Direction.Right;
+    }
 }

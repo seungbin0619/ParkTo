@@ -114,7 +114,7 @@ public class LevelEditorWindow : EditorWindow
         var ground = _level.grounds.FindAll(g => g.position == position);
 
         if(ground.Count == 0) {
-            _level.grounds.Add(new GroundSerializer(new(position.x, position.y)));
+            _level.grounds.Add(new GroundSerializer(new(position.x, position.y), TriggerType.None));
         } else {
             _level.grounds.Remove(ground.First());
         }

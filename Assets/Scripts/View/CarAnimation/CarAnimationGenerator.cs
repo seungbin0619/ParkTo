@@ -11,13 +11,13 @@ public static class CarAnimationGenerator {
     
     public static CarAnimation Generate(CarView view, CarVariables from, CarVariables to) {
         AnimationType type = GetType(from, to);
-
+        
         return type switch
         {
             AnimationType.Starting => new CarStartingAnimation(view, from, to),
             AnimationType.Stoping => new CarStoppingAnimation(view, from, to),
             AnimationType.Rotating => new CarRotatingAnimation(view, from, to),
-            AnimationType.Accelerating => new CarMovingAnimation(view, from, to),
+            AnimationType.Accelerating => new CarAcceleratingAnimation(view, from, to),
             _ => new CarAnimation(view, from, to)
         };
     }
