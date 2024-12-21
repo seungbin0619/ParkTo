@@ -42,9 +42,13 @@ public class CarVariables {
         isBroken = false;
     }
 
+    public Direction GetDirection() {
+        return isBackUp ? direction.Opposite() : direction;
+    }
+
     public CarVariables Next() {
         CarVariables next = new(this);
-        next.position = isBackUp ? position.Next(direction.Opposite()) : position.Next(direction);
+        next.position = position.Next(GetDirection());
         
         return next;
     }

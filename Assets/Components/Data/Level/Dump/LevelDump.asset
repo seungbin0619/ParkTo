@@ -31,7 +31,7 @@ MonoBehaviour:
   - position:
       x: 0
       z: 2
-    trigger: 0
+    trigger: 3
   - position:
       x: 1
       z: 2
@@ -47,7 +47,7 @@ MonoBehaviour:
   - position:
       x: 0
       z: 0
-    trigger: -2
+    trigger: 0
   - position:
       x: 2
       z: 0

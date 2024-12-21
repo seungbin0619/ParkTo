@@ -6,7 +6,12 @@ public abstract class TurnTrigger : Trigger
 
     public override void Execute(Car car)
     {
-        car.Variables.Rotate(IsClockwise ? 1 : -1);
+        // clockwise = true, car.variables.isbackup = false -> 1
+        // clockwise = false, car.variables.isbackup = false -> -1
+        // clockwise = true, car.variables.isbackup = true -> -1
+        // clockwise = false, car.variables.isbackup = true -> 1
+        
+        car.Variables.Rotate(IsClockwise != car.Variables.isBackUp ? 1 : -1);
     }
 }
 

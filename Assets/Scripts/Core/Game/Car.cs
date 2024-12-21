@@ -24,7 +24,7 @@ public partial class Car
         Variables = Variables.Next();
 
         _ground.Exit(this);
-        _ground = _ground.Next(Variables.direction); 
+        _ground = _ground.Next(Variables.GetDirection()); 
         _ground.Enter(this);
 
         if(!CanMove()) {
@@ -44,12 +44,8 @@ public partial class Car
     public bool CanMove() {
         if(Variables.isStop) return false;
         if(Variables.isBroken) return false;
-        if(_ground.Next(Variables.direction) == null) return false;
+        if(_ground.Next(Variables.GetDirection()) == null) return false;
 
         return true;
-    }
-
-    public Ground GetNextGround() {
-        return _ground.Next(Variables.direction);
     }
 }
