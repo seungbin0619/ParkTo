@@ -59,6 +59,22 @@ public partial class CarView : PhysicsObject
     {
         //currentAnimation?.Stop();
     }
+
+    private List<Vector3> positions = new();
+    int k = 0;
+
+    private void Update() {
+        if(k++ % 10 != 0) return;
+        positions.Add(transform.position);
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        foreach (var position in positions)
+        {
+            Gizmos.DrawSphere(position, 0.05f);
+        }
+    }
 }
 
 public partial class CarView : IAssignable<Trigger> {
