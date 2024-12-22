@@ -23,7 +23,7 @@ MonoBehaviour:
   - position:
       x: 0
       z: 1
-    trigger: 2
+    trigger: -99
   - position:
       x: 1
       z: 1

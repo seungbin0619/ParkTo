@@ -6,12 +6,12 @@ public class CarBackingUpAnimation : CarAnimation {
 
     }
 
-    protected override Tween PositionAnimation() {
-        Vector3 to = transform.localPosition;
+    protected override Tween Animation() {
+        Vector3 to = view.transform.localPosition;
         
         Sequence tween = DOTween.Sequence();
-        tween.Append(transform.DOLocalMove((from.position + to) * 0.5f, duration * 0.5f).SetEase(Ease.OutQuad));
-        tween.Append(transform.DOLocalMove(to, duration * 0.5f).SetEase(Ease.InQuad));
+        tween.Append(view.transform.DOLocalMove((from.position + to) * 0.5f, duration * 0.5f).SetEase(Ease.OutQuad));
+        tween.Append(view.transform.DOLocalMove(to, duration * 0.5f).SetEase(Ease.InQuad));
 
         return tween;
     }
