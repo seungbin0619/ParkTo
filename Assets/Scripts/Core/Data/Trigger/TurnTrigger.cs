@@ -17,11 +17,12 @@ public abstract class TurnTrigger : Trigger
 
 public class TurnRightTrigger : TurnTrigger
 {
-    protected override bool IsClockwise => true;
     public override TriggerType Type => TriggerType.TurnRight;
+    protected override bool IsClockwise => true;
 }
 
 public class TurnLeftTrigger : TurnTrigger
 {
     public override TriggerType Type => TriggerType.TurnLeft;
+    protected override bool IsClockwise => false;
 }
