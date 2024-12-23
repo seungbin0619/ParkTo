@@ -51,8 +51,9 @@ public partial class CarView : PhysicsObject
     public void ApplyVisual() {
         // direction, position...
 
-        transform.localPosition = Car.Variables.position;
-        transform.rotation = Car.Variables.direction.Rotation();
+        transform.SetLocalPositionAndRotation(
+            Car.Variables.position,
+            Car.Variables.direction.Rotation());
     }
 
     protected override void OnCollisionEnter(Collision collision)

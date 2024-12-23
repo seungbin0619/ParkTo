@@ -10,7 +10,7 @@ public class CarStoppingAnimation : CarPhysicsAnimation {
     protected override Sequence Animation()
     {
         return base.Animation().Join(
-            view.transform.DORotateQuaternion(
+            view.transform.DOLocalRotateQuaternion(
                 Quaternion.LookRotation(to.direction.ToPoint()), 
                 duration).SetEase(Ease.OutQuad)
         );

@@ -39,8 +39,11 @@ public class CarPhysicsAnimation : CarAnimation {
     }
 
     protected virtual TweenerCore<Vector3, Vector3, DG.Tweening.Plugins.Options.VectorOptions>  VelocityAnimation() {
+        // view.transform.parent.parent.TransformDirection(x) ... too complex
+        // TODO : refactor this
+
         return DOTween.To(() => RB.linearVelocity,
-            x => RB.linearVelocity = x * TimeScale,
+            x => RB.linearVelocity = view.transform.parent.parent.TransformDirection(x) * TimeScale,
             to.speed * (Vector3)to.GetDirection().ToPoint(),
             duration)
             .From(from.speed * (Vector3)from.GetDirection().ToPoint())

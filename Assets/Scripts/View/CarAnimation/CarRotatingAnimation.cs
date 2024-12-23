@@ -15,7 +15,7 @@ public class CarRotatingAnimation : CarAnimation {
         
         tween.Append(view.transform.DOLocalMoveX(to.x, duration).SetEase(easeX));
         tween.Join(view.transform.DOLocalMoveZ(to.z, duration).SetEase(easeZ));
-        tween.Join(view.transform.DORotateQuaternion(
+        tween.Join(view.transform.DOLocalRotateQuaternion(
                 Quaternion.LookRotation(this.to.direction.ToPoint()), 
                 duration).SetEase(Ease.Linear));
 
