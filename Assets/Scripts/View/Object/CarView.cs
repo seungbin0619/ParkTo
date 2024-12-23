@@ -20,28 +20,28 @@ public partial class CarView : PhysicsObject
     }
 
     private IEnumerator Move() {
-        CarVariables before, current;
-        before = current = new(Car.Variables);
-        before.isStart = true;
+        CarVariables from, to;
+        from = to = new(Car.Variables);
+        from.isStart = true;
         
         // starting animation
-        yield return Animate(before, current);
-        before = new(current);
+        yield return Animate(from, to);
+        from = new(to);
 
         while(Car.CanMove()) {
             Car.Move();
-            current = Car.Variables;
+            to = Car.Variables;
 
-            yield return Animate(before, current);
-            before = current;
+            yield return Animate(from, to);
+            from = to;
         }
 
         ApplyVisual();
         Car.Reset();
     }
 
-    public IEnumerator Animate(CarVariables before, CarVariables current) {
-        currentAnimation = CarAnimationGenerator.Generate(this, before, current);
+    public IEnumerator Animate(CarVariables from, CarVariables to) {
+        currentAnimation = CarAnimationGenerator.Generate(this, from, to);
         currentAnimation.Play();
 
         yield return YieldDictionary.WaitForSeconds(currentAnimation.duration);

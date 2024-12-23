@@ -19,6 +19,8 @@ public class CarAnimation {
     }
 
     public void Play() {
+        view.transform.localPosition = InitialPosition;
+        
         tween = Animation();
     }
 
@@ -26,6 +28,7 @@ public class CarAnimation {
         tween.Kill();
     }
 
+    private Vector3 InitialPosition => (Vector3)(from.position + to.position) * 0.5f;
     protected virtual Sequence Animation() => DOTween.Sequence();
 }
 
