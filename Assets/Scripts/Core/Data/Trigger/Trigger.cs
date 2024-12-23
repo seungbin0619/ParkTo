@@ -5,6 +5,8 @@ public enum TriggerType {
     TurnLeft,
     Stop,
     BackUp,
+    Accelerate,
+    Decelerate,
 }
 
 public abstract class Trigger {

@@ -10,6 +10,8 @@ public static class TriggerGenerator
             TriggerType.TurnLeft => new TurnLeftTrigger(),
             TriggerType.Stop => new StopTrigger(),
             TriggerType.BackUp => new BackUpTrigger(),
+            TriggerType.Accelerate => new AccelerateTrigger(),
+            TriggerType.Decelerate => new DecelerateTrigger(),
             _ => null,
         };
     }
