@@ -36,7 +36,7 @@ public partial class CarView : PhysicsObject
             before = current;
         }
 
-        // ApplyVisual();
+        ApplyVisual();
         Car.Reset();
     }
 

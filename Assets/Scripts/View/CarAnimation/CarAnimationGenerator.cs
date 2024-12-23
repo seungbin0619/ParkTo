@@ -21,7 +21,7 @@ public static class CarAnimationGenerator {
             AnimationType.BackingUp => new CarBackingUpAnimation(view, before, current),
             AnimationType.Rotating => new CarRotatingAnimation(view, before, current),
             AnimationType.Accelerating => new CarAcceleratingAnimation(view, before, current),
-            _ => new CarAnimation(view, before, current)
+            _ => new CarPhysicsAnimation(view, before, current)
         };
     }
 

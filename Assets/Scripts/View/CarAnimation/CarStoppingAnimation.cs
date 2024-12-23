@@ -1,12 +1,18 @@
 using DG.Tweening;
+using DG.Tweening.Core;
+using UnityEngine;
 
-public class CarStoppingAnimation : CarAnimation {
-    public CarStoppingAnimation(CarView view, CarVariables from, CarVariables to) : base(view, from, to) { 
-        positionEase = Ease.OutQuad;
-        rotationEase = Ease.OutQuad;
+public class CarStoppingAnimation : CarPhysicsAnimation {
+    public CarStoppingAnimation(CarView view, CarVariables from, CarVariables to) : base(view, from, to) {
+        this.to.speed = 0;
     }
 
-    protected override Tween PositionAnimation() => 
-        transform.DOLocalMove(from.position, duration).SetEase(positionEase);
+    protected override Sequence Animation()
+    {
+        return base.Animation().Join(
+            view.transform.DORotateQuaternion(
+                Quaternion.LookRotation(to.direction.ToPoint()), 
+                duration).SetEase(Ease.OutQuad)
+        );
+    }
 }
-
