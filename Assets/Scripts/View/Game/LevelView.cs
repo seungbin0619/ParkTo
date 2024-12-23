@@ -26,9 +26,8 @@ public class LevelView : MonoBehaviour {
 
     public void CreateView() {
         DestroyView();
-
-        MoveViewToCenter();
         
+        MoveViewToCenter();
         InstantiateGroundViews();
         InstantiateCarViews();
     }

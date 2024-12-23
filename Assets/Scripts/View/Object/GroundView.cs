@@ -13,6 +13,11 @@ public partial class GroundView : MonoBehaviour, IAssignable<Trigger>
         Ground.SetTrigger(trigger);
     }
 
+    public void Unassign()
+    {
+        Ground.SetTrigger(null);
+    }
+
     public bool IsAssignable(Trigger trigger)
     {
         return !Ground.HasTrigger;

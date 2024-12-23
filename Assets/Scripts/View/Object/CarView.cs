@@ -23,7 +23,7 @@ public partial class CarView : PhysicsObject
         CarVariables from, to;
         from = to = new(Car.Variables);
         from.isStart = true;
-        
+
         // starting animation
         yield return Animate(from, to);
         from = new(to);
@@ -63,9 +63,15 @@ public partial class CarView : PhysicsObject
 }
 
 public partial class CarView : IAssignable<Trigger> {
+
     public void Assign(Trigger trigger)
     {
         trigger.Execute(Car);
+    }
+
+    public void Unassign() {
+        // TODO : Implement this
+
     }
 
     public bool IsAssignable(Trigger trigger)
