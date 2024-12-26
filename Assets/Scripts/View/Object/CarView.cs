@@ -69,9 +69,8 @@ public partial class CarView : IAssignable<Trigger> {
         trigger.Execute(Car);
     }
 
-    public void Unassign() {
-        // TODO : Implement this
-
+    public void Unassign(Trigger trigger) {
+        trigger.Abort(Car);
     }
 
     public bool IsAssignable(Trigger trigger)
@@ -81,6 +80,7 @@ public partial class CarView : IAssignable<Trigger> {
         {
             TriggerType.Stop => !Car.Variables.isStop,
             TriggerType.BackUp => !Car.Variables.isBackUp,
+            TriggerType.Accelerate | TriggerType.Decelerate => Car.Variables.speed == 1f,
             _ => true,
         };
     }

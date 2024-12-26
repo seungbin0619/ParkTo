@@ -1,9 +1,9 @@
-public class AssignTriggerCommand<T> : ICommand where T : IAssignable<Trigger>
+public class AssignTriggerCommand : ICommand
 {
-    private readonly T _target;
+    private readonly IAssignable<Trigger> _target;
     private readonly Trigger _trigger;
 
-    public AssignTriggerCommand(T target, Trigger trigger)
+    public AssignTriggerCommand(IAssignable<Trigger> target, Trigger trigger)
     {
         _target = target;
         _trigger = trigger;
@@ -11,12 +11,12 @@ public class AssignTriggerCommand<T> : ICommand where T : IAssignable<Trigger>
 
     public virtual void Execute()
     {
-        _trigger.Assign(_target);
+        _target.Assign(_trigger);
     }
 
     public virtual void Undo()
     {
-        _target.Unassign();
+        _target.Unassign(_trigger);
     }
 }
 

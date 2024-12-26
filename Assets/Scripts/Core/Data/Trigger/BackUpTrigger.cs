@@ -4,8 +4,5 @@ public class BackUpTrigger : Trigger
 {
     public override TriggerType Type => TriggerType.Stop;
 
-    public override void Execute(Car car)
-    {
-        car.Variables.BackUp();
-    }
+    protected override void OnExecute(Car car) => car.Variables.BackUp();
 }

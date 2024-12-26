@@ -4,8 +4,5 @@ public class StopTrigger : Trigger
 {
     public override TriggerType Type => TriggerType.Stop;
 
-    public override void Execute(Car car)
-    {
-        car.Variables.Stop();
-    }
+    protected override void OnExecute(Car car) => car.Variables.Stop();
 }

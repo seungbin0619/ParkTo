@@ -7,7 +7,8 @@ using System.Linq;
 /// 레벨 상태 정보들을 총체적으로 담는 클래스.
 /// ex) 클리어 여부, 차, 트리거, ...
 /// </summary>
-public class LevelState : MonoBehaviour {
+public partial class LevelState : MonoBehaviour {
+    private Stack<ICommand> _commands;
     private LevelGenerator _generator;
     private LevelView _view;
 
@@ -21,15 +22,33 @@ public class LevelState : MonoBehaviour {
             return;
         }
 
+        _commands = new Stack<ICommand>();
+
         _generator.Initialize(levelPack, index);
         _view.Initialize(levelPack.style);
         _view.CreateView();
     }
 
     public void Play() {
+        _commands.Push(new SaveCommand(_view.CarViews));
         foreach(var view in _view.CarViews) {
             view.Play();
             //view.ApplyVisual();
         }
+    }
+
+    public void AssignTrigger(IAssignable<Trigger> target, Trigger trigger) {
+        _commands.Push(new AssignTriggerCommand(target, trigger));
+        
+        trigger.Assign(target);
+    }
+
+    public void Undo() {
+        if(_commands.Count == 0) {
+            return;
+        }
+
+        var command = _commands.Pop();
+        command.Undo();
     }
 }
