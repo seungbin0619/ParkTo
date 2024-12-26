@@ -28,7 +28,13 @@ public partial class LevelState : MonoBehaviour {
         _view.CreateView();
     }
 
-    
+    public void Play() {
+        Execute(new PlayCommand(_view.CarViews));
+    }
+
+    public void AssignTrigger(IAssignable<Trigger> target, Trigger trigger) {
+        Execute(new AssignTriggerCommand(target, trigger));
+    }
 }
 
 // about commands
@@ -39,14 +45,6 @@ public partial class LevelState {
         command.Execute();
 
         _commands.Push(command);
-    }
-
-    public void Play() {
-        Execute(new PlayCommand(_view.CarViews));
-    }
-
-    public void AssignTrigger(IAssignable<Trigger> target, Trigger trigger) {
-        Execute(new AssignTriggerCommand(target, trigger));
     }
 
     public void Undo() {

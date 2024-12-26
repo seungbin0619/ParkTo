@@ -37,4 +37,8 @@ public partial class Ground
     public Ground Next(Direction direction) {
         return _grid[Position + direction.ToPoint()];
     }
+
+    public Ground MoveTo(Point point) {
+        return _grid[point];
+    }
 }

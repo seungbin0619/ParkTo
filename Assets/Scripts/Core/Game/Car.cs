@@ -9,13 +9,15 @@ public partial class Car
 
     public Car(CarSerializer serilizer, Ground ground) {
         Color = serilizer.color;
-        _ground = ground;
 
+        _ground = ground;
         SetVariables(new CarVariables(serilizer));
     }
 
     public void SetVariables(CarVariables variables) {
         Variables = variables;
+        
+        _ground = _ground?.MoveTo(variables.position);
     }
 
     public void Move() {

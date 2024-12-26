@@ -12,7 +12,6 @@ public static class CarAnimationGenerator {
     
     public static CarAnimation Generate(CarView view, CarVariables before, CarVariables current) {
         AnimationType type = GetType(before, current);
-        Debug.Log(type);
 
         return type switch
         {

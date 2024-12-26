@@ -21,6 +21,7 @@ public partial class CarView : PhysicsObject
 
     private IEnumerator Move() {
         CarVariables from, to;
+        
         from = to = new(Car.Variables);
         from.isStart = true;
 
@@ -76,7 +77,7 @@ public partial class CarView : IAssignable<Trigger> {
     public bool IsAssignable(Trigger trigger)
     {
         // Can't it be done more neatly?
-        
+
         return trigger.Type switch
         {
             TriggerType.Stop => !Car.Variables.isStop,

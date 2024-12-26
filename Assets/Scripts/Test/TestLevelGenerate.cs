@@ -10,15 +10,12 @@ public class TestLevelGenerate : MonoBehaviour
         levelState.Initialize(pack, 0);
     }
 
-    public void Go() {
+    public void Play() {
         levelState.Play();
     }
     
-    public void Rotate() {
-        foreach(var view in levelView.CarViews) {
-            view.Car.Variables.Rotate(1);
-            view.ApplyVisual();
-        }
+    public void Undo() {
+        levelState.Undo();
     }
 
     void Update() {
