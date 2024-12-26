@@ -76,6 +76,7 @@ public partial class CarView : IAssignable<Trigger> {
     public bool IsAssignable(Trigger trigger)
     {
         // Can't it be done more neatly?
+        
         return trigger.Type switch
         {
             TriggerType.Stop => !Car.Variables.isStop,

@@ -8,7 +8,6 @@ using System.Linq;
 /// ex) 클리어 여부, 차, 트리거, ...
 /// </summary>
 public partial class LevelState : MonoBehaviour {
-    private Stack<ICommand> _commands;
     private LevelGenerator _generator;
     private LevelView _view;
 
@@ -29,18 +28,25 @@ public partial class LevelState : MonoBehaviour {
         _view.CreateView();
     }
 
+    
+}
+
+// about commands
+public partial class LevelState {
+    private Stack<ICommand> _commands;
+
+    private void Execute(ICommand command) {
+        command.Execute();
+
+        _commands.Push(command);
+    }
+
     public void Play() {
-        _commands.Push(new SaveCommand(_view.CarViews));
-        foreach(var view in _view.CarViews) {
-            view.Play();
-            //view.ApplyVisual();
-        }
+        Execute(new PlayCommand(_view.CarViews));
     }
 
     public void AssignTrigger(IAssignable<Trigger> target, Trigger trigger) {
-        _commands.Push(new AssignTriggerCommand(target, trigger));
-        
-        trigger.Assign(target);
+        Execute(new AssignTriggerCommand(target, trigger));
     }
 
     public void Undo() {

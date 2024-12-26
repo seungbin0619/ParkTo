@@ -2,20 +2,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // save the current state of cars
-public class SaveCommand : ICommand
+public class PlayCommand : ICommand
 {
     private readonly Dictionary<CarView, CarVariables> _variables;
+    private readonly IEnumerable<CarView> views;
 
-    public SaveCommand(IEnumerable<CarView> views) {
+    public PlayCommand(IEnumerable<CarView> views) {
         _variables = new Dictionary<CarView, CarVariables>();
-        foreach(var view in views) {
-            _variables.Add(view, new(view.Car.Variables));
-        }
+        this.views = views;
     }
 
     public void Execute()
     {
-        // do nothing
+        foreach(var view in views) {
+            _variables.Add(view, new(view.Car.Variables));
+        }
+
+        foreach(var view in views) {
+            view.Play();
+        }
     }
 
     public void Undo()
