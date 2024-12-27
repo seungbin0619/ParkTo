@@ -42,10 +42,15 @@ public partial class LevelState {
     private Stack<ICommand> _commands;
 
     private void Execute(ICommand command) {
+        if(!CanExcecute()) return;
         if(!command.Condition()) return;
 
         command.Execute();
         _commands.Push(command);
+    }
+
+    private bool CanExcecute() {
+        return !_view.CarViews.Any(view => view.IsAnimating);
     }
 
     public void Undo() {

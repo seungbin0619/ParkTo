@@ -7,6 +7,7 @@ public partial class CarView : PhysicsObject
 {
     // TODO : Hide this
     public Car Car { get; private set; }
+    public bool IsAnimating => currentAnimation != null;
     public CarAnimation currentAnimation = null;
     
     public void Initialize(Car car) {
@@ -16,6 +17,7 @@ public partial class CarView : PhysicsObject
 
     public void Play() {
         if(!Car.CanMove()) return;
+
         StartCoroutine(Move());
     }
 
@@ -39,6 +41,8 @@ public partial class CarView : PhysicsObject
 
         ApplyVisual();
         Car.Reset();
+
+        currentAnimation = null;
     }
 
     public IEnumerator Animate(CarVariables from, CarVariables to) {
