@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -11,6 +12,8 @@ public class LevelView : MonoBehaviour {
     private LevelStyle _style;
     private LevelGenerator _generator;
     [SerializeField] private Tilemap groundTile;
+    private Transform _gridTransform;
+    private int _gridRotation = 0;
 
     private readonly List<CarView> _carViews = new();
     private readonly Dictionary<Point, GroundView> _groundViews = new();
@@ -18,6 +21,7 @@ public class LevelView : MonoBehaviour {
 
     void Awake() {
         _generator = GetComponent<LevelGenerator>();
+        _gridTransform = groundTile.transform.parent;
     }
 
     public void Initialize(LevelStyle style) {
@@ -59,7 +63,7 @@ public class LevelView : MonoBehaviour {
     private void InstantiateGroundViews() {
         foreach(var ground in _generator.Grid.Grounds) {
             Vector3Int position = ground.Position;
-            position = position.XZY();
+            position = position.XZY(); // clean up
 
             groundTile.SetTile(position, _style.groundTile);
 
@@ -68,5 +72,15 @@ public class LevelView : MonoBehaviour {
             
             _groundViews.Add(ground.Position, view);
         }
+    }
+
+    public void RotateLevelView(int direction) {
+        Vector3 rotation = _gridTransform.eulerAngles;
+        _gridRotation += direction;
+        _gridRotation %= 4;
+        
+        rotation.y = 90 * _gridRotation;
+
+        _gridTransform.DORotate(rotation, 0.5f).SetEase(Ease.OutCubic);
     }
 }
