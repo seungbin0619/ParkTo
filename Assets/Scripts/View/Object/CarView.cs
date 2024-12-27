@@ -7,8 +7,10 @@ public partial class CarView : PhysicsObject
 {
     // TODO : Hide this
     public Car Car { get; private set; }
-    public bool IsAnimating => currentAnimation != null;
-    public CarAnimation currentAnimation = null;
+    public bool IsAnimating => _coroutine != null;
+    
+    private CarAnimation _animation = null;
+    private Coroutine _coroutine = null;
     
     public void Initialize(Car car) {
         Car = car;
@@ -18,7 +20,7 @@ public partial class CarView : PhysicsObject
     public void Play() {
         if(!Car.CanMove()) return;
 
-        StartCoroutine(Move());
+        _coroutine = StartCoroutine(Move());
     }
 
     private IEnumerator Move() {
@@ -41,15 +43,28 @@ public partial class CarView : PhysicsObject
 
         ApplyVisual();
         Car.Reset();
+        
+        Stop();
+    }
 
-        currentAnimation = null;
+    public void Stop() {
+        if(_coroutine == null) return;
+
+        _animation?.Stop();
+        StopCoroutine(_coroutine);
+
+        RB.linearVelocity = Vector3.zero;
+        RB.angularVelocity = Vector3.zero;
+
+        _animation = null;
+        _coroutine = null;
     }
 
     public IEnumerator Animate(CarVariables from, CarVariables to) {
-        currentAnimation = CarAnimationGenerator.Generate(this, from, to);
-        currentAnimation.Play();
+        _animation = CarAnimationGenerator.Generate(this, from, to);
+        _animation.Play();
 
-        yield return YieldDictionary.WaitForSeconds(currentAnimation.duration);
+        yield return YieldDictionary.WaitForSeconds(_animation.duration);
     }
 
     // TODO : Remove this
@@ -63,7 +78,7 @@ public partial class CarView : PhysicsObject
 
     protected override void OnCollisionEnter(Collision collision)
     {
-        //currentAnimation?.Stop();
+        // Stop();
     }
 }
 

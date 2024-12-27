@@ -29,7 +29,13 @@ public partial class LevelState : MonoBehaviour {
     }
 
     public void Play() {
+        if(!IsPlayable()) return;
+
         Execute(new PlayCommand(_view.CarViews));
+    }
+
+    private bool IsPlayable() {
+        return !_view.CarViews.Any(view => view.IsAnimating);
     }
 
     public void AssignTrigger(IAssignable<Trigger> target, Trigger trigger) {
@@ -50,7 +56,7 @@ public partial class LevelState {
     }
 
     private bool CanExcecute() {
-        return !_view.CarViews.Any(view => view.IsAnimating);
+        return true;
     }
 
     public void Undo() {

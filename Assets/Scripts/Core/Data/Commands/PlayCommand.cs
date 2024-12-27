@@ -31,9 +31,11 @@ public class PlayCommand : ICommand
 
     public void Undo()
     {
-        foreach(var pair in _variables) {
-            pair.Key.Car.SetVariables(pair.Value);
-            pair.Key.ApplyVisual();
+        foreach(var (view, variables) in _variables) {
+            view.Stop();
+            
+            view.Car.SetVariables(variables);
+            view.ApplyVisual();
         }
     }
 }
