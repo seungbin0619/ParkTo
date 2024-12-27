@@ -42,8 +42,9 @@ public partial class LevelState {
     private Stack<ICommand> _commands;
 
     private void Execute(ICommand command) {
-        command.Execute();
+        if(!command.Condition()) return;
 
+        command.Execute();
         _commands.Push(command);
     }
 

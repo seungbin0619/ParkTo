@@ -9,35 +9,19 @@ public class AssignTriggerCommand : ICommand
         _trigger = trigger;
     }
 
-    public virtual void Execute()
+    public bool Condition()
     {
+        return _target.IsAssignable(_trigger);
+    }
+
+    public void Execute()
+    {
+        if(!Condition()) return;
         _target.Assign(_trigger);
     }
 
-    public virtual void Undo()
+    public void Undo()
     {
         _target.Unassign(_trigger);
     }
 }
-
-// public class AssignTriggerToCarCommand : AssignTriggerCommand<CarView>
-// {
-//     private CarVariables _variables;
-//     private CarView _target;
-
-//     public AssignTriggerToCarCommand(CarView target, Trigger trigger) : base(target, trigger) { 
-//         _target = target;
-//     }
-
-//     public override void Execute()
-//     {
-//         _variables = new(_target.Car.Variables);
-//         base.Execute();
-//     }
-
-//     public override void Undo()
-//     {
-//         base.Undo();
-//         _target.Car.SetVariables(_variables);
-//     }
-// }

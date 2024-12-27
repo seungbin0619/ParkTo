@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 // save the current state of cars
@@ -10,6 +11,11 @@ public class PlayCommand : ICommand
     public PlayCommand(IEnumerable<CarView> views) {
         _variables = new Dictionary<CarView, CarVariables>();
         this.views = views;
+    }
+
+    public bool Condition()
+    {
+        return views.Any(view => view.Car.CanMove());
     }
 
     public void Execute()
