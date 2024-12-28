@@ -16,7 +16,6 @@ public class AssignTriggerCommand : ICommand
 
     public void Execute()
     {
-        if(!Condition()) return;
         _target.Assign(_trigger);
     }
 
