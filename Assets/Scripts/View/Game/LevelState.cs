@@ -10,6 +10,7 @@ using System.Linq;
 public partial class LevelState : MonoBehaviour {
     private LevelGenerator _generator;
     private LevelView _view;
+    public bool IsPlaying => !_view.CarViews.Any(view => view.IsAnimating);
 
     void Awake() {
         _generator = GetComponent<LevelGenerator>();
@@ -33,6 +34,8 @@ public partial class LevelState : MonoBehaviour {
     }
 
     public void AssignTrigger(IAssignable<Trigger> target, Trigger trigger) {
+        if(IsPlaying) return;
+        
         Execute(new AssignTriggerCommand(target, trigger));
     }
 }

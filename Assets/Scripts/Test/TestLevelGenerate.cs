@@ -1,3 +1,4 @@
+using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 
@@ -16,6 +17,13 @@ public class TestLevelGenerate : MonoBehaviour
     
     public void Undo() {
         levelState.Undo();
+    }
+
+    public void AssignTrigger() {
+        var view = levelView.CarViews.First();
+        var trigger = TriggerGenerator.Generate(TriggerType.TurnRight);
+
+        levelState.AssignTrigger(view, trigger);
     }
 
     void Update() {

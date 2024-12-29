@@ -8,7 +8,6 @@ public partial class CarView : PhysicsObject
     // TODO : Hide this
     public Car Car { get; private set; }
     public bool IsAnimating => _coroutine != null;
-    
     private CarAnimation _animation = null;
     private Coroutine _coroutine = null;
     
@@ -87,16 +86,17 @@ public partial class CarView : IAssignable<Trigger> {
     public void Assign(Trigger trigger)
     {
         trigger.Execute(Car);
+        ApplyVisual();
     }
 
     public void Unassign(Trigger trigger) {
         trigger.Abort(Car);
+        ApplyVisual();
     }
 
     public bool IsAssignable(Trigger trigger)
     {
-        // Can't it be done more neatly?
-
+        // Can't it be done more neatly? ... no
         return trigger.Type switch
         {
             TriggerType.Stop => !Car.Variables.isStop,
