@@ -14,7 +14,7 @@ public class PlayCommand : ICommand
 
     public bool Condition()
     {
-        return views.Any(view => view.Car.CanMove());
+        return views.Any(view => view.Car.CanMove()) && !views.Any(view => view.IsAnimating);
     }
 
     public void Execute()
