@@ -10,7 +10,9 @@ using System.Linq;
 public partial class LevelState : MonoBehaviour {
     private LevelGenerator _generator;
     private LevelView _view;
+
     public bool IsPlaying => !_view.CarViews.Any(view => view.IsAnimating);
+    
 
     void Awake() {
         _generator = GetComponent<LevelGenerator>();
