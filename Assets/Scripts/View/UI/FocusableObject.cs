@@ -26,7 +26,6 @@ public class FocusableObject : MonoBehaviour, IFocusable
 
     public IFocusable Next() {
         
-
         return null;
     }
 
