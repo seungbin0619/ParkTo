@@ -41,8 +41,6 @@ public partial class CarView : PhysicsObject
         }
 
         ApplyVisual();
-        Car.Reset();
-        
         Stop();
     }
 
@@ -57,6 +55,8 @@ public partial class CarView : PhysicsObject
 
         _animation = null;
         _coroutine = null;
+
+        Car.Reset();
     }
 
     public IEnumerator Animate(CarVariables from, CarVariables to) {
