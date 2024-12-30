@@ -10,7 +10,7 @@ public class LevelGenerator : MonoBehaviour {
     private Level _level;
     private LevelPack _pack;
     private Grid _grid;
-    public Grid Grid => _grid ??= new(_level.grounds.Select(g => new Ground(g)) ?? Enumerable.Empty<Ground>());
+    public Grid Grid => _grid ??= new(_level.grounds.Select(g => new Ground(g)) ?? Enumerable.Empty<Ground>(), _level.Rect);
     public IEnumerable<Car> Cars => _level.cars.Select(c => new Car(c, Grid[c.position])) ?? Enumerable.Empty<Car>();
     public Rect ViewRect => _level.Rect;
 
