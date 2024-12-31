@@ -9,7 +9,7 @@ public class ViewInputModule : Selectable
     [SerializeField] private LevelView _view;
     [SerializeField] private LevelGenerator _generator;
 
-    private GroundView selectedView = null;
+    private IView selectedView = null;
 
     protected override void Start() {
         base.Start();
@@ -19,7 +19,7 @@ public class ViewInputModule : Selectable
 
     // Test
     private void OnDrawGizmos() {
-        if(!selectedView) return;
+        if(selectedView == null) return;
         
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(selectedView.transform.position, 1f);
@@ -64,7 +64,7 @@ public class ViewInputModule : Selectable
             return true;
         }
 
-        Point position = selectedView.Ground.Position;
+        Point position = selectedView.position;
         do {
             position = position.Next(direction);
 

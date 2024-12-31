@@ -7,9 +7,9 @@ public partial class CarView : PhysicsObject, IView
 {
     // TODO : Hide this
     public Car Car { get; private set; }
-    public bool IsAnimating => _coroutine != null;
     public Point position => Car.Variables.position;
 
+    public bool IsAnimating => _coroutine != null;
     private CarAnimation _animation = null;
     private Coroutine _coroutine = null;
     
@@ -68,10 +68,7 @@ public partial class CarView : PhysicsObject, IView
         yield return YieldDictionary.WaitForSeconds(_animation.duration);
     }
 
-    // TODO : Remove this
     public void ApplyVisual() {
-        // direction, position...
-
         transform.SetLocalPositionAndRotation(
             Car.Variables.position,
             Car.Variables.direction.Rotation());
