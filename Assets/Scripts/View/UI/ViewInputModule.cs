@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ViewInputDelegator : Selectable
+public class ViewInputModule : Selectable
 {
     [SerializeField] private LevelView _view;
     [SerializeField] private LevelGenerator _generator;
@@ -13,6 +13,7 @@ public class ViewInputDelegator : Selectable
 
     protected override void Start() {
         base.Start();
+        
         Select();
     }
 
@@ -70,7 +71,6 @@ public class ViewInputDelegator : Selectable
             if(_generator.Grid.IsOutOfBounds(position)) {
                 return false;
             }
-
         } while(!_view.GroundViews.ContainsKey(position));
         
         SelectView(_view.GroundViews[position]);

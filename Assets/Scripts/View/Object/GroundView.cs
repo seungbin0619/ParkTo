@@ -3,9 +3,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public partial class GroundView : MonoBehaviour, IAssignable<Trigger>
+public partial class GroundView : MonoBehaviour, IAssignable<Trigger>, IView
 {
     public Ground Ground { get; private set; }
+    public Point position => Ground.Position;
 
     public void Initialize(Ground ground) {
         Ground = ground;

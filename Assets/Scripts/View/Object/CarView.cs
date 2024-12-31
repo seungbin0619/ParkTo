@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-public partial class CarView : PhysicsObject
+public partial class CarView : PhysicsObject, IView
 {
     // TODO : Hide this
     public Car Car { get; private set; }
     public bool IsAnimating => _coroutine != null;
+    public Point position => Car.Variables.position;
+
     private CarAnimation _animation = null;
     private Coroutine _coroutine = null;
     
