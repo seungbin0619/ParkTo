@@ -13,7 +13,9 @@ public class LevelView : MonoBehaviour {
 
     private LevelStyle _style;
     private LevelGenerator _generator;
-    [SerializeField] private Tilemap groundTile;
+    
+    [SerializeField] 
+    private Tilemap groundTile;
 
     // test
     private Transform _gridTransform;

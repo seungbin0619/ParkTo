@@ -25,13 +25,8 @@ public class Grid {
     }
 
     private Ground GroundAt(Point position) {
-        if(IsOutOfBounds(position)) return null;
         _grounds.TryGetValue(position, out Ground ground);
         
         return ground;
-    }
-
-    public bool IsOutOfBounds(Point position) {
-        return !Rect.Contains((Vector2)position);
     }
 }

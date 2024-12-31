@@ -1,0 +1,1 @@
+public interface IAssignableView : IAssignable<Trigger>, IView { }

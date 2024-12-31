@@ -80,7 +80,7 @@ public partial class CarView : PhysicsObject, IView
     }
 }
 
-public partial class CarView : IAssignable<Trigger> {
+public partial class CarView : IAssignableView {
 
     public void Assign(Trigger trigger)
     {

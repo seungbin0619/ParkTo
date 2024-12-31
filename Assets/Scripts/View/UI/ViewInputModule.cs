@@ -6,15 +6,23 @@ using UnityEngine.UI;
 
 public class ViewInputModule : Selectable
 {
-    [SerializeField] private LevelView _view;
-    [SerializeField] private LevelGenerator _generator;
+    [SerializeField] 
+    private LevelView _view;
 
-    private IView selectedView = null;
+    [SerializeField] 
+    private LevelGenerator _generator;
+
+    private IEnumerable<IAssignableView> _currentViews;
+    private IAssignableView selectedView = null;
 
     protected override void Start() {
         base.Start();
-        
         Select();
+    }
+
+    private void Initialize() {
+        _currentViews = _view.GroundViews.Values;
+        _currentViews.Concat(_view.CarViews);
     }
 
     // Test
@@ -43,17 +51,10 @@ public class ViewInputModule : Selectable
         base.OnSelect(eventData);
     }
 
-    public override void OnDeselect(BaseEventData eventData)
-    {
-        selectedView = null;
-        base.OnDeselect(eventData);
-    }
-
-    public GroundView GetBoundaryGroundInDirection(Direction direction) {
+    public IAssignableView GetBoundaryGroundInDirection(Direction direction) {
         if(direction == Direction.None) return null;
-        if(!_view) return null;
 
-        return _view.GroundViews.Values.OrderByDescending(view =>
+        return _currentViews.OrderByDescending(view =>
             Vector3.Dot(direction.ToPoint(), Camera.main.WorldToViewportPoint(view.transform.position)))
             .FirstOrDefault();
     }
@@ -61,6 +62,7 @@ public class ViewInputModule : Selectable
     public bool TrySelectNextView(Direction direction) {
         if(selectedView == null) {
             SelectView(GetBoundaryGroundInDirection(direction.Opposite()));
+            
             return true;
         }
 
@@ -68,17 +70,17 @@ public class ViewInputModule : Selectable
         do {
             position = position.Next(direction);
 
-            if(_generator.Grid.IsOutOfBounds(position)) {
-                return false;
-            }
+            //if(_generator.Grid.IsOutOfBounds(position)) {
+            //    return false;
+            //}
         } while(!_view.GroundViews.ContainsKey(position));
         
         SelectView(_view.GroundViews[position]);
         return true;
     }
 
-    public void SelectView(GroundView view) {
-        if(!view) return;
+    public void SelectView(IAssignableView view) {
+        if(view == null) return;
 
         selectedView = view;
     }
@@ -97,18 +99,24 @@ public class ViewInputModule : Selectable
         }
     }
 
+    public override void OnDeselect(BaseEventData eventData)
+    {
+        selectedView = null;
+        base.OnDeselect(eventData);
+    }
+
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        //_view.OnViewCreated?.AddListener(Initialize);
+        _view.OnViewCreated?.AddListener(Initialize);
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
         
-        //_view.OnViewCreated?.RemoveAllListeners();
+        _view.OnViewCreated?.RemoveAllListeners();
     }
 
     protected override void Reset() {
