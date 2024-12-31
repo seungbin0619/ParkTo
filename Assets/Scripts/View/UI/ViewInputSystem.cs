@@ -8,19 +8,45 @@ public partial class ViewInputSystem {
     [SerializeField] 
     private LevelView _view;
     
-    private IEnumerable<IAssignableView> _currentViews;
+    private List<IAssignableView> _currentViews;
     private IAssignableView selectedView = null;
-
+    
     private void Initialize() {
-        _currentViews = _view.GroundViews.Values;
+        _currentViews = new();
+        
+        _currentViews.AddRange(_view.GroundViews.Values);
         _currentViews.Concat(_view.CarViews);
     }
 
     // return cancel flag
     private bool OnMoveInput(Direction direction) {
+        if(direction == Direction.None) return true;
+
+        if(selectedView == null) {
+            selectedView = GetBoundaryViewInDirection(direction);
+            return true;
+        }
         
+        // view의 rotate를 반영한 direction으로 변환환
+        direction = selectedView.transform.parent.parent.TransformDirection(direction.ToPoint()).ToDirection();
+        Debug.Log(direction);
 
         return true;
+    }
+
+    private void OnDrawGizmos() {
+        if(selectedView == null) return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(selectedView.transform.position, 1f);
+    }
+
+    public IAssignableView GetBoundaryViewInDirection(Direction direction) {
+        if(direction == Direction.None) return null;
+
+        return _currentViews.OrderByDescending(view =>
+            Vector3.Dot(direction.Opposite().ToPoint(), Camera.main.WorldToViewportPoint(view.transform.position)))
+            .FirstOrDefault();
     }
 
     protected override void OnEnable()
