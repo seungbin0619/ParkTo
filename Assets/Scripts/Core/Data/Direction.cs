@@ -104,4 +104,8 @@ public static class DirectionExtensionMethod {
     public static bool IsHorizontal(this Direction direction) {
         return direction == Direction.Left || direction == Direction.Right;
     }
+
+    public static bool IsPositive(this Direction direction) {
+        return direction == Direction.Up || direction == Direction.Right;
+    }
 }
