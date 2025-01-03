@@ -31,7 +31,8 @@ public partial class ViewInputSystem {
         
         // view의 rotate를 반영한 direction으로 변환
         var grid = selectedView.transform.parent.parent;
-        direction = grid.TransformDirection(direction.ToPoint()).ToDirection();
+        direction = grid.InverseTransformDirection(direction.ToPoint()).ToDirection();
+        Debug.Log(direction);
 
         Point mask = new(direction.ToPoint());
         mask.x = mask.x == 0 ? 1 : 0;
@@ -50,9 +51,12 @@ public partial class ViewInputSystem {
             break;
         }
 
-        selectedView = inlineViews.FirstOrDefault(view => view.position == targetPoint);
+        if(IsPositive) selectedView = inlineViews.FirstOrDefault(view => view.position == targetPoint);
+        else selectedView = inlineViews.LastOrDefault(view => view.position == targetPoint);
+        
         Debug.Log(selectedView + " " + targetPoint);
-        return selectedView == null;
+
+        return true; //selectedView == null;
     }
 
     private void OnDrawGizmos() {
