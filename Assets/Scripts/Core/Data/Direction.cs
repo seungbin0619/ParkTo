@@ -67,6 +67,15 @@ public static class DirectionExtensionMethod {
             { Direction.None, Direction.None },
         };
 
+    private static readonly IDictionary<Direction, Direction> swaps = 
+        new Dictionary<Direction, Direction>() {
+            { Direction.Up, Direction.Right },
+            { Direction.Right, Direction.Up },
+            { Direction.Left, Direction.Down },
+            { Direction.Down, Direction.Left },
+            { Direction.None, Direction.None },
+        };
+
     public static Vector2Int Vector(this Direction direction) {
         return vectors[direction];
     }
@@ -91,6 +100,10 @@ public static class DirectionExtensionMethod {
 
     public static Direction Opposite(this Direction direction) {
         return opposites[direction];
+    }
+
+    public static Direction Swap(this Direction direction) {
+        return swaps[direction];
     }
 
     public static Point ToPoint(this Direction direction) {

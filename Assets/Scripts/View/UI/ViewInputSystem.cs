@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,6 +8,9 @@ using UnityEngine.UI;
 public partial class ViewInputSystem {
     [SerializeField] 
     private LevelView _view;
+
+    [SerializeField]
+    private LevelGenerator _generator;
     
     private List<IAssignableView> _currentViews;
     private IAssignableView selectedView = null;
@@ -28,32 +32,50 @@ public partial class ViewInputSystem {
         }
 
         var IsPositive = direction.IsPositive();
+        var swap = direction.Swap();
         
         // view의 rotate를 반영한 direction으로 변환
         var grid = selectedView.transform.parent.parent;
         direction = grid.InverseTransformDirection(direction.ToPoint()).ToDirection();
+        swap = grid.InverseTransformDirection(swap.ToPoint()).ToDirection();
 
-        Point mask = new(direction.ToPoint());
-        mask.x = mask.x == 0 ? 1 : 0;
-        mask.z = mask.z == 0 ? 1 : 0;
+        Point mask = new() {
+            x = Math.Sign(direction.ToPoint().z),
+            z = Math.Sign(direction.ToPoint().x)
+        };
 
-        // 이걸 어떻게 깔끔하게 바꾸지?
-        // 선택된 view가 CarView이고(true), 이동 방향이 positive한 경우(true), 제외.
-        // 선택된 view가 GroundView이고(false), 이동 방향이 negative한 경우(false) 제외
+        // 같은 위치 요소(Car 등으로 인한..)를 포함할지 여부 결정
         Point targetPoint = selectedView.position;
         if(IsPositive == (selectedView.GetType() == typeof(CarView))) 
             targetPoint += direction.ToPoint();
 
+        //
+        
+        var rect = _generator.Grid.Rect;
         var inlineViews = _currentViews.Where(v => v != selectedView && (v.position * mask == targetPoint * mask));
+        
         while(inlineViews.All(view => view.position != targetPoint)) {
-            targetPoint += direction.ToPoint();
-            break;
+            if(!rect.Contains((Vector2)targetPoint)) { // 범위 밖으로 나간 경우에는
+                targetPoint += swap.ToPoint();
+                targetPoint += direction.Opposite().ToPoint();
+
+                if(!rect.Contains((Vector2)targetPoint)) {
+                    inlineViews = null;
+                    break;
+                }
+
+                inlineViews = _currentViews.Where(v => v != selectedView && (v.position * mask == targetPoint * mask));
+                var first = inlineViews.OrderByDescending(view => (view.position.x + view.position.z) * (mask.x + mask.z)).LastOrDefault();
+                targetPoint = first.position;
+
+            } else targetPoint += direction.ToPoint();
         }
 
-        if(IsPositive) selectedView = inlineViews.FirstOrDefault(view => view.position == targetPoint);
-        else selectedView = inlineViews.LastOrDefault(view => view.position == targetPoint);
+        //
+
+        if(IsPositive) selectedView = inlineViews?.FirstOrDefault(view => view.position == targetPoint) ?? selectedView;
+        else selectedView = inlineViews?.LastOrDefault(view => view.position == targetPoint);
         
-        Debug.Log(selectedView + " " + targetPoint + " " + (selectedView == null));
         return selectedView == null;
     }
 
@@ -110,6 +132,7 @@ public partial class ViewInputSystem : Selectable
 
     public override void OnDeselect(BaseEventData eventData)
     {
+        selectedView = null;
         base.OnDeselect(eventData);
     }
 
