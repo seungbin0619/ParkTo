@@ -12,8 +12,16 @@ public partial class GroundView : MonoBehaviour {
     }
 }
 
-public partial class GroundView : IAssignableView
-{    public void Assign(Trigger trigger)
+public partial class GroundView : IAssignableView {
+    public void SetFocus() {
+        Debug.Log("GroundView selected!");
+    }
+
+    public void LostFocus() {
+        Debug.Log("GroundView unselected!");
+    }
+
+    public void Assign(Trigger trigger)
     {
         _ground.SetTrigger(trigger);
     }

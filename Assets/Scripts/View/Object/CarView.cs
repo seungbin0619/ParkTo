@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-public partial class CarView : PhysicsObject, IView
+public partial class CarView : PhysicsObject
 {
     // TODO : Hide this
     public Car Car { get; private set; }
@@ -81,6 +81,13 @@ public partial class CarView : PhysicsObject, IView
 }
 
 public partial class CarView : IAssignableView {
+    public void SetFocus() {
+        Debug.Log("CarView selected!");
+    }
+
+    public void LostFocus() {
+        Debug.Log("CarView unselected!");
+    }
 
     public void Assign(Trigger trigger)
     {

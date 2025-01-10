@@ -1,1 +1,1 @@
-public interface IAssignableView : IAssignable<Trigger>, IView { }
+public interface IAssignableView : IAssignable<Trigger>, IView, IFocusable { }
