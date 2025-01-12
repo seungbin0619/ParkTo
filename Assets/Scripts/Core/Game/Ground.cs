@@ -7,16 +7,27 @@ public partial class Ground
     public Trigger Trigger { get; private set; } = null;
     public bool HasTrigger => Trigger != null;
 
+    ///
+    
+    private Car _enteredCar = null;
+    public bool IsEnterable => _enteredCar?.CanMove() ?? true;
+
+    ///
+
     public void SetTrigger(Trigger trigger) {
         Trigger = trigger;
     }
 
     public void Enter(Car car) {
         Trigger?.Execute(car);
+
+        _enteredCar = car;
     }
 
     public void Exit(Car car) {
         // ...
+
+        _enteredCar = null;
     }
 
     public Ground(Point position, Trigger trigger) {

@@ -45,8 +45,9 @@ public partial class Car
 
     public bool CanMove() {
         if(Variables.isStop || Variables.isBroken) return false;
-        if(_ground.Next(Variables.GetDirection()) == null) return false;
+        Ground next = _ground.Next(Variables.GetDirection());
+        if(next == null) return false;
 
-        return true;
+        return next.IsEnterable;
     }
 }
