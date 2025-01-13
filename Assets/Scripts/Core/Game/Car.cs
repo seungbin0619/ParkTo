@@ -17,17 +17,15 @@ public partial class Car
     public void SetVariables(CarVariables variables) {
         Variables = variables;
         
+        _ground?.Exit(this);
         _ground = _ground?.MoveTo(variables.position);
+        _ground?.Enter(this);
     }
 
     public void Move() {
         if(Variables.isStop) return;
 
-        Variables = Variables.Next();
-
-        _ground.Exit(this);
-        _ground = _ground.Next(Variables.GetDirection()); 
-        _ground.Enter(this);
+        SetVariables(Variables.Next());
 
         if(!CanMove()) {
             Stop();

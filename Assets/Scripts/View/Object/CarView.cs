@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -36,8 +37,10 @@ public partial class CarView : PhysicsObject
 
         while(Car.CanMove()) {
             Car.Move();
-            to = Car.Variables;
+            yield return YieldDictionary.WaitForEndOfFrame; // Wait for ALL car moved
+            // ...?
 
+            to = Car.Variables;
             yield return Animate(from, to);
             from = to;
         }
