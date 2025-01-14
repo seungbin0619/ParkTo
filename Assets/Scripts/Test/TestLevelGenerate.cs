@@ -7,7 +7,12 @@ public class TestLevelGenerate : MonoBehaviour
     public LevelState levelState;
     public LevelView levelView;
     public LevelPack pack;
+
     void Start() {
+        Reload();
+    }
+
+    public void Reload() {
         levelState.Initialize(pack, 0);
     }
 

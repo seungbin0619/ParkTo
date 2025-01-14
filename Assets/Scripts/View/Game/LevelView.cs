@@ -8,8 +8,8 @@ using UnityEngine.Tilemaps;
 /// 레벨에 필요한 View들을 생성하고 관리하는 클래스
 /// </summary>
 public class LevelView : MonoBehaviour {
-    public UnityEvent OnViewCreated = new();
-    public UnityEvent OnViewDestroyed = new();
+    public static UnityEvent OnViewCreated = new();
+    public static UnityEvent OnViewDestroyed = new();
 
     private LevelStyle _style;
     private LevelGenerator _generator;
@@ -48,12 +48,16 @@ public class LevelView : MonoBehaviour {
     }
 
     public void DestroyView() {
-        foreach(var view in _carViews) Destroy(view);
+        foreach(var view in _carViews) Destroy(view.gameObject);
+
         _carViews.Clear();
 
-        foreach(var view in _groundViews.Values) Destroy(view);
-        _groundViews.Clear();
+        foreach(var view in _groundViews.Values) 
+            Destroy(view.gameObject);
 
+        _groundViews.Clear();
+        groundTile.ClearAllTiles();
+        
         OnViewDestroyed?.Invoke();
     }
 

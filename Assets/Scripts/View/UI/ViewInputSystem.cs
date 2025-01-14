@@ -130,7 +130,7 @@ public partial class ViewInputSystem : Selectable
     protected override void OnEnable()
     {
         base.OnEnable();
-        _view.OnViewCreated?.AddListener(Initialize);
+        LevelView.OnViewCreated?.AddListener(Initialize);
     }
     
     private void Initialize() {
@@ -143,7 +143,7 @@ public partial class ViewInputSystem : Selectable
     protected override void OnDisable()
     {
         base.OnDisable();
-        _view.OnViewCreated?.RemoveAllListeners();
+        LevelView.OnViewCreated?.RemoveAllListeners();
     }
 
 

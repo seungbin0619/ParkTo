@@ -25,7 +25,7 @@ public partial class LevelState : MonoBehaviour {
         }
 
         _commands = new Stack<ICommand>();
-
+        
         _generator.Initialize(levelPack, index);
         _view.Initialize(levelPack.style);
         _view.CreateView();
@@ -33,7 +33,8 @@ public partial class LevelState : MonoBehaviour {
 
     public void Play() {
         if(!IsPlayable()) return;
-        Execute(new PlayCommand(_view.CarViews));
+
+        Execute(new PlayCommand(this, _view.CarViews));
     }
 
     private bool IsPlayable() {
