@@ -25,7 +25,7 @@ public partial class LevelState : MonoBehaviour {
         }
 
         _commands = new Stack<ICommand>();
-
+        
         _generator.Initialize(levelPack, index);
         _view.Initialize(levelPack.style);
         _view.CreateView();

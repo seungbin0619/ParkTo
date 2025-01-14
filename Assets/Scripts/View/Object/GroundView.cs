@@ -1,3 +1,4 @@
+using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,6 +10,14 @@ public partial class GroundView : MonoBehaviour {
 
     public void Initialize(Ground ground) {
         _ground = ground;
+    }
+
+    void OnDrawGizmos() {
+        if(_ground.IsEnterable) return;
+        
+        Debug.Log(_ground.Position);
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(transform.position, 0.3f);
     }
 }
 

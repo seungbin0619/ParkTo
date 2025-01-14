@@ -1126,12 +1126,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 511ddd54128e08e47bfeb5038bcff869, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnViewCreated:
-    m_PersistentCalls:
-      m_Calls: []
-  OnViewDestroyed:
-    m_PersistentCalls:
-      m_Calls: []
   groundTile: {fileID: 1125178083}
 --- !u!114 &940254342
 MonoBehaviour:
@@ -1669,7 +1663,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 940254344}
         m_TargetAssemblyTypeName: TestLevelGenerate, Assembly-CSharp
-        m_MethodName: AssignTrigger
+        m_MethodName: Reload
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
