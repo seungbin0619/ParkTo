@@ -47,9 +47,10 @@ public class CarVariables {
     }
 
     public CarVariables Next() {
-        CarVariables next = new(this);
-        next.position = position.Next(GetDirection());
-        
+        CarVariables next = new(this) {
+            position = position.Next(GetDirection())
+        };
+
         return next;
     }
 

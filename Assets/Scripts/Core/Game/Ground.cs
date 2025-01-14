@@ -20,7 +20,7 @@ public partial class Ground
 
     public void Enter(Car car) {
         Trigger?.Execute(car);
-
+        
         _enteredCar = car;
     }
 

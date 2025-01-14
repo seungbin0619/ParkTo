@@ -10,6 +10,7 @@ public partial class CarView : PhysicsObject
     public Car Car { get; private set; }
     public Point position => Car.Variables.position;
 
+
     public bool IsAnimating => _coroutine != null;
     private CarAnimation _animation = null;
     private Coroutine _coroutine = null;
@@ -38,7 +39,7 @@ public partial class CarView : PhysicsObject
         while(Car.CanMove()) {
             Car.Move();
             yield return YieldDictionary.WaitForEndOfFrame; // Wait for ALL car moved
-            // ...?
+            
 
             to = Car.Variables;
             yield return Animate(from, to);

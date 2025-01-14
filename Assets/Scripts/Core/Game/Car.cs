@@ -15,16 +15,15 @@ public partial class Car
     }
 
     public void SetVariables(CarVariables variables) {
-        Variables = variables;
-        
         _ground?.Exit(this);
         _ground = _ground?.MoveTo(variables.position);
         _ground?.Enter(this);
+
+        Variables = variables;
     }
 
     public void Move() {
-        if(Variables.isStop) return;
-
+        if(!CanMove()) return;
         SetVariables(Variables.Next());
 
         if(!CanMove()) {
@@ -44,8 +43,7 @@ public partial class Car
     public bool CanMove() {
         if(Variables.isStop || Variables.isBroken) return false;
         Ground next = _ground.Next(Variables.GetDirection());
-        if(next == null) return false;
-
-        return next.IsEnterable;
+        
+        return next?.IsEnterable ?? false;
     }
 }
