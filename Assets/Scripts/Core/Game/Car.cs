@@ -5,12 +5,12 @@ public partial class Car
 {
     public CarVariables Variables { get; private set; }
     public Color Color { get; }
-    private Ground _ground;
+    public Ground Ground { get; private set; }
 
     public Car(CarSerializer serilizer, Ground ground) {
         Color = serilizer.color;
 
-        _ground = ground;
+        Ground = ground;
         SetVariables(new CarVariables(serilizer));
     }
 
@@ -18,16 +18,16 @@ public partial class Car
     public void SetVariables(CarVariables variables) {
         Variables = variables;
 
-        _ground = _ground.MoveTo(variables.position);
+        Ground = Ground.MoveTo(variables.position);
     }
 
     public void Move() {
         if(!CanMove()) return;  
         Variables = Variables.Next();
 
-        _ground?.Exit(this);
-        _ground = _ground?.MoveTo(Variables.position);
-        _ground?.Enter(this);
+        Ground?.Exit(this);
+        Ground = Ground?.MoveTo(Variables.position);
+        Ground?.Enter(this);
 
         if(!CanMove()) {
             Stop();
@@ -35,7 +35,7 @@ public partial class Car
         }
     }
 
-    private void Stop() {
+    public void Stop() {
         Variables.Stop();
     }
 
@@ -45,7 +45,7 @@ public partial class Car
 
     public bool CanMove() {
         if(Variables.isStop || Variables.isBroken) return false;
-        Ground next = _ground.Next(Variables.GetDirection());
+        Ground next = Ground.Next(Variables.GetDirection());
         
         return next != null;
     }

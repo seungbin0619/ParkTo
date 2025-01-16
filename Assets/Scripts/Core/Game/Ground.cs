@@ -19,14 +19,14 @@ public partial class Ground
     }
 
     public void Enter(Car car) {
-        Debug.Log(Position + " entered" + Trigger);
+        // Debug.Log(Position + " entered" + Trigger);
         Trigger?.Execute(car);
         
         _enteredCar = car;
     }
 
     public void Exit(Car car) {
-        Debug.Log(Position + " exited");
+        // Debug.Log(Position + " exited");
         // ...
 
         _enteredCar = null;

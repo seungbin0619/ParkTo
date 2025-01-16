@@ -40,6 +40,7 @@ public partial class CarView : PhysicsObject
 
         while(Car.CanMove()) {
             Car.Move();
+            
             IsWaitingAnimate = true;
             yield return _waitAnimate ??= new WaitWhile(() => IsWaitingAnimate);
 
