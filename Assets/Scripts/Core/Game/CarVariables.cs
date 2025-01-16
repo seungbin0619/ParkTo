@@ -77,4 +77,10 @@ public class CarVariables {
     public void Broke() {
         isBroken = true;
     }
+    
+    public override string ToString()
+    {
+        return $"Position: {position}\nDirection: {direction}\nSpeed: {speed}\nIsStart: {isStart}\nIsStop: {isStop}\nIsBackUp: {isBackUp}\nIsBroken: {isBroken}";
+    }
+
 }

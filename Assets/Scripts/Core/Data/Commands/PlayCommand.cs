@@ -10,6 +10,7 @@ public class PlayCommand : ICommand
     private readonly LevelState _state;
     private readonly Dictionary<CarView, CarVariables> _variables;
     private readonly IEnumerable<CarView> _views;
+    private Coroutine _coroutine;
 
     public PlayCommand(LevelState _state, IEnumerable<CarView> _views) {
         _variables = new Dictionary<CarView, CarVariables>();
@@ -27,19 +28,35 @@ public class PlayCommand : ICommand
             _variables.Add(view, new(view.Car.Variables));
         }
 
-        // foreach(var view in _views) {
-        //     view.Play();
-        // }
+        foreach(var view in _views) {
+            view.Play();
+        }
 
-        _state.StartCoroutine(Move());
+        _coroutine = _state.StartCoroutine(Move());
     }
 
     private IEnumerator Move() {
+        while(_views.Any(view => view.IsAnimating)) {
+            var waitViews = _views.Where(view => view.IsWaitingAnimate);
 
-        yield return null;
+            if(waitViews.Count() > 0) {
+                foreach(var view in _views) {
+                    if(!view.IsWaitingAnimate) continue;
+                    view.IsWaitingAnimate = false;
+                }
+            }
+
+            yield return YieldDictionary.WaitForEndOfFrame;
+        }
+
+        _coroutine = null;
     }
 
     public void Undo() {
+        if(_coroutine != null) {
+            _state.StopCoroutine(_coroutine);
+        }
+
         foreach(var (view, variables) in _variables) {
             view.Stop();
             

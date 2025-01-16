@@ -10,6 +10,8 @@ public partial class CarView : PhysicsObject
     public Car Car { get; private set; }
     public Point position => Car.Variables.position;
 
+    public bool IsWaitingAnimate = false;
+    private WaitWhile _waitAnimate;
 
     public bool IsAnimating => _coroutine != null;
     private CarAnimation _animation = null;
@@ -38,8 +40,8 @@ public partial class CarView : PhysicsObject
 
         while(Car.CanMove()) {
             Car.Move();
-            yield return YieldDictionary.WaitForEndOfFrame; // Wait for ALL car moved
-            
+            IsWaitingAnimate = true;
+            yield return _waitAnimate ??= new WaitWhile(() => IsWaitingAnimate);
 
             to = Car.Variables;
             yield return Animate(from, to);
@@ -51,18 +53,19 @@ public partial class CarView : PhysicsObject
     }
 
     public void Stop() {
-        if(_coroutine == null) return;
+        if(_coroutine != null) {
+            _animation?.Stop();
+            StopCoroutine(_coroutine);
 
-        _animation?.Stop();
-        StopCoroutine(_coroutine);
+            IsWaitingAnimate = false;
+            _animation = null;
+            _coroutine = null;
+
+            Car.Reset();
+        }
 
         RB.linearVelocity = Vector3.zero;
         RB.angularVelocity = Vector3.zero;
-
-        _animation = null;
-        _coroutine = null;
-
-        Car.Reset();
     }
 
     public IEnumerator Animate(CarVariables from, CarVariables to) {

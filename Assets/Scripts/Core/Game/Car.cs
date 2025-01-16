@@ -14,13 +14,16 @@ public partial class Car
         SetVariables(new CarVariables(serilizer));
     }
 
+    // TODO: SetVariables, Move 리팩토링링
     public void SetVariables(CarVariables variables) {
         Variables = variables;
+
+        _ground = _ground.MoveTo(variables.position);
     }
 
     public void Move() {
-        if(!CanMove()) return;
-        SetVariables(Variables.Next());
+        if(!CanMove()) return;  
+        Variables = Variables.Next();
 
         _ground?.Exit(this);
         _ground = _ground?.MoveTo(Variables.position);
@@ -44,6 +47,6 @@ public partial class Car
         if(Variables.isStop || Variables.isBroken) return false;
         Ground next = _ground.Next(Variables.GetDirection());
         
-        return next?.IsEnterable ?? false;
+        return next != null;
     }
 }
