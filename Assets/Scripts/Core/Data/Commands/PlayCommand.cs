@@ -62,13 +62,9 @@ public class PlayCommand : ICommand
         
         while(updated && loopCount++ < maxUpdateLoopCount) {
             updated = false;
-
             foreach(var view in _views) {
-                if(!view.Car.CanMove()) continue; // 이미 멈췄으면 끝.
-                
-                // MEMO: 어떻게 줄일 수 없을까?
-                var ground = view.Car.Ground.Next(view.Car.Variables.GetDirection());
-                if(ground.IsEnterable) continue;
+                if(view.Car.IsStopped) continue;
+                if(view.Car.CanMove()) continue;
 
                 view.Car.Stop();
                 updated = true;
@@ -76,7 +72,7 @@ public class PlayCommand : ICommand
         }
 
         if(loopCount >= maxUpdateLoopCount) {
-            throw new Exception($"Warning: Detected excessive update iterations. The loop exceeded the configured limit of maxUpdateLoopCount({maxUpdateLoopCount}). Please check your update logic.");
+            throw new Exception($"Detected excessive update iterations. The loop exceeded the configured limit of maxUpdateLoopCount({maxUpdateLoopCount}). Please check your update logic.");
         }
     }
 

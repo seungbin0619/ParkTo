@@ -5,34 +5,30 @@ public partial class Car
 {
     public CarVariables Variables { get; private set; }
     public Color Color { get; }
-    public Ground Ground { get; private set; }
+    public Ground _ground;
+    public bool IsStopped => Variables.isStop || Variables.isBroken;
 
     public Car(CarSerializer serilizer, Ground ground) {
         Color = serilizer.color;
+        _ground = ground;
 
-        Ground = ground;
         SetVariables(new CarVariables(serilizer));
     }
 
-    // TODO: SetVariables, Move 리팩토링링
+    // TODO: SetVariables, Move 리팩토링
     public void SetVariables(CarVariables variables) {
         Variables = variables;
 
-        Ground = Ground.MoveTo(variables.position);
+        _ground?.Exit(this);
+        _ground = _ground?.MoveTo(variables.position);
+        _ground?.Enter(this);
     }
 
     public void Move() {
-        if(!CanMove()) return;  
-        Variables = Variables.Next();
+        SetVariables(Variables.Next());
+        _ground?.Traverse(this);
 
-        Ground?.Exit(this);
-        Ground = Ground?.MoveTo(Variables.position);
-        Ground?.Enter(this);
-
-        if(!CanMove()) {
-            Stop();
-            return;
-        }
+        if(!CanMove()) Stop();
     }
 
     public void Stop() {
@@ -44,9 +40,9 @@ public partial class Car
     }
 
     public bool CanMove() {
-        if(Variables.isStop || Variables.isBroken) return false;
-        Ground next = Ground.Next(Variables.GetDirection());
+        if(IsStopped) return false;
+        Ground next = _ground?.Next(Variables.GetDirection());
         
-        return next != null;
+        return next?.IsEnterable ?? false;
     }
 }

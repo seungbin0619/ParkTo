@@ -13,9 +13,9 @@ public partial class GroundView : MonoBehaviour {
     }
 
     void OnDrawGizmos() {
-        if(_ground.IsEnterable) return;
+        if(_ground._enteredCars.Count == 0) return;
         
-        Debug.Log(_ground.Position);
+        // Debug.Log(_ground.Position);
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(transform.position, 0.3f);
     }

@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public partial class Ground
@@ -9,8 +12,8 @@ public partial class Ground
 
     ///
     
-    private Car _enteredCar = null;
-    public bool IsEnterable => _enteredCar?.CanMove() ?? true;
+    public List<Car> _enteredCars = new();
+    public bool IsEnterable => _enteredCars.All(car => car.CanMove());
 
     ///
 
@@ -19,17 +22,15 @@ public partial class Ground
     }
 
     public void Enter(Car car) {
-        // Debug.Log(Position + " entered" + Trigger);
+        _enteredCars.Add(car);
+    }
+
+    public void Traverse(Car car) {
         Trigger?.Execute(car);
-        
-        _enteredCar = car;
     }
 
     public void Exit(Car car) {
-        // Debug.Log(Position + " exited");
-        // ...
-
-        _enteredCar = null;
+        _enteredCars.Remove(car);
     }
 
     public Ground(Point position, Trigger trigger) {

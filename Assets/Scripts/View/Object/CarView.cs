@@ -16,6 +16,13 @@ public partial class CarView : PhysicsObject
     public bool IsAnimating => _coroutine != null;
     private CarAnimation _animation = null;
     private Coroutine _coroutine = null;
+
+    void OnDrawGizmos() {
+        if(!Car.CanMove()) return;
+        
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(transform.position + Vector3.up * 0.4f, 0.2f);
+    }
     
     public void Initialize(Car car) {
         Car = car;
@@ -38,7 +45,7 @@ public partial class CarView : PhysicsObject
         yield return Animate(from, to);
         from = new(to);
 
-        while(Car.CanMove()) {
+        while(!Car.IsStopped) {
             Car.Move();
             
             IsWaitingAnimate = true;
