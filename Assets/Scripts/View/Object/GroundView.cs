@@ -30,6 +30,16 @@ public partial class GroundView : IAssignableView {
         Debug.Log("GroundView unselected!");
     }
 
+    void OnMouseEnter()
+    {
+        Debug.Log("ground entered " + position);
+    }
+
+    void OnMouseExit()
+    {
+        Debug.Log("ground exited " + position);
+    }
+
     public void Assign(Trigger trigger)
     {
         _ground.SetTrigger(trigger);

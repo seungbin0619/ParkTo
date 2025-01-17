@@ -1,3 +1,5 @@
+#pragma warning disable IDE1006
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +8,10 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public partial class ViewInputSystem {
+    private static readonly List<ViewInputSystem> _viewInputSystems = new();
+    public static ViewInputSystem current => _viewInputSystems.FirstOrDefault();
+    
+
     [SerializeField] 
     private LevelView _view;
 
@@ -130,6 +136,8 @@ public partial class ViewInputSystem : Selectable
     protected override void OnEnable()
     {
         base.OnEnable();
+        _viewInputSystems.Add(this);
+
         LevelView.OnViewCreated?.AddListener(Initialize);
     }
     
@@ -143,6 +151,8 @@ public partial class ViewInputSystem : Selectable
     protected override void OnDisable()
     {
         base.OnDisable();
+        _viewInputSystems.Remove(this);
+
         LevelView.OnViewCreated?.RemoveAllListeners();
     }
 

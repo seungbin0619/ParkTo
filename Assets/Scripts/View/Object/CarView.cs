@@ -60,6 +60,19 @@ public partial class CarView : PhysicsObject
         Stop();
     }
 
+    public IEnumerator Animate(CarVariables from, CarVariables to) {
+        _animation = CarAnimationGenerator.Generate(this, from, to);
+        _animation.Play();
+
+        yield return YieldDictionary.WaitForSeconds(_animation.duration);
+    }
+
+    public void ApplyVisual() {
+        transform.SetLocalPositionAndRotation(
+            Car.Variables.position,
+            Car.Variables.direction.Rotation());
+    }
+    
     public void Stop() {
         if(_coroutine != null) {
             _animation?.Stop();
@@ -76,19 +89,6 @@ public partial class CarView : PhysicsObject
         RB.angularVelocity = Vector3.zero;
     }
 
-    public IEnumerator Animate(CarVariables from, CarVariables to) {
-        _animation = CarAnimationGenerator.Generate(this, from, to);
-        _animation.Play();
-
-        yield return YieldDictionary.WaitForSeconds(_animation.duration);
-    }
-
-    public void ApplyVisual() {
-        transform.SetLocalPositionAndRotation(
-            Car.Variables.position,
-            Car.Variables.direction.Rotation());
-    }
-
     protected override void OnCollisionEnter(Collision collision)
     {
         // Stop();
@@ -102,6 +102,16 @@ public partial class CarView : IAssignableView {
 
     public void LostFocus() {
         Debug.Log("CarView unselected!");
+    }
+
+    void OnMouseEnter()
+    {
+        Debug.Log("car entered " + position);
+    }
+
+    void OnMouseExit()
+    {
+        Debug.Log("car exited " + position);
     }
 
     public void Assign(Trigger trigger)

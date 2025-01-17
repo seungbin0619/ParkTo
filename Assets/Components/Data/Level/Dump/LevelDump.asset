@@ -58,6 +58,14 @@ MonoBehaviour:
       x: 1
       z: 1
     position:
+      x: 1
+      z: 2
+    direction: 3
+  - color: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 0}
+    size:
+      x: 1
+      z: 1
+    position:
       x: 2
       z: 1
     direction: 3
@@ -69,12 +77,4 @@ MonoBehaviour:
       x: 0
       z: 0
     direction: 1
-  - color: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 0}
-    size:
-      x: 1
-      z: 1
-    position:
-      x: 1
-      z: 2
-    direction: 3
   triggers: []
