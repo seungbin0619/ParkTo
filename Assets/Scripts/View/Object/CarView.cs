@@ -104,6 +104,16 @@ public partial class CarView : IAssignableView {
         Debug.Log("CarView unselected!");
     }
 
+    void OnMouseEnter()
+    {
+        Debug.Log("car entered " + position);
+    }
+
+    void OnMouseExit()
+    {
+        Debug.Log("car exited " + position);
+    }
+
     public void Assign(Trigger trigger)
     {
         trigger.Execute(Car);
