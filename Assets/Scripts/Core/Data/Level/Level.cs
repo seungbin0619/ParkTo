@@ -15,10 +15,10 @@ public class Level : ScriptableObject
     public List<TriggerSerializer> triggers;
 
     void OnValidate() {
-        InitializeRect();
+        Initialize();
     }
 
-    private void InitializeRect() {
+    public void Initialize() {
         if(grounds.Count == 0) return;
 
         int xMin, zMin, xMax, zMax;

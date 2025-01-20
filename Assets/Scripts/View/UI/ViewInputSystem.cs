@@ -10,16 +10,16 @@ using UnityEngine.UI;
 public partial class ViewInputSystem {
     private static readonly List<ViewInputSystem> _viewInputSystems = new();
     public static ViewInputSystem current => _viewInputSystems.FirstOrDefault();
-    
+
 
     [SerializeField] 
     private LevelView _view;
 
     [SerializeField]
     private LevelGenerator _generator;
-    
     private List<IAssignableView> _currentViews;
-    private IAssignableView selectedView = null;
+
+    public IAssignableView selectedView = null;
     
     private void SelectView(IAssignableView view) {
         selectedView?.LostFocus();
@@ -156,7 +156,7 @@ public partial class ViewInputSystem : Selectable
         LevelView.OnViewCreated?.RemoveAllListeners();
     }
 
-
+#if UNITY_EDITOR
     protected override void Reset() {
         base.Reset();
 
@@ -168,4 +168,5 @@ public partial class ViewInputSystem : Selectable
         
         this.navigation = navigation;
     }
+#endif
 }

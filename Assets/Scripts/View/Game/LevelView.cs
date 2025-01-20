@@ -40,7 +40,7 @@ public class LevelView : MonoBehaviour {
     public void CreateView() {
         DestroyView();
         
-        MoveViewToCenter();
+        InitializeGridView();
         InstantiateGroundViews();
         InstantiateCarViews();
 
@@ -61,11 +61,13 @@ public class LevelView : MonoBehaviour {
         OnViewDestroyed?.Invoke();
     }
 
-    private void MoveViewToCenter() {
+    private void InitializeGridView() {
         Rect rect = _generator.ViewRect;
         Vector3 position = -rect.position - (rect.size - Vector2.one) * 0.5f;
 
-        groundTile.transform.position = position.XZY();
+        _gridRotation = 0;
+        _gridTransform.transform.rotation = Quaternion.identity;
+        groundTile.transform.localPosition = position.XZY();
     }
 
     private void InstantiateCarViews() {

@@ -10,6 +10,7 @@ public partial class CarView : PhysicsObject
     public Car Car { get; private set; }
     public Point position => Car.Variables.position;
 
+    [NonSerialized]
     public bool IsWaitingAnimate = false;
     private WaitWhile _waitAnimate;
 

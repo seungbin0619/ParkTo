@@ -25,6 +25,8 @@ public class LevelGenerator : MonoBehaviour {
         Cars = _level.cars.Select(c => new Car(c, Grid[c.position]));
     
         LevelIndex = index;
+        _level.Initialize();
+        
         onLevelGenerated?.Invoke(_level);
     }
 }
