@@ -13,7 +13,6 @@ public partial class LevelState : MonoBehaviour {
 
     public bool IsPlaying => !_view.CarViews.Any(view => view.IsAnimating);
     
-
     void Awake() {
         _generator = GetComponent<LevelGenerator>();
         _view = GetComponent<LevelView>();

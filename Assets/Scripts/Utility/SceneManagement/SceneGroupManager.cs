@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 namespace Core.SceneManagement {
     public class SceneGroupManager
     {
+        private const int defaultDelay = 100;
         public event Action<string> OnSceneLoaded = delegate {};
         public event Action<string> OnSceneUnloaded = delegate {};
 
@@ -30,8 +31,8 @@ namespace Core.SceneManagement {
                 _sceneLoaders.Add(sceneLoader);
             }
             
-            while(!_sceneLoaders.All(o => o.IsDone()))
-                await Task.Delay(100);
+            while(!_sceneLoaders.All(o => o.IsDone))
+                await Task.Delay(defaultDelay);
 
             // set active scene
             SceneManager.SetActiveScene(_sceneLoaders[0].Scene);
@@ -46,8 +47,8 @@ namespace Core.SceneManagement {
                 sceneLoader.Unload();
             }
 
-            while(!_sceneLoaders.All(o => o.IsDone()))
-                await Task.Delay(100);
+            while(!_sceneLoaders.All(o => o.IsDone))
+                await Task.Delay(defaultDelay);
             _sceneLoaders.Clear();
 
             OnSceneUnloaded.Invoke(ActiveSceneGroup.Name);
