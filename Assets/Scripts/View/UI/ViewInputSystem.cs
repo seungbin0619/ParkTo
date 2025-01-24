@@ -11,7 +11,6 @@ public partial class ViewInputSystem {
     private static readonly List<ViewInputSystem> _viewInputSystems = new();
     public static ViewInputSystem current => _viewInputSystems.FirstOrDefault();
 
-
     [SerializeField] 
     private LevelView _view;
 

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5973ae23c90017a48846e1b7bcf5891d, type: 3}
+  m_Name: LevelVeiwGroup
+  m_EditorClassIdentifier: 
+  Name: Level View
+  scenes:
+  - asset: {fileID: 102900000, guid: 913abed8431526a40ae38c510c0c2895, type: 3}
+    guid: 913abed8431526a40ae38c510c0c2895
+  - asset: {fileID: 102900000, guid: 99c9720ab356a0642a771bea13969a05, type: 3}
+    guid: 99c9720ab356a0642a771bea13969a05
