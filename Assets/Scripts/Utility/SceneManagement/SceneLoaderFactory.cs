@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Eflatun.SceneReference;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -28,6 +27,7 @@ namespace Core.SceneManagement {
         public SceneReference Reference { get; private set; }
         public Scene Scene => SceneManager.GetSceneByPath(Reference.Path);
         public bool IsLoaded => Scene.isLoaded;
+        public abstract bool IsDone { get; }
         
         public SceneLoader(SceneReference reference) { 
             Reference = reference; 
@@ -35,27 +35,26 @@ namespace Core.SceneManagement {
 
         public abstract void Load();
         public abstract void Unload();
-        public abstract bool IsDone();
-
     }
+    
     public class RegularSceneLoader : SceneLoader {
         private AsyncOperation _operation = null;
         public RegularSceneLoader(SceneReference reference) : base(reference) { }
+        public override bool IsDone => _operation?.isDone ?? true;
 
         public override void Load() => _operation = SceneManager.LoadSceneAsync(Reference.Path, LoadSceneMode.Additive);
         public override void Unload() => _operation = SceneManager.UnloadSceneAsync(Scene);
-        public override bool IsDone() => _operation?.isDone ?? true;
     }
 
     public class AddressablesSceneLoader : SceneLoader {
         private AsyncOperationHandle<SceneInstance> _handle;
         public AddressablesSceneLoader(SceneReference reference) : base(reference) { }
+        public override bool IsDone => !_handle.IsValid() || _handle.IsDone;
 
         public override void Load() => _handle = Addressables.LoadSceneAsync(Reference.Path, LoadSceneMode.Additive);
         public override void Unload() {
             if(!_handle.IsValid()) return;
             _handle = Addressables.UnloadSceneAsync(_handle);
         }
-        public override bool IsDone() => !_handle.IsValid() || _handle.IsDone;
     }
 }
