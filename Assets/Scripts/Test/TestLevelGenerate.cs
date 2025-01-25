@@ -5,6 +5,7 @@ using UnityEngine;
 public class TestLevelGenerate : MonoBehaviour
 {
     public LevelState levelState;
+    public LevelAction levelAction;
     public LevelView levelView;
     public LevelPack pack;
 
@@ -17,18 +18,18 @@ public class TestLevelGenerate : MonoBehaviour
     }
 
     public void Play() {
-        levelState.Play();
+        levelAction.Play();
     }
     
     public void Undo() {
-        levelState.Undo();
+        levelAction.Undo();
     }
 
     public void AssignTrigger() {
         var view = levelView.CarViews.First();
         var trigger = TriggerGenerator.Generate(TriggerType.TurnRight);
 
-        levelState.AssignTrigger(view, trigger);
+        levelAction.AssignTrigger(view, trigger);
     }
 
     void Update() {

@@ -8,15 +8,15 @@ using UnityEngine.Rendering;
 // save the current state of cars
 public class PlayCommand : ICommand
 {
-    private readonly LevelState _state;
+    private readonly LevelAction _action;
     private readonly Dictionary<CarView, CarVariables> _variables;
     private readonly IEnumerable<CarView> _views;
     private Coroutine _coroutine;
 
-    public PlayCommand(LevelState _state, IEnumerable<CarView> _views) {
+    public PlayCommand(LevelAction _action, IEnumerable<CarView> _views) {
         _variables = new Dictionary<CarView, CarVariables>();
 
-        this._state = _state;
+        this._action = _action;
         this._views = _views;
     }
 
@@ -33,7 +33,7 @@ public class PlayCommand : ICommand
             view.Play();
         }
 
-        _coroutine = _state.StartCoroutine(Move());
+        _coroutine = _action.StartCoroutine(Move());
     }
 
     private IEnumerator Move() {
@@ -78,7 +78,7 @@ public class PlayCommand : ICommand
 
     public void Undo() {
         if(_coroutine != null) {
-            _state.StopCoroutine(_coroutine);
+            _action.StopCoroutine(_coroutine);
         }
 
         foreach(var (view, variables) in _variables) {

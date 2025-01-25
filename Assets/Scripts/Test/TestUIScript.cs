@@ -3,6 +3,7 @@ using UnityEngine;
 public class TestUIScript : MonoBehaviour
 {
     private LevelState _levelState;
+    private LevelAction _levelAction;
     private LevelView _levelView;
     private LevelGenerator _levelGenerator;
 
@@ -20,6 +21,6 @@ public class TestUIScript : MonoBehaviour
     }
 
     public void Play() {
-        _levelState.Play();
+        _levelAction.Play();
     }
 }
