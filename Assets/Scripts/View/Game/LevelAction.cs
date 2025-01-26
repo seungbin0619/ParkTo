@@ -9,7 +9,7 @@ public partial class LevelAction : MonoBehaviour {
     public void Initialize() {
         _state = GetComponent<LevelState>();
         _view = GetComponent<LevelView>();
-
+        
         _commands = new Stack<ICommand>();
     }
 

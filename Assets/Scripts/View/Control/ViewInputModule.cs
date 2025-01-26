@@ -7,9 +7,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public partial class ViewInputSystem {
-    private static readonly List<ViewInputSystem> _viewInputSystems = new();
-    public static ViewInputSystem current => _viewInputSystems.FirstOrDefault();
+public partial class ViewInputModule {
+    public event Action<IAssignableView> OnSelectedViewChanged = delegate {};
+    private static readonly List<ViewInputModule> _viewInputSystems = new();
+    public static ViewInputModule current => _viewInputSystems.FirstOrDefault();
 
     [SerializeField] 
     private LevelView _view;
@@ -19,11 +20,20 @@ public partial class ViewInputSystem {
     private List<IAssignableView> _currentViews;
 
     public IAssignableView selectedView = null;
-    
+
+#if UNITY_EDITOR
+    protected override void Start()
+    {
+        base.Start();
+
+        if(Application.isPlaying) EventSystem.current.SetSelectedGameObject(gameObject);
+    }
+#endif
+
     private void SelectView(IAssignableView view) {
-        selectedView?.LostFocus();
         selectedView = view;
-        view?.SetFocus();
+
+        OnSelectedViewChanged?.Invoke(view);
     }
 
     private void OnDrawGizmos() {
@@ -34,12 +44,19 @@ public partial class ViewInputSystem {
     }
 }
 
-public partial class ViewInputSystem : Selectable
+public partial class ViewInputModule : Selectable, ISubmitHandler
 {
+    public void OnSubmit(BaseEventData eventData)
+    {
+        if(selectedView == null) return;
+        
+        selectedView.OnSubmit(eventData);
+    }
+
     public override void OnSelect(BaseEventData eventData)
     {
         OnMoveInput(GetLastInput());
-
+        
         base.OnSelect(eventData);
     }
 
@@ -136,8 +153,7 @@ public partial class ViewInputSystem : Selectable
     {
         base.OnEnable();
         _viewInputSystems.Add(this);
-
-        LevelView.OnViewCreated?.AddListener(Initialize);
+        _view.OnViewCreated += Initialize;
     }
     
     private void Initialize() {
@@ -151,8 +167,7 @@ public partial class ViewInputSystem : Selectable
     {
         base.OnDisable();
         _viewInputSystems.Remove(this);
-
-        LevelView.OnViewCreated?.RemoveAllListeners();
+        _view.OnViewCreated -=Initialize;
     }
 
 #if UNITY_EDITOR

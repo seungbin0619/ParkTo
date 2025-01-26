@@ -3,15 +3,24 @@ using UnityEngine;
 public class LevelInputModule : MonoBehaviour {
     [SerializeField]
     private GameObject _levelManager;
-    private LevelState _levelState;
-    private LevelView _levelView;
-    private LevelGenerator _levelGenerator;
+    private LevelAction _action;
+
+
+    private TriggerListView _triggerListView;
+    private ViewInputModule _viewInput;
 
     void Awake() {
-        _levelGenerator = _levelManager.GetComponent<LevelGenerator>();
-        _levelState = _levelManager.GetComponent<LevelState>();
-        _levelView = _levelManager.GetComponent<LevelView>();
+        _action = _levelManager.GetComponent<LevelAction>();
+
+        _viewInput = GetComponentInChildren<ViewInputModule>();
+        _triggerListView = GetComponentInChildren<TriggerListView>();
     }
 
-    
+    public void Play() {
+        _action.Play();
+    }
+
+    public void AssignTrigger() {
+        // _action.AssignTrigger(ViewInputSystem.current.selectedView, )
+    }
 }

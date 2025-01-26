@@ -29,8 +29,18 @@ public partial class LevelState : MonoBehaviour {
         }
 
         _generator.Initialize(levelPack, index);
-
+        _action.Initialize();
         _view.Initialize(levelPack.style);
         _view.CreateView();
+
+        
+    }
+
+    public void Clear() {
+        // ...
+    }
+
+    public void Failed() {
+        // ...
     }
 }

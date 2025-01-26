@@ -21,14 +21,11 @@ public partial class GroundView : MonoBehaviour {
 }
 
 public partial class GroundView : IAssignableView {
-    public void SetFocus() {
-        Debug.Log("GroundView selected!");
+    public void OnSubmit(BaseEventData eventData)
+    {
+        
     }
-
-    public void LostFocus() {
-        Debug.Log("GroundView unselected!");
-    }
-
+    
     void OnMouseEnter()
     {
         Debug.Log("ground entered " + position);
@@ -38,6 +35,7 @@ public partial class GroundView : IAssignableView {
     {
         Debug.Log("ground exited " + position);
     }
+
 
     public void Assign(Trigger trigger)
     {

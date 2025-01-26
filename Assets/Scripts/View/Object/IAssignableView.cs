@@ -1,1 +1,3 @@
-public interface IAssignableView : IAssignable<Trigger>, IView, IFocusable { }
+using UnityEngine.EventSystems;
+
+public interface IAssignableView : IAssignable<Trigger>, IView, ISubmitHandler { }

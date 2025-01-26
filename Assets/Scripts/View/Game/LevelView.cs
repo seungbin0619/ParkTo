@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -8,8 +9,8 @@ using UnityEngine.Tilemaps;
 /// 레벨에 필요한 View들을 생성하고 관리하는 클래스
 /// </summary>
 public class LevelView : MonoBehaviour {
-    public static UnityEvent OnViewCreated = new();
-    public static UnityEvent OnViewDestroyed = new();
+    public event Action OnViewCreated = delegate {};
+    public event Action OnViewDestroyed = delegate {};
 
     private LevelStyle _style;
     private LevelGenerator _generator;

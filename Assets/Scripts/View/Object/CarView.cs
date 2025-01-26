@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public partial class CarView : PhysicsObject
 {
@@ -97,14 +98,6 @@ public partial class CarView : PhysicsObject
 }
 
 public partial class CarView : IAssignableView {
-    public void SetFocus() {
-        Debug.Log("CarView selected!");
-    }
-
-    public void LostFocus() {
-        Debug.Log("CarView unselected!");
-    }
-
     void OnMouseEnter()
     {
         Debug.Log("car entered " + position);
@@ -113,6 +106,11 @@ public partial class CarView : IAssignableView {
     void OnMouseExit()
     {
         Debug.Log("car exited " + position);
+    }
+
+    public void OnSubmit(BaseEventData eventData)
+    {
+        // if trigger is not selected -> await select trigger...
     }
 
     public void Assign(Trigger trigger)
