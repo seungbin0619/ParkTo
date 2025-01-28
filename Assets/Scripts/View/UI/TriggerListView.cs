@@ -3,16 +3,15 @@
 using System;
 using System.Collections;
 using System.Linq;
+using System.Threading.Tasks;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class TriggerListView : Selectable
+public class TriggerListView : Selectable, ISubmitHandler
 {
     public TriggerType selectedTrigger { get; private set; } = TriggerType.None;
-
-    public bool IsSelected => selectedTrigger != TriggerType.None;
 
     [SerializeField] 
     private SerializedDictionary<TriggerType, TriggerView> _views;
@@ -33,6 +32,30 @@ public class TriggerListView : Selectable
 
         _triggers.OnTriggerUsed += (trigger) => _views[trigger.Type].Count = _triggers[trigger.Type];
         _triggers.OnTriggerCancelled += (trigger) => _views[trigger.Type].Count = _triggers[trigger.Type];
+    }
+
+    public async Task<Trigger> GetSelectedTrigger() {
+        if(selectedTrigger != TriggerType.None) {
+            return TriggerGenerator.Generate(selectedTrigger);
+        }
+
+        // open trigger select ui...
+
+
+        await Task.Run(() => {
+            Debug.Log("Wait for select trigger");
+            while(selectedTrigger != TriggerType.None);
+
+            // ...
+            Debug.Log("Trigger Selected");
+        });
+
+        return TriggerGenerator.Generate(selectedTrigger);
+    }
+
+    public void OnSubmit(BaseEventData eventData)
+    {
+        
     }
 
     public override void OnSelect(BaseEventData eventData)

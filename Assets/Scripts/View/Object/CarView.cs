@@ -108,11 +108,6 @@ public partial class CarView : IAssignableView {
         Debug.Log("car exited " + position);
     }
 
-    public void OnSubmit(BaseEventData eventData)
-    {
-        // if trigger is not selected -> await select trigger...
-    }
-
     public void Assign(Trigger trigger)
     {
         trigger.Execute(Car);

@@ -20,17 +20,19 @@ public class LevelInputModule : MonoBehaviour {
         _action.Play();
     }
 
-    public /*async*/ void AssignTrigger() {
-        IAssignableView view;
-        Trigger trigger;
+    public void Undo() {
+        _action.Undo();
+    }
 
-        // await _viewInput.GetSelectedView...
-        // await _triggerListView.GetSelectedTrigger...
+    public void Restart() {
+        // implement
+        
+    }
 
-        view = _viewInput.selectedView;
-        trigger = TriggerGenerator.Generate(_triggerListView.selectedTrigger);
+    public async void AssignTrigger() {
+        IAssignableView view = await _viewInput.GetSelectedView();
+        Trigger trigger = await _triggerListView.GetSelectedTrigger();
 
         _action.AssignTrigger(view, trigger);
-        
     }
 }

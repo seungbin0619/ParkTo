@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class TriggerView : Selectable
+public class TriggerView : Selectable, ISubmitHandler
 {
     private TriggerListView _parent;
 
@@ -23,6 +23,10 @@ public class TriggerView : Selectable
         _parent = GetComponentInParent<TriggerListView>();
     }
 
+    public void OnSubmit(BaseEventData eventData)
+    {
+        _parent.OnSubmit(eventData);
+    }
 
     private void ApplyVisual() {
         // ...
@@ -30,16 +34,14 @@ public class TriggerView : Selectable
         interactable = _count > 0;
     }
 
-    public override void OnSelect(BaseEventData eventData)
-    {
+    public override void OnSelect(BaseEventData eventData) {
         base.OnSelect(eventData);
 
         _parent.SelectTrigger(Type);
         Debug.Log(Type + " selected");
     }
 
-    public override void OnDeselect(BaseEventData eventData)
-    {
+    public override void OnDeselect(BaseEventData eventData) {
         base.OnDeselect(eventData);
 
         _parent.SelectTrigger(TriggerType.None);

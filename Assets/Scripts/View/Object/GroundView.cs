@@ -21,10 +21,6 @@ public partial class GroundView : MonoBehaviour {
 }
 
 public partial class GroundView : IAssignableView {
-    public void OnSubmit(BaseEventData eventData)
-    {
-        
-    }
     
     void OnMouseEnter()
     {

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -30,6 +31,21 @@ public partial class ViewInputModule {
     }
 #endif
 
+    public async Task<IAssignableView> GetSelectedView() {
+        if(selectedView != null) return selectedView;
+
+        // open view select ui...
+
+        await Task.Run(() => {
+            Debug.Log("Wait for select view");
+            while(selectedView == null);
+
+            Debug.Log("view Selected");
+        });
+
+        return selectedView;
+    }
+
     private void SelectView(IAssignableView view) {
         selectedView = view;
 
@@ -50,7 +66,7 @@ public partial class ViewInputModule : Selectable, ISubmitHandler
     {
         if(selectedView == null) return;
         
-        selectedView.OnSubmit(eventData);
+        
     }
 
     public override void OnSelect(BaseEventData eventData)
