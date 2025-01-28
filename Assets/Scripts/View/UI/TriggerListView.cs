@@ -1,44 +1,56 @@
+#pragma warning disable IDE1006
+
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class TriggerListView : MonoBehaviour
+public class TriggerListView : Selectable
 {
-    Triggers _triggers;
-
-    [NonSerialized]
-    public TriggerType selectedTrigger = TriggerType.None;
+    public TriggerType selectedTrigger { get; private set; } = TriggerType.None;
 
     public bool IsSelected => selectedTrigger != TriggerType.None;
 
-    private List<TriggerView> _views;
-
     [SerializeField] 
-    private TriggerView _triggerViewPrefab;
+    private Dictionary<TriggerType, TriggerView> _views;
 
     public void Initialize(LevelGenerator generator) {
-        // Debug.Log("trigger list initialized");
-        
-        _triggers = generator.Triggers;
-        _views = new();
+        var _triggers = generator.Triggers;
 
+        _views.Values.Select(view => view.enabled = false);
         foreach(var type in _triggers.Types) {
-            uint count = _triggers[type];
+            _views[type].enabled = true;
 
-            var view = Instantiate(_triggerViewPrefab, transform);
-            view.Initialize(type, count);
-
-            _views.Add(view);
+            _views[type].Count = _triggers[type];
         }
+
+        _triggers.OnTriggerUsed += (trigger) => _views[trigger.Type].Count = _triggers[trigger.Type];
+        _triggers.OnTriggerCancelled += (trigger) => _views[trigger.Type].Count = _triggers[trigger.Type];
     }
 
-    void OnEnable() {
+    public void SelectTrigger(TriggerType type) {
+        selectedTrigger = type;
+    }
+
+    public override void OnSelect(BaseEventData eventData)
+    {
+        if(_views.Count() == 0) return;
+
+        base.OnSelect(eventData);
+        _views.Values.FirstOrDefault().Select();
+    }
+
+    protected override void OnEnable() {
+        base.OnEnable();
         GameObject.FindGameObjectWithTag("LevelManager")
             .GetComponent<LevelGenerator>()
             .OnLevelGenerated += Initialize;
     }
 
-    void OnDisable() {
+    protected override void OnDisable() {
+        base.OnDisable();
         try {
             GameObject.FindGameObjectWithTag("LevelManager")
                 .GetComponent<LevelGenerator>()

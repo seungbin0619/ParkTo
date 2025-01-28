@@ -19,7 +19,7 @@ public partial class ViewInputModule {
     private LevelGenerator _generator;
     private List<IAssignableView> _currentViews;
 
-    public IAssignableView selectedView = null;
+    public IAssignableView selectedView { get; private set; } = null;
 
 #if UNITY_EDITOR
     protected override void Start()

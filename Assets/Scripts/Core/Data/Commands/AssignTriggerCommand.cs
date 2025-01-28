@@ -1,11 +1,14 @@
 public class AssignTriggerCommand : ICommand
 {
+    private readonly Triggers _triggers;
     private readonly IAssignable<Trigger> _target;
     private readonly Trigger _trigger;
 
-    public AssignTriggerCommand(IAssignable<Trigger> target, Trigger trigger) {
+    public AssignTriggerCommand(Triggers triggers, IAssignable<Trigger> target, Trigger trigger) {
         _target = target;
         _trigger = trigger;
+        
+        _triggers = triggers;
     }
 
     public bool Condition() {
@@ -14,9 +17,11 @@ public class AssignTriggerCommand : ICommand
 
     public void Execute() {
         _target.Assign(_trigger);
+        _triggers.Use(_trigger);
     }
 
     public void Undo() {
         _target.Unassign(_trigger);
+        _triggers.Cancel(_trigger);
     }
 }

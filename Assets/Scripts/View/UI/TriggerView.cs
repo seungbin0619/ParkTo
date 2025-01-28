@@ -1,19 +1,40 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class TriggerView : MonoBehaviour
+public class TriggerView : Button
 {
-    private  TriggerType _type;
+    private TriggerListView _parent;
+
+    [field: SerializeField] 
+    public TriggerType Type { get; private set; } = TriggerType.None;
+
     private uint _count;
-    private bool _isInfinite => _count == uint.MaxValue;
-
-    public void Initialize(TriggerType type, uint count) {
-        _type = type;
-        _count = count;
-
+    public uint Count { get => _count; set {
+        _count = value;
         ApplyVisual();
+    }}
+    
+    private bool IsInfinite => Count == uint.MaxValue;
+
+    protected override void Awake() {
+        base.Awake();
+
+        _parent = GetComponentInParent<TriggerListView>();
     }
+
 
     private void ApplyVisual() {
         // ...
+
+        interactable = _count > 0;
+    }
+
+    public override void OnSelect(BaseEventData eventData)
+    {
+        base.OnSelect(eventData);
+        _parent.SelectTrigger(Type);
+
+        Debug.Log(Type);
     }
 }

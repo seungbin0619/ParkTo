@@ -5,7 +5,6 @@ public class LevelInputModule : MonoBehaviour {
     private GameObject _levelManager;
     private LevelAction _action;
 
-
     private TriggerListView _triggerListView;
     private ViewInputModule _viewInput;
 
@@ -20,7 +19,17 @@ public class LevelInputModule : MonoBehaviour {
         _action.Play();
     }
 
-    public void AssignTrigger() {
-        // _action.AssignTrigger(ViewInputSystem.current.selectedView, )
+    public /*async*/ void AssignTrigger() {
+        IAssignableView view;
+        Trigger trigger;
+
+        // await _viewInput.GetSelectedView...
+        // await _triggerListView.GetSelectedTrigger...
+
+        view = _viewInput.selectedView;
+        trigger = TriggerGenerator.Generate(_triggerListView.selectedTrigger);
+
+        _action.AssignTrigger(view, trigger);
+        
     }
 }

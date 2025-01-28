@@ -4,11 +4,13 @@ using UnityEngine;
 public partial class LevelAction : MonoBehaviour {
     private LevelState _state;
     private LevelView _view;
+    private LevelGenerator _generator;
     private Stack<ICommand> _commands;
 
     public void Initialize() {
         _state = GetComponent<LevelState>();
         _view = GetComponent<LevelView>();
+        _generator = GetComponent<LevelGenerator>();
         
         _commands = new Stack<ICommand>();
     }
@@ -25,7 +27,8 @@ public partial class LevelAction : MonoBehaviour {
 
     public void AssignTrigger(IAssignable<Trigger> target, Trigger trigger) {
         if(!IsAssignable()) return;
-        Execute(new AssignTriggerCommand(target, trigger));
+        
+        Execute(new AssignTriggerCommand(_generator.Triggers, target, trigger));
     }
 
     private bool IsAssignable() {
