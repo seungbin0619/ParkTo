@@ -1,8 +1,9 @@
 #pragma warning disable IDE1006
 
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -14,14 +15,18 @@ public class TriggerListView : Selectable
     public bool IsSelected => selectedTrigger != TriggerType.None;
 
     [SerializeField] 
-    private Dictionary<TriggerType, TriggerView> _views;
+    private SerializedDictionary<TriggerType, TriggerView> _views;
 
     public void Initialize(LevelGenerator generator) {
         var _triggers = generator.Triggers;
 
-        _views.Values.Select(view => view.enabled = false);
+        _views.Values.Select(view => _triggers.Types.Contains(view.Type) ? view : null).ToList().ForEach((view) => {
+            if(view == null) return;
+            view.gameObject.SetActive(false);
+        });
+
         foreach(var type in _triggers.Types) {
-            _views[type].enabled = true;
+            _views[type].gameObject.SetActive(true);
 
             _views[type].Count = _triggers[type];
         }
@@ -30,16 +35,25 @@ public class TriggerListView : Selectable
         _triggers.OnTriggerCancelled += (trigger) => _views[trigger.Type].Count = _triggers[trigger.Type];
     }
 
-    public void SelectTrigger(TriggerType type) {
-        selectedTrigger = type;
-    }
-
     public override void OnSelect(BaseEventData eventData)
     {
-        if(_views.Count() == 0) return;
-
         base.OnSelect(eventData);
-        _views.Values.FirstOrDefault().Select();
+
+        // refactor..
+        IEnumerator SelectFirstTrigger() {
+            yield return new WaitWhile(() => EventSystem.current.alreadySelecting);
+
+            _views.Values.FirstOrDefault(view => view.interactable).Select();
+            interactable = false;
+        }
+
+        StartCoroutine(SelectFirstTrigger());
+    }
+
+    public void SelectTrigger(TriggerType type) {
+        selectedTrigger = type;
+
+        interactable = selectedTrigger == TriggerType.None;
     }
 
     protected override void OnEnable() {

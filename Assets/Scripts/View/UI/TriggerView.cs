@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class TriggerView : Button
+public class TriggerView : Selectable
 {
     private TriggerListView _parent;
 
@@ -33,8 +33,16 @@ public class TriggerView : Button
     public override void OnSelect(BaseEventData eventData)
     {
         base.OnSelect(eventData);
-        _parent.SelectTrigger(Type);
 
-        Debug.Log(Type);
+        _parent.SelectTrigger(Type);
+        Debug.Log(Type + " selected");
+    }
+
+    public override void OnDeselect(BaseEventData eventData)
+    {
+        base.OnDeselect(eventData);
+
+        _parent.SelectTrigger(TriggerType.None);
+        Debug.Log(Type + " deselected");
     }
 }

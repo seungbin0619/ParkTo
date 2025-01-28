@@ -1,5 +1,3 @@
-using System;
-
 public enum TriggerType {
     None = -2,
     Ban = -1,
