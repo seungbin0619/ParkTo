@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class LevelInputModule : MonoBehaviour {
-    [SerializeField]
     private GameObject _levelManager;
     private LevelAction _action;
 
@@ -10,6 +9,7 @@ public class LevelInputModule : MonoBehaviour {
     private ViewInputModule _viewInput;
 
     void Awake() {
+        _levelManager = GameObject.FindGameObjectWithTag("LevelManager");
         _action = _levelManager.GetComponent<LevelAction>();
 
         _viewInput = GetComponentInChildren<ViewInputModule>();

@@ -13,6 +13,7 @@ public class TestUIScript : MonoBehaviour
         _levelGenerator = levelManagerObject.GetComponent<LevelGenerator>();
         _levelState = levelManagerObject.GetComponent<LevelState>();
         _levelView = levelManagerObject.GetComponent<LevelView>();
+        _levelAction = levelManagerObject.GetComponent<LevelAction>();
     }
 
     public void Message(string message)

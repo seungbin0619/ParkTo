@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Level View
   scenes:
-  - asset: {fileID: 102900000, guid: 913abed8431526a40ae38c510c0c2895, type: 3}
-    guid: 913abed8431526a40ae38c510c0c2895
+  - asset: {fileID: 102900000, guid: 316754f2c470a444ca5eaa00cbb5cfea, type: 3}
+    guid: 316754f2c470a444ca5eaa00cbb5cfea
+  - asset: {fileID: 102900000, guid: 2ddc674dc0c064c479a2bd5e8b70c3c2, type: 3}
+    guid: 2ddc674dc0c064c479a2bd5e8b70c3c2
   - asset: {fileID: 102900000, guid: 99c9720ab356a0642a771bea13969a05, type: 3}
     guid: 99c9720ab356a0642a771bea13969a05

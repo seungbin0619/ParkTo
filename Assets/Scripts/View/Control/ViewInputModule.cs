@@ -13,10 +13,7 @@ public partial class ViewInputModule {
     private static readonly List<ViewInputModule> _viewInputSystems = new();
     public static ViewInputModule current => _viewInputSystems.FirstOrDefault();
 
-    [SerializeField] 
     private LevelView _view;
-
-    [SerializeField]
     private LevelGenerator _generator;
     private List<IAssignableView> _currentViews;
 
@@ -30,6 +27,16 @@ public partial class ViewInputModule {
         if(Application.isPlaying) EventSystem.current.SetSelectedGameObject(gameObject);
     }
 #endif
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        var levelManager = GameObject.FindGameObjectWithTag("LevelManager");
+        
+        _view = levelManager.GetComponent<LevelView>();
+        _generator = levelManager.GetComponent<LevelGenerator>();
+    }
 
     public async Task<IAssignableView> GetSelectedView() {
         if(selectedView != null) return selectedView;
@@ -182,6 +189,7 @@ public partial class ViewInputModule : Selectable, ISubmitHandler
     protected override void OnDisable()
     {
         base.OnDisable();
+        
         _viewInputSystems.Remove(this);
         _view.OnViewCreated -=Initialize;
     }
