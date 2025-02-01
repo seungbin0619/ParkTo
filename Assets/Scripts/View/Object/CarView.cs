@@ -100,12 +100,19 @@ public partial class CarView : PhysicsObject
 public partial class CarView : IAssignableView {
     void OnMouseEnter()
     {
-        Debug.Log("car entered " + position);
+        // Debug.Log("car entered " + position);
+
+        ViewInputModule.current.SelectView(this);
     }
 
     void OnMouseExit()
     {
-        Debug.Log("car exited " + position);
+        // Debug.Log("car exited " + position);
+    }
+
+    void OnMouseDown()
+    {
+        ViewInputModule.current.AssignTrigger();
     }
 
     public void Assign(Trigger trigger)

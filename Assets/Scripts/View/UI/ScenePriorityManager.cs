@@ -19,6 +19,12 @@ public class ScenePriorityManager : MonoBehaviour {
 
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.sceneUnloaded += OnSceneUnloaded;
+
+        // OnScenePriorityChanged += () => {
+        //     foreach(var k in _scenePriority) {
+        //         Debug.Log(k.Key + " " + k.Value);
+        //     }
+        // };
     }
 
     void OnDisable() {

@@ -11,12 +11,22 @@ using UnityEngine.UI;
 
 public class TriggerListView : Selectable, ISubmitHandler
 {
+    private LevelInputModule _module;
     public TriggerType selectedTrigger { get; private set; } = TriggerType.None;
 
     [SerializeField] 
     private SerializedDictionary<TriggerType, TriggerView> _views;
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        _module = GetComponentInParent<LevelInputModule>();
+    }
+
     public void Initialize(LevelGenerator generator) {
+        if(!generator.HasInitialized) return;
+        // Debug.Log("initialized");
         var _triggers = generator.Triggers;
 
         _views.Values.Select(view => _triggers.Types.Contains(view.Type) ? view : null).ToList().ForEach((view) => {
@@ -34,28 +44,35 @@ public class TriggerListView : Selectable, ISubmitHandler
         _triggers.OnTriggerCancelled += (trigger) => _views[trigger.Type].Count = _triggers[trigger.Type];
     }
 
-    public async Task<Trigger> GetSelectedTrigger() {
+    public async Task<TriggerType> GetSelectedTriggerAsync() {
         if(selectedTrigger != TriggerType.None) {
-            return TriggerGenerator.Generate(selectedTrigger);
+            return selectedTrigger;
         }
 
         // open trigger select ui...
-
+        ScenePriorityManager.current.SetHighestPriority("LevelTriggerUI");
 
         await Task.Run(() => {
             Debug.Log("Wait for select trigger");
-            while(selectedTrigger != TriggerType.None);
-
+            while(selectedTrigger == TriggerType.None);
+            // Debug.Log(selectedTrigger);
             // ...
             Debug.Log("Trigger Selected");
         });
 
-        return TriggerGenerator.Generate(selectedTrigger);
+        ScenePriorityManager.current.ResetAllPriorities();
+        return selectedTrigger;
     }
 
     public void OnSubmit(BaseEventData eventData)
     {
-        
+        AssignTrigger();
+    }
+
+    public void AssignTrigger() {
+        if(selectedTrigger == TriggerType.None) return;
+
+        _module.AssignTrigger(selectedTrigger);
     }
 
     public override void OnSelect(BaseEventData eventData)
@@ -81,13 +98,17 @@ public class TriggerListView : Selectable, ISubmitHandler
 
     protected override void OnEnable() {
         base.OnEnable();
-        GameObject.FindGameObjectWithTag("LevelManager")
-            .GetComponent<LevelGenerator>()
-            .OnLevelGenerated += Initialize;
+
+        var generator = GameObject.FindGameObjectWithTag("LevelManager")
+            .GetComponent<LevelGenerator>();
+
+        Initialize(generator);
+        generator.OnLevelGenerated += Initialize;
     }
 
     protected override void OnDisable() {
         base.OnDisable();
+
         try {
             GameObject.FindGameObjectWithTag("LevelManager")
                 .GetComponent<LevelGenerator>()

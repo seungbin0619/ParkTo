@@ -7,12 +7,16 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Selectable))]
 public class SelectableHandler : MonoBehaviour {
     private Selectable _selectable;
+
+    [SerializeField]
     private string _sceneName;
 
     void Awake() {
         _selectable = GetComponent<Selectable>();
-        _sceneName = gameObject.scene.name;
-        
+        if(_sceneName == "") _sceneName = gameObject.scene.name;
+    }
+
+    void Start() {
         UpdateInteractable();
     }
 
@@ -21,7 +25,9 @@ public class SelectableHandler : MonoBehaviour {
     }
 
     void OnDisable() {
-        ScenePriorityManager.current.OnScenePriorityChanged -= UpdateInteractable;
+        try {
+            ScenePriorityManager.current.OnScenePriorityChanged -= UpdateInteractable;
+        } catch { /* ignored */ }
     }
 
     void UpdateInteractable() {

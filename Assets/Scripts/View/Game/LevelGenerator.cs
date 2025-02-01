@@ -19,6 +19,7 @@ public class LevelGenerator : MonoBehaviour {
     public Rect ViewRect => _level.Rect;
 
     public int LevelIndex { get; private set; }
+    public bool HasInitialized => _level != null;
 
     public void Initialize(LevelPack levelPack, int index) {
         _pack = levelPack;

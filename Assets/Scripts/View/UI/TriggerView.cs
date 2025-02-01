@@ -28,6 +28,23 @@ public class TriggerView : Selectable, ISubmitHandler
         _parent.OnSubmit(eventData);
     }
 
+    public override void OnPointerDown(PointerEventData eventData)
+    {
+        base.OnPointerDown(eventData);
+
+        _parent.OnSubmit(eventData);
+    }
+
+    public override void OnPointerEnter(PointerEventData eventData)
+    {
+        Select();
+    }
+
+    public override void OnPointerExit(PointerEventData eventData)
+    {
+        
+    }
+
     private void ApplyVisual() {
         // ...
 
@@ -38,13 +55,13 @@ public class TriggerView : Selectable, ISubmitHandler
         base.OnSelect(eventData);
 
         _parent.SelectTrigger(Type);
-        Debug.Log(Type + " selected");
+        // Debug.Log(Type + " selected");
     }
 
     public override void OnDeselect(BaseEventData eventData) {
         base.OnDeselect(eventData);
 
         _parent.SelectTrigger(TriggerType.None);
-        Debug.Log(Type + " deselected");
+        // Debug.Log(Type + " deselected");
     }
 }

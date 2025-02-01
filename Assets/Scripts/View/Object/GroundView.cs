@@ -24,12 +24,19 @@ public partial class GroundView : IAssignableView {
     
     void OnMouseEnter()
     {
-        Debug.Log("ground entered " + position);
+        // Debug.Log("ground entered " + position);
+
+        ViewInputModule.current?.SelectView(this);
     }
 
     void OnMouseExit()
     {
-        Debug.Log("ground exited " + position);
+        // Debug.Log("ground exited " + position);
+    }
+
+    void OnMouseDown()
+    {
+        ViewInputModule.current?.AssignTrigger();
     }
 
 
