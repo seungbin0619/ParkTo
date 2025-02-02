@@ -6,6 +6,7 @@ public class LevelInputModule : MonoBehaviour {
     private LevelAction _action;
     private TriggerListView _triggerListView;
     private ViewInputModule _viewInput;
+    private bool _isWaiting;
 
     void Awake() {
         _levelManager = GameObject.FindGameObjectWithTag("LevelManager");
@@ -29,19 +30,37 @@ public class LevelInputModule : MonoBehaviour {
     }
 
     public async void AssignTrigger(IAssignableView view) {
-        // IAssignableView view = await _viewInput.GetSelectedViewAsync();
+        if(_isWaiting) return;
+        _isWaiting = true;
+
         Trigger trigger = TriggerGenerator.Generate(await _triggerListView.GetSelectedTriggerAsync());
-        Debug.Log(trigger);
-        
-        Debug.Log(view + " " + trigger.Type);
-        //_action.AssignTrigger(view, trigger);
+
+        AssignTrigger(view, trigger);
+
+        _viewInput.Reject();
+        _triggerListView.Reject();
+
+        _isWaiting = false;
     }
 
     public async void AssignTrigger(TriggerType type) {
+        if(_isWaiting) return;
+        _isWaiting = true;
+
         IAssignableView view = await _viewInput.GetSelectedViewAsync();
         Trigger trigger = TriggerGenerator.Generate(type);
 
+        AssignTrigger(view, trigger);
+
+        _viewInput.Reject();
+        _triggerListView.Reject();
+
+        _isWaiting = false;
+    }
+
+    public void AssignTrigger(IAssignableView view, Trigger trigger) {
         Debug.Log(view + " " + trigger.Type);
-        //_action.AssignTrigger(view, trigger);
+
+        _action.AssignTrigger(view, trigger);
     }
 }

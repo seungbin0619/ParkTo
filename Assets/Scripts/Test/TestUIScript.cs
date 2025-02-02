@@ -24,4 +24,8 @@ public class TestUIScript : MonoBehaviour
     public void Play() {
         _levelAction.Play();
     }
+
+    public void Undo() {
+        _levelAction.Undo();
+    }
 }

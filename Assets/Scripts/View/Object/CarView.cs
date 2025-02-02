@@ -1,3 +1,5 @@
+#pragma warning disable UNT0008
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -102,12 +104,14 @@ public partial class CarView : IAssignableView {
     {
         // Debug.Log("car entered " + position);
 
-        ViewInputModule.current.SelectView(this);
+        // if (ViewInputModule.current == null) return;
+        ViewInputModule.current?.SelectView(this);
     }
 
     void OnMouseExit()
     {
         // Debug.Log("car exited " + position);
+        ViewInputModule.current?.SelectView(null);
     }
 
     void OnMouseDown()

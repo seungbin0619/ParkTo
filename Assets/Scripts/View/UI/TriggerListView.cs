@@ -12,7 +12,7 @@ using UnityEngine.UI;
 public class TriggerListView : Selectable, ISubmitHandler
 {
     private LevelInputModule _module;
-    public TriggerType selectedTrigger { get; private set; } = TriggerType.None;
+    private TriggerType _selectedTrigger = TriggerType.None, _submittedTrigger = TriggerType.None;
 
     [SerializeField] 
     private SerializedDictionary<TriggerType, TriggerView> _views;
@@ -45,8 +45,8 @@ public class TriggerListView : Selectable, ISubmitHandler
     }
 
     public async Task<TriggerType> GetSelectedTriggerAsync() {
-        if(selectedTrigger != TriggerType.None) {
-            return selectedTrigger;
+        if(_submittedTrigger != TriggerType.None) {
+            return _submittedTrigger;
         }
 
         // open trigger select ui...
@@ -54,14 +54,14 @@ public class TriggerListView : Selectable, ISubmitHandler
 
         await Task.Run(() => {
             Debug.Log("Wait for select trigger");
-            while(selectedTrigger == TriggerType.None);
+            while(_submittedTrigger == TriggerType.None);
             // Debug.Log(selectedTrigger);
             // ...
             Debug.Log("Trigger Selected");
         });
 
         ScenePriorityManager.current.ResetAllPriorities();
-        return selectedTrigger;
+        return _submittedTrigger;
     }
 
     public void OnSubmit(BaseEventData eventData)
@@ -69,10 +69,15 @@ public class TriggerListView : Selectable, ISubmitHandler
         AssignTrigger();
     }
 
-    public void AssignTrigger() {
-        if(selectedTrigger == TriggerType.None) return;
+    public void Reject() {
+        _submittedTrigger = TriggerType.None;
+    }
 
-        _module.AssignTrigger(selectedTrigger);
+    public void AssignTrigger() {
+        if(_selectedTrigger == TriggerType.None) return;
+
+        _submittedTrigger = _selectedTrigger;
+        _module.AssignTrigger(_submittedTrigger);
     }
 
     public override void OnSelect(BaseEventData eventData)
@@ -91,9 +96,9 @@ public class TriggerListView : Selectable, ISubmitHandler
     }
 
     public void SelectTrigger(TriggerType type) {
-        selectedTrigger = type;
+        _selectedTrigger = type;
 
-        interactable = selectedTrigger == TriggerType.None;
+        interactable = _selectedTrigger == TriggerType.None;
     }
 
     protected override void OnEnable() {

@@ -1,3 +1,5 @@
+#pragma warning disable UNT0008
+
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -26,12 +28,14 @@ public partial class GroundView : IAssignableView {
     {
         // Debug.Log("ground entered " + position);
 
+        //if(ViewInputModule.current == null) return;
         ViewInputModule.current?.SelectView(this);
     }
 
     void OnMouseExit()
     {
         // Debug.Log("ground exited " + position);
+        ViewInputModule.current?.SelectView(null);
     }
 
     void OnMouseDown()

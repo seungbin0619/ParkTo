@@ -73,7 +73,8 @@ public class ScenePriorityManager : MonoBehaviour {
     }
 
     public void ResetAllPriorities() {
-        foreach(var sceneName in _scenePriority.Keys) {
+        var keys = _scenePriority.Keys.ToList();
+        foreach(var sceneName in keys) {
             _scenePriority[sceneName] = 0;
         }
 

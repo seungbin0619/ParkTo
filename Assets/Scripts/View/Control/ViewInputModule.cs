@@ -18,7 +18,7 @@ public partial class ViewInputModule {
     private LevelGenerator _generator;
     private List<IAssignableView> _currentViews;
 
-    private IAssignableView _selectedView;
+    private IAssignableView _selectedView, _submittedView;
 
     protected override void Awake()
     {
@@ -33,21 +33,24 @@ public partial class ViewInputModule {
     }
 
     public async Task<IAssignableView> GetSelectedViewAsync() {
-        if(_selectedView != null) return _selectedView;
+        if(_submittedView != null) return _submittedView;
 
         // open view select ui...
         ScenePriorityManager.current.SetHighestPriority("LevelObjectView");
 
         await Task.Run(() => {
             Debug.Log("Wait for select view");
-            while(_selectedView == null);
+            while(_submittedView == null);
 
             Debug.Log("view Selected");
         });
 
         ScenePriorityManager.current.ResetAllPriorities();
+        return _submittedView;
+    }
 
-        return _selectedView;
+    public void Reject() {
+        _submittedView = null;
     }
 
     public void SelectView(IAssignableView view) {
@@ -75,7 +78,8 @@ public partial class ViewInputModule : Selectable, ISubmitHandler
     public void AssignTrigger() {
         if(_selectedView == null) return;
         
-        _module.AssignTrigger(_selectedView);
+        _submittedView = _selectedView;
+        _module.AssignTrigger(_selectedView);   
     }
 
     public override void OnSelect(BaseEventData eventData)
@@ -91,6 +95,8 @@ public partial class ViewInputModule : Selectable, ISubmitHandler
         
         float dx = module.input.GetAxisRaw("Horizontal");
         float dy = module.input.GetAxisRaw("Vertical");
+
+        if(dx == 0 && dy == 0) return Direction.None;
 
         if (Mathf.Abs(dx) > Mathf.Abs(dy)) {
             return dx > 0 ? Direction.Right : Direction.Left;
