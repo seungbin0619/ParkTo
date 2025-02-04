@@ -10,10 +10,24 @@ public partial class Ground
     public Trigger Trigger { get; private set; } = null;
     public bool HasTrigger => Trigger != null;
 
-    ///
+    /// 
     
     public List<Car> _enteredCars = new();
-    public bool IsEnterable => _enteredCars.All(car => car.CanMove());
+    private static Ground _firstEnterableChecked = null;
+    public bool IsEnterable {
+        get {
+            bool first = false;
+            if(_firstEnterableChecked == this) return true;
+
+            first = _firstEnterableChecked == null;
+            _firstEnterableChecked ??= this;
+
+            bool ret = _enteredCars.All(car => car.CanMove());
+
+            if(first) _firstEnterableChecked = null;
+            return ret;
+        }
+    }
 
     ///
 

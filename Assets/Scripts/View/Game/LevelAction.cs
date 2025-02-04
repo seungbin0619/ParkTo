@@ -26,10 +26,8 @@ public partial class LevelAction : MonoBehaviour {
     }
 
     public void AssignTrigger(IAssignable<Trigger> target, Trigger trigger) {
-        Debug.Log("0");
         if(!IsAssignable()) return;
         
-        Debug.Log("1");
         Execute(new AssignTriggerCommand(_generator.Triggers, target, trigger));
     }
 

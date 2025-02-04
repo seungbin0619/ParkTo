@@ -19,103 +19,19 @@ MonoBehaviour:
   - position:
       x: 0
       z: 0
-    trigger: -2
+    trigger: 0
   - position:
       x: 1
       z: 0
-    trigger: -2
-  - position:
-      x: 2
-      z: 0
-    trigger: -2
-  - position:
-      x: 3
-      z: 0
-    trigger: -2
-  - position:
-      x: 4
-      z: 0
-    trigger: -2
+    trigger: 0
   - position:
       x: 0
       z: 1
-    trigger: -2
+    trigger: 0
   - position:
       x: 1
       z: 1
-    trigger: -2
-  - position:
-      x: 2
-      z: 1
-    trigger: -2
-  - position:
-      x: 3
-      z: 1
-    trigger: -2
-  - position:
-      x: 4
-      z: 1
-    trigger: 5
-  - position:
-      x: 0
-      z: 2
-    trigger: -2
-  - position:
-      x: 1
-      z: 2
-    trigger: -2
-  - position:
-      x: 2
-      z: 2
-    trigger: -2
-  - position:
-      x: 3
-      z: 2
-    trigger: -2
-  - position:
-      x: 4
-      z: 2
-    trigger: -2
-  - position:
-      x: 0
-      z: 3
-    trigger: -2
-  - position:
-      x: 1
-      z: 3
-    trigger: -2
-  - position:
-      x: 2
-      z: 3
-    trigger: -2
-  - position:
-      x: 3
-      z: 3
-    trigger: -2
-  - position:
-      x: 4
-      z: 3
-    trigger: -2
-  - position:
-      x: 0
-      z: 4
-    trigger: -2
-  - position:
-      x: 1
-      z: 4
-    trigger: 4
-  - position:
-      x: 2
-      z: 4
-    trigger: -2
-  - position:
-      x: 3
-      z: 4
-    trigger: -2
-  - position:
-      x: 4
-      z: 4
-    trigger: -2
+    trigger: 0
   cars:
   - color: {r: 0, g: 0, b: 0, a: 0}
     size:
@@ -123,14 +39,30 @@ MonoBehaviour:
       z: 0
     position:
       x: 0
-      z: 4
+      z: 0
+    direction: 1
+  - color: {r: 0, g: 0, b: 0, a: 0}
+    size:
+      x: 0
+      z: 0
+    position:
+      x: 0
+      z: 1
     direction: 4
   - color: {r: 0, g: 0, b: 0, a: 0}
     size:
       x: 0
       z: 0
     position:
-      x: 4
+      x: 1
+      z: 1
+    direction: 2
+  - color: {r: 0, g: 0, b: 0, a: 0}
+    size:
+      x: 0
       z: 0
-    direction: 1
+    position:
+      x: 1
+      z: 0
+    direction: 3
   triggers: []

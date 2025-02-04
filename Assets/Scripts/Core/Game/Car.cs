@@ -35,6 +35,10 @@ public partial class Car
         Variables.Stop();
     }
 
+    public void Broke() {
+        Variables.Broke();
+    }
+
     public void Reset() {
         Variables.Reset();
     }

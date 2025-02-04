@@ -94,8 +94,12 @@ public partial class CarView : PhysicsObject
     }
 
     protected override void OnCollisionEnter(Collision collision)
-    {
-        // Stop();
+    {  
+        if(!collision.gameObject.CompareTag("Car")) return;
+
+        Stop();
+
+        Car.Broke();
     }
 }
 
