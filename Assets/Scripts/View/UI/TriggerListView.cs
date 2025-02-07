@@ -9,10 +9,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class TriggerListView : Selectable, ISubmitHandler
+public class TriggerListView : SelectableList<TriggerType>
 {
+    protected override string TargetScene => "LevelTriggerUI";
+
     private LevelInputModule _module;
-    private TriggerType _selectedTrigger = TriggerType.None, _submittedTrigger = TriggerType.None;
 
     [SerializeField] 
     private SerializedDictionary<TriggerType, TriggerView> _views;
@@ -43,41 +44,10 @@ public class TriggerListView : Selectable, ISubmitHandler
         _triggers.OnTriggerUsed += (trigger) => _views[trigger.Type].Count = _triggers[trigger.Type];
         _triggers.OnTriggerCancelled += (trigger) => _views[trigger.Type].Count = _triggers[trigger.Type];
     }
-
-    public async Task<TriggerType> GetSelectedTriggerAsync() {
-        if(_submittedTrigger != TriggerType.None) {
-            return _submittedTrigger;
-        }
-
-        // open trigger select ui...
-        ScenePriorityManager.current.SetHighestPriority("LevelTriggerUI");
-
-        await Task.Run(() => {
-            Debug.Log("Wait for select trigger");
-            while(_submittedTrigger == TriggerType.None);
-            // Debug.Log(selectedTrigger);
-            // ...
-            Debug.Log("Trigger Selected");
-        });
-
-        ScenePriorityManager.current.ResetAllPriorities();
-        return _submittedTrigger;
-    }
-
-    public void OnSubmit(BaseEventData eventData)
+    public override void OnSubmitted()
     {
-        AssignTrigger();
-    }
-
-    public void Reject() {
-        _submittedTrigger = TriggerType.None;
-    }
-
-    public void AssignTrigger() {
-        if(_selectedTrigger == TriggerType.None) return;
-
-        _submittedTrigger = _selectedTrigger;
-        _module.AssignTrigger(_submittedTrigger);
+        base.OnSubmitted();
+        _module.AssignTrigger(_selected);  
     }
 
     public override void OnSelect(BaseEventData eventData)
@@ -93,12 +63,6 @@ public class TriggerListView : Selectable, ISubmitHandler
         }
 
         StartCoroutine(SelectFirstTrigger());
-    }
-
-    public void SelectTrigger(TriggerType type) {
-        _selectedTrigger = type;
-
-        interactable = _selectedTrigger == TriggerType.None;
     }
 
     protected override void OnEnable() {

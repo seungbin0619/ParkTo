@@ -9,6 +9,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public partial class ViewInputModule {
+    protected override string TargetScene => "LevelManager";
+
     public event Action<IAssignableView> OnSelectedViewChanged = delegate {};
     private static readonly List<ViewInputModule> _viewInputSystems = new();
     public static ViewInputModule current => _viewInputSystems.FirstOrDefault();
@@ -18,7 +20,6 @@ public partial class ViewInputModule {
     private LevelGenerator _generator;
     private List<IAssignableView> _currentViews;
 
-    private IAssignableView _selectedView, _submittedView;
 
     protected override void Awake()
     {
@@ -32,54 +33,27 @@ public partial class ViewInputModule {
         _module = GetComponentInParent<LevelInputModule>();
     }
 
-    public async Task<IAssignableView> GetSelectedViewAsync() {
-        if(_submittedView != null) return _submittedView;
-
-        // open view select ui...
-        ScenePriorityManager.current.SetHighestPriority("LevelObjectView");
-
-        await Task.Run(() => {
-            Debug.Log("Wait for select view");
-            while(_submittedView == null);
-
-            Debug.Log("view Selected");
-        });
-
-        ScenePriorityManager.current.ResetAllPriorities();
-        return _submittedView;
-    }
-
-    public void Reject() {
-        _submittedView = null;
-    }
-
-    public void SelectView(IAssignableView view) {
-        if(_selectedView == null) Select();
-        _selectedView = view;
-
+    public override void Select(IAssignableView view) {
+        if(!HasValue(_selected)) Select();
+        
+        base.Select(view);
         OnSelectedViewChanged?.Invoke(view);
     }
 
     private void OnDrawGizmos() {
-        if(_selectedView == null) return;
+        if(_selected == null) return;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(_selectedView.transform.position, 1f);
+        Gizmos.DrawSphere(_selected.transform.position, 1f);
     }
 }
 
-public partial class ViewInputModule : Selectable, ISubmitHandler
+public partial class ViewInputModule : SelectableList<IAssignableView>
 {
-    public void OnSubmit(BaseEventData eventData)
+    public override void OnSubmitted()
     {
-        AssignTrigger();
-    }
-
-    public void AssignTrigger() {
-        if(_selectedView == null) return;
-        
-        _submittedView = _selectedView;
-        _module.AssignTrigger(_selectedView);   
+        base.OnSubmitted();
+        _module.AssignTrigger(_selected);  
     }
 
     public override void OnSelect(BaseEventData eventData)
@@ -116,8 +90,8 @@ public partial class ViewInputModule : Selectable, ISubmitHandler
     private bool OnMoveInput(Direction direction) {
         if(direction == Direction.None) return true;
 
-        if(_selectedView == null) {
-            SelectView(GetBoundaryViewInDirection(direction));
+        if(_selected == null) {
+            Select(GetBoundaryViewInDirection(direction));
             return true;
         }
 
@@ -125,7 +99,7 @@ public partial class ViewInputModule : Selectable, ISubmitHandler
         var swap = direction.Swap();
         
         // view의 rotate를 반영한 direction으로 변환
-        var grid = _selectedView.transform.parent.parent;
+        var grid = _selected.transform.parent.parent;
         direction = grid.InverseTransformDirection(direction.ToPoint()).ToDirection();
         swap = grid.InverseTransformDirection(swap.ToPoint()).ToDirection();
 
@@ -135,12 +109,12 @@ public partial class ViewInputModule : Selectable, ISubmitHandler
         };
 
         // 같은 위치 요소(Car 등으로 인한..)를 포함할지 여부 결정
-        Point targetPoint = _selectedView.position;
-        if(IsPositive == (_selectedView.GetType() == typeof(CarView))) 
+        Point targetPoint = _selected.position;
+        if(IsPositive == (_selected.GetType() == typeof(CarView))) 
             targetPoint += direction.ToPoint();
 
         var rect = _generator.Grid.Rect;
-        var inlineViews = _currentViews.Where(v => v != _selectedView && (v.position * mask == targetPoint * mask));
+        var inlineViews = _currentViews.Where(v => v != _selected && (v.position * mask == targetPoint * mask));
         
         while(inlineViews.All(view => view.position != targetPoint)) {
             if(!rect.Contains((Vector2)targetPoint)) { // 범위 밖으로 나간 경우에는
@@ -152,17 +126,17 @@ public partial class ViewInputModule : Selectable, ISubmitHandler
                     break;
                 }
 
-                inlineViews = _currentViews.Where(v => v != _selectedView && (v.position * mask == targetPoint * mask));
+                inlineViews = _currentViews.Where(v => v != _selected && (v.position * mask == targetPoint * mask));
                 var first = inlineViews.OrderByDescending(view => (view.position.x + view.position.z) * (mask.x + mask.z)).LastOrDefault();
                 targetPoint = first.position;
 
             } else targetPoint += direction.ToPoint();
         }
 
-        if(IsPositive) SelectView(inlineViews?.FirstOrDefault(view => view.position == targetPoint) ?? _selectedView);
-        else SelectView(inlineViews?.LastOrDefault(view => view.position == targetPoint));
+        if(IsPositive) Select(inlineViews?.FirstOrDefault(view => view.position == targetPoint) ?? _selected);
+        else Select(inlineViews?.LastOrDefault(view => view.position == targetPoint));
         
-        return _selectedView == null;
+        return _selected == null;
     }
 
     public IAssignableView GetBoundaryViewInDirection(Direction direction) {
@@ -175,7 +149,7 @@ public partial class ViewInputModule : Selectable, ISubmitHandler
 
     public override void OnDeselect(BaseEventData eventData)
     {
-        SelectView(null);
+        Select(null);
 
         base.OnDeselect(eventData);
     }

@@ -33,7 +33,8 @@ public class LevelInputModule : MonoBehaviour {
         if(_isWaiting) return;
         _isWaiting = true;
 
-        Trigger trigger = TriggerGenerator.Generate(await _triggerListView.GetSelectedTriggerAsync());
+        Trigger trigger = TriggerGenerator.Generate(
+            await _triggerListView.GetSelectedAsync());
 
         AssignTrigger(view, trigger);
 
@@ -47,7 +48,7 @@ public class LevelInputModule : MonoBehaviour {
         if(_isWaiting) return;
         _isWaiting = true;
 
-        IAssignableView view = await _viewInput.GetSelectedViewAsync();
+        IAssignableView view = await _viewInput.GetSelectedAsync();
         Trigger trigger = TriggerGenerator.Generate(type);
 
         AssignTrigger(view, trigger);

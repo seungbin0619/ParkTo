@@ -15,8 +15,7 @@ public partial class GroundView : MonoBehaviour {
 
     void OnDrawGizmos() {
         if(_ground._enteredCars.Count == 0) return;
-        
-        // Debug.Log(_ground.Position);
+
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(transform.position, 0.3f);
     }
@@ -26,21 +25,17 @@ public partial class GroundView : IAssignableView {
     
     void OnMouseEnter()
     {
-        // Debug.Log("ground entered " + position);
-
-        //if(ViewInputModule.current == null) return;
-        ViewInputModule.current?.SelectView(this);
+        ViewInputModule.current?.Select(this);
     }
 
     void OnMouseExit()
     {
-        // Debug.Log("ground exited " + position);
-        ViewInputModule.current?.SelectView(null);
+        ViewInputModule.current?.Select(null);
     }
 
     void OnMouseDown()
     {
-        ViewInputModule.current?.AssignTrigger();
+        ViewInputModule.current?.OnSubmitted();
     }
 
 

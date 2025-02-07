@@ -1,7 +1,7 @@
 public enum TriggerType {
-    None = -2,
     Ban = -1,
-    TurnRight = 0,
+    None = 0,
+    TurnRight,
     TurnLeft,
     Stop,
     BackUp,

@@ -79,10 +79,10 @@ MonoBehaviour:
     direction: 1
   triggers:
   - count: 3
-    type: 0
-  - count: 3
     type: 1
   - count: 3
     type: 2
   - count: 3
     type: 3
+  - count: 3
+    type: 4

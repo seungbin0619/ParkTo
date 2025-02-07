@@ -54,14 +54,12 @@ public class TriggerView : Selectable, ISubmitHandler
     public override void OnSelect(BaseEventData eventData) {
         base.OnSelect(eventData);
 
-        _parent.SelectTrigger(Type);
-        // Debug.Log(Type + " selected");
+        _parent.Select(Type);
     }
 
     public override void OnDeselect(BaseEventData eventData) {
         base.OnDeselect(eventData);
 
-        _parent.SelectTrigger(TriggerType.None);
-        // Debug.Log(Type + " deselected");
+        _parent.Select(Type);
     }
 }
