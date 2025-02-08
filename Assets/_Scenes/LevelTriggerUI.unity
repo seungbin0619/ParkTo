@@ -506,10 +506,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 631860781}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13cad7fa3d699f24aaf3fcc6da7f7829, type: 3}
+  m_Script: {fileID: 11500000, guid: f5f1bce9334e28f479ee4a801344d32f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneName: 
+  _targets:
+  - {fileID: 631860784}
 --- !u!114 &631860784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -965,10 +967,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 822343569}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13cad7fa3d699f24aaf3fcc6da7f7829, type: 3}
+  m_Script: {fileID: 11500000, guid: f5f1bce9334e28f479ee4a801344d32f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneName: LevelObjectView
+  _targets:
+  - {fileID: 822343572}
 --- !u!114 &822343572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1257,10 +1261,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1457850678}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13cad7fa3d699f24aaf3fcc6da7f7829, type: 3}
+  m_Script: {fileID: 11500000, guid: f5f1bce9334e28f479ee4a801344d32f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneName: 
+  _targets:
+  - {fileID: 1457850681}
 --- !u!114 &1457850681
 MonoBehaviour:
   m_ObjectHideFlags: 0

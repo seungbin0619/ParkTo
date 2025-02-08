@@ -1,11 +1,17 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public abstract class PriorityObserver : MonoBehaviour
+public class PriorityObserver : MonoBehaviour
 {
     [SerializeField]
     private string _sceneName;
+
+    [SerializeField]
+    private List<MonoBehaviour> _targets;
+    
+    public bool State { get; private set; }
 
     protected virtual void Awake() {
         if(_sceneName == "") _sceneName = gameObject.scene.name;
@@ -21,11 +27,15 @@ public abstract class PriorityObserver : MonoBehaviour
         } catch { /* ignored */ }
     }
 
-    protected virtual void UpdateState(bool state) {
-        throw new NotImplementedException();
+    protected virtual void OnStateUpdate(bool state) {
+        foreach(var target in _targets) {
+            target.enabled = state;
+        }
     }
 
     protected void SetState() {
-        UpdateState(ScenePriorityManager.current.IsHighestPriority(_sceneName));
+        State = ScenePriorityManager.current.IsHighestPriority(_sceneName);
+
+        OnStateUpdate(State);
     }
 }

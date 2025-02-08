@@ -20,7 +20,6 @@ public partial class ViewInputModule {
     private LevelGenerator _generator;
     private List<IAssignableView> _currentViews;
 
-
     protected override void Awake()
     {
         base.Awake();
@@ -43,7 +42,7 @@ public partial class ViewInputModule {
     private void OnDrawGizmos() {
         if(_selected == null) return;
 
-        Gizmos.color = Color.red;
+        Gizmos.color = _submitted == null ? Color.red : Color.blue;
         Gizmos.DrawSphere(_selected.transform.position, 1f);
     }
 }

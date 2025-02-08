@@ -8,6 +8,7 @@ public abstract class SelectableList<T> : Selectable, ISubmitHandler {
     protected abstract string TargetScene { get; }
 
     protected T _selected, _submitted;
+    private bool _cancelled = false;
 
     protected bool HasValue(T a) {
         return !EqualityComparer<T>.Default.Equals(a, default);
@@ -19,11 +20,18 @@ public abstract class SelectableList<T> : Selectable, ISubmitHandler {
         ScenePriorityManager.current.SetHighestPriority(TargetScene);
 
         await Task.Run(() => {
-            while(!HasValue(_submitted));
+            while(!_cancelled && !HasValue(_submitted));
         });
 
         ScenePriorityManager.current.ResetPriority(TargetScene);
         return _submitted;
+    }
+
+    public void OnCancel() {
+        if(!enabled) return;
+        
+        _cancelled = true;
+        Debug.Log("Canceled");
     }
 
     public virtual void Select(T target) {

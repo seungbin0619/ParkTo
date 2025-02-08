@@ -20,17 +20,29 @@ public class LevelInputModule : MonoBehaviour {
         _triggerListView = GetComponentInChildren<TriggerListView>();
     }
 
+    public void OnPlay() => Play();
+
     public void Play() {
         _action.Play();
     }
+
+    public void OnUndo() => Undo();
 
     public void Undo() {
         _action.Undo();
     }
 
+    public void OnRestart() => Restart();
+
     public void Restart() {
-        
         // implement
+        
+    }
+
+    public void OnCancel() {
+        if(!enabled) return;
+        if(_isWaiting) return;
+
         
     }
 
