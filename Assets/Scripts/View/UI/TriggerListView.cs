@@ -47,7 +47,7 @@ public class TriggerListView : SelectableList<TriggerType>
     public override void OnSubmitted()
     {
         base.OnSubmitted();
-        _module.AssignTrigger(_selected);  
+        _module.AssignTrigger();  
     }
 
     public override void OnSelect(BaseEventData eventData)

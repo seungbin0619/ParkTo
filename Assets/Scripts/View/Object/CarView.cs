@@ -116,7 +116,7 @@ public partial class CarView : IAssignableView {
 
     void OnMouseDown()
     {
-        ViewInputModule.current.OnSubmitted();
+        ViewInputModule.current?.OnSubmitted();
     }
 
     public void Assign(Trigger trigger)

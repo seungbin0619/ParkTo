@@ -8,6 +8,7 @@ using UnityEngine.Tilemaps;
 /// <summary>
 /// 레벨에 필요한 View들을 생성하고 관리하는 클래스
 /// </summary>
+[DisallowMultipleComponent]
 public class LevelView : MonoBehaviour {
     public event Action OnViewCreated = delegate {};
     public event Action OnViewDestroyed = delegate {};

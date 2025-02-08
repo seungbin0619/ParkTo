@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public partial class LevelAction : MonoBehaviour {
     private LevelState _state;
     private LevelView _view;

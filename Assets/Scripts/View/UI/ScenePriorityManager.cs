@@ -14,6 +14,8 @@ public class ScenePriorityManager : MonoBehaviour {
 
     readonly Dictionary<string, int> _scenePriority = new();
 
+    public bool IsInitialState => GetHighestPriority() == 0;
+
     void OnEnable() {
         _scenePriorityManagers.Add(this);
 
@@ -59,11 +61,25 @@ public class ScenePriorityManager : MonoBehaviour {
         SetPriority(sceneName, GetHighestPriority() + 1);
     }
 
+    public void SetHighestPriority(params string[] sceneName) {
+        int highestPriority = GetHighestPriority() + 1;
+
+        foreach(var name in sceneName) {
+            SetPriority(name, highestPriority + 1);
+        }
+    }
+
     public void ResetPriority(string sceneName) {
         if(!_scenePriority.ContainsKey(sceneName)) return;
 
         _scenePriority[sceneName] = 0;
         OnScenePriorityChanged?.Invoke();
+    }
+
+    public void ResetPriority(params string[] sceneName) {
+        foreach(var name in sceneName) {
+            ResetPriority(name);
+        }
     }
 
     public bool IsHighestPriority(string sceneName) {

@@ -1,39 +1,23 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Selectable))]
-public class SelectableHandler : MonoBehaviour {
+public class SelectableHandler : PriorityObserver {
     private Selectable _selectable;
 
-    [SerializeField]
-    private string _sceneName;
+    protected override void Awake() {
+        base.Awake();
 
-    void Awake() {
         _selectable = GetComponent<Selectable>();
-        if(_sceneName == "") _sceneName = gameObject.scene.name;
     }
 
     void Start() {
-        UpdateInteractable();
+        SetState();
     }
 
-    void OnEnable() {
-        ScenePriorityManager.current.OnScenePriorityChanged += UpdateInteractable;
-    }
-
-    void OnDisable() {
-        try {
-            ScenePriorityManager.current.OnScenePriorityChanged -= UpdateInteractable;
-        } catch { /* ignored */ }
-    }
-
-    void UpdateInteractable() {
-        if(_selectable == null) return;
-
-        //Debug.Log(ScenePriorityManager.current == null);
-        _selectable.enabled = ScenePriorityManager.current.IsHighestPriority(_sceneName);
-    }
+    protected override void UpdateState(bool state)
+    {
+        _selectable.enabled = state;
+    } 
 }

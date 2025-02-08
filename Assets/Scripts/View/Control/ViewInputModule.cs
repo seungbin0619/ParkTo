@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public partial class ViewInputModule {
-    protected override string TargetScene => "LevelManager";
+    protected override string TargetScene => "LevelObjectView";
 
     public event Action<IAssignableView> OnSelectedViewChanged = delegate {};
     private static readonly List<ViewInputModule> _viewInputSystems = new();
@@ -53,7 +53,7 @@ public partial class ViewInputModule : SelectableList<IAssignableView>
     public override void OnSubmitted()
     {
         base.OnSubmitted();
-        _module.AssignTrigger(_selected);  
+        _module.AssignTrigger();  
     }
 
     public override void OnSelect(BaseEventData eventData)

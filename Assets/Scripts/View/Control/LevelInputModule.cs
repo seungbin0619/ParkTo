@@ -1,15 +1,19 @@
+using System;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.UI;
 
+[DisallowMultipleComponent]
 public class LevelInputModule : MonoBehaviour {
-    private GameObject _levelManager;
+    // private GameObject _levelManager;
     private LevelAction _action;
     private TriggerListView _triggerListView;
     private ViewInputModule _viewInput;
+
     private bool _isWaiting;
 
     void Awake() {
-        _levelManager = GameObject.FindGameObjectWithTag("LevelManager");
+        var _levelManager = GameObject.FindGameObjectWithTag("LevelManager");
         _action = _levelManager.GetComponent<LevelAction>();
 
         _viewInput = GetComponentInChildren<ViewInputModule>();
@@ -25,41 +29,34 @@ public class LevelInputModule : MonoBehaviour {
     }
 
     public void Restart() {
+        
         // implement
         
     }
 
-    public async void AssignTrigger(IAssignableView view) {
+    public async void AssignTrigger() {
         if(_isWaiting) return;
         _isWaiting = true;
+        ScenePriorityManager.current.SetHighestPriority("LevelManager", "LevelTriggerUI");
 
-        Trigger trigger = TriggerGenerator.Generate(
-            await _triggerListView.GetSelectedAsync());
-
-        AssignTrigger(view, trigger);
-
-        _viewInput.Reject();
-        _triggerListView.Reject();
-
-        _isWaiting = false;
-    }
-
-    public async void AssignTrigger(TriggerType type) {
-        if(_isWaiting) return;
-        _isWaiting = true;
+        /////////////////////////////////////////////////////////////////////////////////
 
         IAssignableView view = await _viewInput.GetSelectedAsync();
-        Trigger trigger = TriggerGenerator.Generate(type);
+        Trigger trigger = TriggerGenerator.Generate(await _triggerListView.GetSelectedAsync());
 
         AssignTrigger(view, trigger);
 
         _viewInput.Reject();
         _triggerListView.Reject();
 
+        /////////////////////////////////////////////////////////////////////////////////
+
+        ScenePriorityManager.current.ResetPriority("LevelManager", "LevelTriggerUI");
         _isWaiting = false;
     }
 
     public void AssignTrigger(IAssignableView view, Trigger trigger) {
+        if(view == default || trigger == default) return;
         Debug.Log(view + " " + trigger.Type);
 
         _action.AssignTrigger(view, trigger);

@@ -7,6 +7,7 @@ using System.Linq;
 /// 레벨 상태 정보들을 총체적으로 담는 클래스.
 /// ex) 클리어 여부, 차, 트리거, ...
 /// </summary>
+[DisallowMultipleComponent]
 [RequireComponent(typeof(LevelView))]
 [RequireComponent(typeof(LevelAction))]
 [RequireComponent(typeof(LevelGenerator))]
