@@ -8,19 +8,22 @@ public abstract class SelectableList<T> : Selectable, ISubmitHandler {
     protected abstract string TargetScene { get; }
 
     protected T _selected, _submitted;
-    private bool _cancelled = false;
+    private bool _cancelled = false, _isWaiting = false;
 
     protected bool HasValue(T a) {
         return !EqualityComparer<T>.Default.Equals(a, default);
     }
 
     public async Task<T> GetSelectedAsync() {
+        _cancelled = false;
         if(HasValue(_submitted)) return _submitted;
 
         ScenePriorityManager.current.SetHighestPriority(TargetScene);
 
         await Task.Run(() => {
+            _isWaiting = true;
             while(!_cancelled && !HasValue(_submitted));
+            _isWaiting = false;
         });
 
         ScenePriorityManager.current.ResetPriority(TargetScene);
@@ -28,10 +31,10 @@ public abstract class SelectableList<T> : Selectable, ISubmitHandler {
     }
 
     public void OnCancel() {
-        if(!enabled) return;
-        
+        if(!_isWaiting) return;
+
         _cancelled = true;
-        Debug.Log("Canceled");
+        Debug.Log("Cancelled " + name);
     }
 
     public virtual void Select(T target) {

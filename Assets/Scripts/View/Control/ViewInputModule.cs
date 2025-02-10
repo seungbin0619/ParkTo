@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public partial class ViewInputModule {
@@ -23,7 +24,7 @@ public partial class ViewInputModule {
     protected override void Awake()
     {
         base.Awake();
-
+        
         var levelManager = GameObject.FindGameObjectWithTag("LevelManager");
         
         _view = levelManager.GetComponent<LevelView>();
@@ -34,7 +35,7 @@ public partial class ViewInputModule {
 
     public override void Select(IAssignableView view) {
         if(!HasValue(_selected)) Select();
-        
+
         base.Select(view);
         OnSelectedViewChanged?.Invoke(view);
     }

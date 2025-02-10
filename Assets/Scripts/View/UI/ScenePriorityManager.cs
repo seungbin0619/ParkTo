@@ -52,6 +52,7 @@ public class ScenePriorityManager : MonoBehaviour {
 
     public void SetPriority(string sceneName, int priority) {
         if(!_scenePriority.ContainsKey(sceneName)) return;
+        if(_scenePriority[sceneName] == priority) return;
 
         _scenePriority[sceneName] = priority;
         OnScenePriorityChanged?.Invoke();
@@ -72,8 +73,7 @@ public class ScenePriorityManager : MonoBehaviour {
     public void ResetPriority(string sceneName) {
         if(!_scenePriority.ContainsKey(sceneName)) return;
 
-        _scenePriority[sceneName] = 0;
-        OnScenePriorityChanged?.Invoke();
+        SetPriority(sceneName, 0);
     }
 
     public void ResetPriority(params string[] sceneName) {
@@ -91,10 +91,8 @@ public class ScenePriorityManager : MonoBehaviour {
     public void ResetAllPriorities() {
         var keys = _scenePriority.Keys.ToList();
         foreach(var sceneName in keys) {
-            _scenePriority[sceneName] = 0;
+            SetPriority(sceneName, 0);
         }
-
-        OnScenePriorityChanged?.Invoke();
     }
 
     private int GetHighestPriority() {

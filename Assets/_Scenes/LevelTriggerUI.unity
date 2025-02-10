@@ -815,6 +815,8 @@ GameObject:
   - component: {fileID: 813878393}
   - component: {fileID: 813878392}
   - component: {fileID: 813878391}
+  - component: {fileID: 813878397}
+  - component: {fileID: 813878396}
   m_Layer: 5
   m_Name: InputModuleCanvas
   m_TagString: Untagged
@@ -920,6 +922,99 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &813878396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 813878390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5f1bce9334e28f479ee4a801344d32f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sceneName: 
+  _targets:
+  - {fileID: 813878397}
+--- !u!114 &813878397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 813878390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04b8687d7015c4b408e0d6d1185897b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _inputActions:
+    _serializedList:
+    - Key: {fileID: 4252975776694680187, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+      Value:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 813878391}
+            m_TargetAssemblyTypeName: LevelInputModule, Assembly-CSharp
+            m_MethodName: OnCancel
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+    - Key: {fileID: -1132318093581699921, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+      Value:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 813878391}
+            m_TargetAssemblyTypeName: LevelInputModule, Assembly-CSharp
+            m_MethodName: OnPlay
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+    - Key: {fileID: -7442265543639410168, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+      Value:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 813878391}
+            m_TargetAssemblyTypeName: LevelInputModule, Assembly-CSharp
+            m_MethodName: OnRestart
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+    - Key: {fileID: 2911718387056250181, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+      Value:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 813878391}
+            m_TargetAssemblyTypeName: LevelInputModule, Assembly-CSharp
+            m_MethodName: OnUndo
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
 --- !u!1 &822343569
 GameObject:
   m_ObjectHideFlags: 0
@@ -931,6 +1026,7 @@ GameObject:
   - component: {fileID: 822343570}
   - component: {fileID: 822343573}
   - component: {fileID: 822343572}
+  - component: {fileID: 822343574}
   - component: {fileID: 822343571}
   m_Layer: 5
   m_Name: ViewInputModule
@@ -973,6 +1069,7 @@ MonoBehaviour:
   _sceneName: LevelObjectView
   _targets:
   - {fileID: 822343572}
+  - {fileID: 822343574}
 --- !u!114 &822343572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1022,6 +1119,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 822343569}
   m_CullTransparentMesh: 1
+--- !u!114 &822343574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 822343569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04b8687d7015c4b408e0d6d1185897b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _inputActions:
+    _serializedList:
+    - Key: {fileID: 4252975776694680187, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+      Value:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 822343572}
+            m_TargetAssemblyTypeName: SelectableList`1[[IAssignableView, Assembly-CSharp
+            m_MethodName: OnCancel
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
 --- !u!1001 &990432906
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1221,6 +1348,7 @@ GameObject:
   - component: {fileID: 1457850683}
   - component: {fileID: 1457850682}
   - component: {fileID: 1457850681}
+  - component: {fileID: 1457850685}
   - component: {fileID: 1457850680}
   m_Layer: 5
   m_Name: Triggers
@@ -1364,6 +1492,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1457850678}
   m_CullTransparentMesh: 1
+--- !u!114 &1457850685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1457850678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04b8687d7015c4b408e0d6d1185897b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _inputActions:
+    _serializedList:
+    - Key: {fileID: 4252975776694680187, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+      Value:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 1457850681}
+            m_TargetAssemblyTypeName: SelectableList`1[[TriggerType, Assembly-CSharp
+            m_MethodName: OnCancel
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
 --- !u!1001 &1709822899
 PrefabInstance:
   m_ObjectHideFlags: 0

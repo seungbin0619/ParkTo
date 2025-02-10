@@ -36,14 +36,14 @@ public class LevelInputModule : MonoBehaviour {
 
     public void Restart() {
         // implement
-        
+        Debug.Log("Restart");
     }
 
     public void OnCancel() {
         if(!enabled) return;
         if(_isWaiting) return;
 
-        
+        Debug.Log("Cancelled!");
     }
 
     public async void AssignTrigger() {
