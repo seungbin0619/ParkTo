@@ -14,14 +14,20 @@ public class PriorityObserver : MonoBehaviour
     public bool State { get; private set; }
 
     protected virtual void Awake() {
+        if(!Application.isPlaying) return;
+
         if(_sceneName == "") _sceneName = gameObject.scene.name;
     }
     
     protected virtual void OnEnable() {
+        if(!Application.isPlaying) return;
+
         ScenePriorityManager.current.OnScenePriorityChanged += SetState;
     }
 
     protected virtual void OnDisable() {
+        if(!Application.isPlaying) return;
+        
         try {
             ScenePriorityManager.current.OnScenePriorityChanged -= SetState;
         } catch { /* ignored */ }

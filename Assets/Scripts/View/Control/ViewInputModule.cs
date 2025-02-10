@@ -25,6 +25,7 @@ public partial class ViewInputModule {
     {
         base.Awake();
         
+        if(!Application.isPlaying) return;
         var levelManager = GameObject.FindGameObjectWithTag("LevelManager");
         
         _view = levelManager.GetComponent<LevelView>();
@@ -157,6 +158,8 @@ public partial class ViewInputModule : SelectableList<IAssignableView>
     protected override void OnEnable()
     {
         base.OnEnable();
+        if(!Application.isPlaying) return;
+        
         _viewInputSystems.Add(this);
         _view.OnViewCreated += Initialize;
     }
@@ -171,7 +174,8 @@ public partial class ViewInputModule : SelectableList<IAssignableView>
     protected override void OnDisable()
     {
         base.OnDisable();
-        
+        if(!Application.isPlaying) return;
+
         _viewInputSystems.Remove(this);
         _view.OnViewCreated -=Initialize;
     }

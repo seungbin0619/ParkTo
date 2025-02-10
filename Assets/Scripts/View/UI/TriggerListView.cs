@@ -22,6 +22,7 @@ public class TriggerListView : SelectableList<TriggerType>
     {
         base.Awake();
 
+        if(!Application.isPlaying) return;
         _module = GetComponentInParent<LevelInputModule>();
     }
 
@@ -67,7 +68,8 @@ public class TriggerListView : SelectableList<TriggerType>
 
     protected override void OnEnable() {
         base.OnEnable();
-
+        if(!Application.isPlaying) return;
+        
         var generator = GameObject.FindGameObjectWithTag("LevelManager")
             .GetComponent<LevelGenerator>();
 
@@ -77,13 +79,10 @@ public class TriggerListView : SelectableList<TriggerType>
 
     protected override void OnDisable() {
         base.OnDisable();
+        if(!Application.isPlaying) return;
 
-        try {
-            GameObject.FindGameObjectWithTag("LevelManager")
-                .GetComponent<LevelGenerator>()
-                .OnLevelGenerated -= Initialize;
-        } catch {
-            // ignored
-        }
+        GameObject.FindGameObjectWithTag("LevelManager")
+            .GetComponent<LevelGenerator>()
+            .OnLevelGenerated -= Initialize;
     }
 }
