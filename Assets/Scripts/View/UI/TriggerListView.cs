@@ -79,10 +79,11 @@ public class TriggerListView : SelectableList<TriggerType>
 
     protected override void OnDisable() {
         base.OnDisable();
-        if(!Application.isPlaying) return;
 
-        GameObject.FindGameObjectWithTag("LevelManager")
-            .GetComponent<LevelGenerator>()
-            .OnLevelGenerated -= Initialize;
+        try {
+            GameObject.FindGameObjectWithTag("LevelManager")
+                .GetComponent<LevelGenerator>()
+                .OnLevelGenerated -= Initialize;
+        } catch { /* ignored.. */ }
     }
 }

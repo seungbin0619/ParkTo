@@ -1,6 +1,7 @@
 #pragma warning disable UNT0008
 
 using System;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -13,7 +14,12 @@ public partial class GroundView : MonoBehaviour {
         _ground = ground;
     }
 
+    void Start() {
+        ApplyVisual();
+    }
+
     void OnDrawGizmos() {
+        if(!Application.isPlaying) return;
         if(_ground._enteredCars.Count == 0) return;
 
         Gizmos.color = Color.red;
@@ -42,11 +48,19 @@ public partial class GroundView : IAssignableView {
     public void Assign(Trigger trigger)
     {
         _ground.SetTrigger(trigger);
+
+        ApplyVisual();
     }
 
     public void Unassign(Trigger _)
     {
         _ground.SetTrigger(null);
+
+        ApplyVisual();
+    }
+
+    public void ApplyVisual() {
+        GetComponentInChildren<GroundTriggerView>().SetTrigger(_ground.Trigger?.Type ?? TriggerType.None);
     }
 
     public bool IsAssignable(Trigger trigger)
