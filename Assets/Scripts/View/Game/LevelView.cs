@@ -98,7 +98,7 @@ public class LevelView : MonoBehaviour {
     // test
     public void RotateLevelView(int direction) {
         Vector3 rotation = _gridTransform.eulerAngles;
-        _gridRotation += direction;
+        _gridRotation += direction + 4;
         _gridRotation %= 4;
 
         rotation.y = 90 * _gridRotation;

@@ -9,7 +9,7 @@ public partial class Car
     public bool IsStopped => Variables.isStop || Variables.isBroken;
 
     public Car(CarSerializer serilizer, Ground ground) {
-        Color = serilizer.color;
+        // Color = serilizer.color;
         _ground = ground;
 
         SetVariables(new CarVariables(serilizer));

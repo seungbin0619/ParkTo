@@ -1015,6 +1015,38 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
+    - Key: {fileID: -3723934256527331170, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+      Value:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 813878391}
+            m_TargetAssemblyTypeName: LevelInputModule, Assembly-CSharp
+            m_MethodName: OnRotateInclockwise
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+    - Key: {fileID: 8357902901976768952, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+      Value:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 813878391}
+            m_TargetAssemblyTypeName: LevelInputModule, Assembly-CSharp
+            m_MethodName: OnRotateClockwise
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
 --- !u!1 &822343569
 GameObject:
   m_ObjectHideFlags: 0

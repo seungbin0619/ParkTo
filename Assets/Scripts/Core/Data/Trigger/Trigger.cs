@@ -1,4 +1,5 @@
 public enum TriggerType {
+    Goal = -2,
     Ban = -1,
     None = 0,
     TurnRight,

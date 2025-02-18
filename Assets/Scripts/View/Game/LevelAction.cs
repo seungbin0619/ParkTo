@@ -35,6 +35,10 @@ public partial class LevelAction : MonoBehaviour {
     private bool IsAssignable() {
         return !_state.IsPlaying;
     }
+
+    public void Rotate(int direction) {
+        _view.RotateLevelView(direction);
+    }
 }
 
 public partial class LevelAction {

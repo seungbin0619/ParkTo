@@ -10,8 +10,10 @@ public class Level : ScriptableObject
     public int index;
     public Rect Rect { get; private set; }
 
+    public int seed;
     public List<GroundSerializer> grounds;
     public List<CarSerializer> cars;
+    public List<GoalSerializer> goals;
     public List<TriggerSerializer> triggers;
 
     void OnValidate() {
@@ -40,10 +42,16 @@ public class Level : ScriptableObject
 
 [Serializable]
 public struct CarSerializer {
-    public Color color;
+    public int color;
     public Point size;
     public Point position;
     public Direction direction;
+}
+
+[Serializable]
+public struct GoalSerializer {
+    public int color;
+    public Point position;
 }
 
 [Serializable]
@@ -60,5 +68,6 @@ public struct GroundSerializer {
 [Serializable]
 public struct TriggerSerializer {
     public uint count;
+    public bool isInfinite;
     public TriggerType type;
 }

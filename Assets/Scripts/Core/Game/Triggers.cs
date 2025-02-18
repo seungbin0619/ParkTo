@@ -8,7 +8,6 @@ public class Triggers {
     public event Action<Trigger> OnTriggerUsed = delegate {};
     public event Action<Trigger> OnTriggerCancelled = delegate {};
 
-
     public const uint Infinity = uint.MaxValue;
     private readonly Dictionary<TriggerType, uint> _triggers;
 
@@ -17,7 +16,10 @@ public class Triggers {
     public Triggers(IEnumerable<TriggerSerializer> triggers) {
         _triggers = new();
         _triggers.AddRange(triggers.Select(trigger => 
-            new KeyValuePair<TriggerType, uint>(trigger.type, trigger.count)));
+            new KeyValuePair<TriggerType, uint>(trigger.type, 
+                trigger.isInfinite 
+                    ? Infinity 
+                    : trigger.count)));
     }
 
     public uint this[TriggerType type] => Count(type);
@@ -35,6 +37,7 @@ public class Triggers {
         if(_triggers[type] == Infinity) return;
 
         _triggers[type]--;
+        // Debug.Log(type + " " + _triggers[type]);
     }
 
     public void Use(Trigger trigger) {

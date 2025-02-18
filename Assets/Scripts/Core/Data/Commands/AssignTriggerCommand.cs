@@ -14,7 +14,7 @@ public class AssignTriggerCommand : ICommand
     }
 
     public bool Condition() {
-        return _target.IsAssignable(_trigger);
+        return _triggers.IsEnabled(_trigger.Type) && _target.IsAssignable(_trigger);
     }
 
     public void Execute() {

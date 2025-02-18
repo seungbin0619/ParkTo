@@ -46,6 +46,13 @@ public class LevelInputModule : MonoBehaviour {
         Debug.Log("Cancelled!");
     }
 
+    public void OnRotateClockwise() => Rotate(1);
+    public void OnRotateInclockwise() => Rotate(-1);
+
+    public void Rotate(int direction) {
+        _action.Rotate(direction);
+    }
+
     public async void AssignTrigger() {
         if(_isWaiting) return;
         _isWaiting = true;
