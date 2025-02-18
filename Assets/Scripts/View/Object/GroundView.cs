@@ -1,6 +1,7 @@
 #pragma warning disable UNT0008
 
 using System;
+using System.Linq;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -20,7 +21,7 @@ public partial class GroundView : MonoBehaviour {
 
     void OnDrawGizmos() {
         if(!Application.isPlaying) return;
-        if(_ground._enteredCars.Count == 0) return;
+        if(_ground.Cars.Count() == 0) return;
 
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(transform.position, 0.3f);

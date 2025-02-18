@@ -4,12 +4,12 @@ using UnityEngine;
 public partial class Car
 {
     public CarVariables Variables { get; private set; }
-    public Color Color { get; }
+    public int Color { get; }
     public Ground _ground;
     public bool IsStopped => Variables.isStop || Variables.isBroken;
 
     public Car(CarSerializer serilizer, Ground ground) {
-        // Color = serilizer.color;
+        Color = serilizer.color;
         _ground = ground;
 
         SetVariables(new CarVariables(serilizer));

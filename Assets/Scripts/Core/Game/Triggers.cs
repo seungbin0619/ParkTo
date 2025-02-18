@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
-using UnityEngine;
 
 public class Triggers {
     public event Action<Trigger> OnTriggerUsed = delegate {};
@@ -37,7 +36,6 @@ public class Triggers {
         if(_triggers[type] == Infinity) return;
 
         _triggers[type]--;
-        // Debug.Log(type + " " + _triggers[type]);
     }
 
     public void Use(Trigger trigger) {

@@ -13,7 +13,7 @@ public class Level : ScriptableObject
     public int seed;
     public List<GroundSerializer> grounds;
     public List<CarSerializer> cars;
-    public List<GoalSerializer> goals;
+    public List<DestinationSerializer> destinations;
     public List<TriggerSerializer> triggers;
 
     void OnValidate() {
@@ -49,7 +49,7 @@ public struct CarSerializer {
 }
 
 [Serializable]
-public struct GoalSerializer {
+public struct DestinationSerializer {
     public int color;
     public Point position;
 }

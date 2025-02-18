@@ -12,7 +12,9 @@ public partial class Ground
 
     /// 
     
-    public List<Car> _enteredCars = new();
+    private List<Car> _enteredCars = new();
+    public IEnumerable<Car> Cars => _enteredCars;
+    
     private static Ground _firstEnterableChecked = null;
     public bool IsEnterable {
         get {

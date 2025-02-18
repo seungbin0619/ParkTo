@@ -10,8 +10,10 @@ public class TriggerView : Selectable, ISubmitHandler
     public TriggerType Type { get; private set; } = TriggerType.None;
 
     private uint _count;
+
     public uint Count { get => _count; set {
         _count = value;
+        
         ApplyVisual();
     }}
     
@@ -48,7 +50,7 @@ public class TriggerView : Selectable, ISubmitHandler
     private void ApplyVisual() {
         // ...
 
-        interactable = _count > 0;
+        enabled = _count > 0;
     }
 
     public override void OnSelect(BaseEventData eventData) {

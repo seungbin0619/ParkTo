@@ -33,15 +33,9 @@ public partial class LevelState : MonoBehaviour {
         _action.Initialize();
         _view.Initialize(levelPack.style);
         _view.CreateView();
-
-        
     }
 
     public void Clear() {
-        // ...
-    }
-
-    public void Failed() {
         // ...
     }
 }

@@ -85,6 +85,17 @@
                 },
                 {
                     "name": "",
+                    "id": "435bad11-fa7b-46d8-801b-b4fb9812bdaf",
+                    "path": "<Mouse>/backButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Undo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "5c4a0894-0198-49bc-b44e-be136f8a7045",
                     "path": "<Keyboard>/r",
                     "interactions": "",

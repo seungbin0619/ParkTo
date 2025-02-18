@@ -28,6 +28,7 @@ public class LevelGenerator : MonoBehaviour {
 
         Grid = new(_level.grounds.Select(g => new Ground(g)), _level.Rect);
         Cars = _level.cars.Select(c => new Car(c, Grid[c.position]));
+        
         Triggers = new(_level.triggers);
     
         LevelIndex = index;
