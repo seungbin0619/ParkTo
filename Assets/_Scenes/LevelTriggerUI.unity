@@ -512,6 +512,7 @@ MonoBehaviour:
   _sceneName: 
   _targets:
   - {fileID: 631860784}
+  _enableOnDefault: 0
 --- !u!114 &631860784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -937,6 +938,7 @@ MonoBehaviour:
   _sceneName: 
   _targets:
   - {fileID: 813878397}
+  _enableOnDefault: 1
 --- !u!114 &813878397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1102,6 +1104,7 @@ MonoBehaviour:
   _targets:
   - {fileID: 822343572}
   - {fileID: 822343574}
+  _enableOnDefault: 0
 --- !u!114 &822343572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1427,6 +1430,7 @@ MonoBehaviour:
   _sceneName: 
   _targets:
   - {fileID: 1457850681}
+  _enableOnDefault: 0
 --- !u!114 &1457850681
 MonoBehaviour:
   m_ObjectHideFlags: 0

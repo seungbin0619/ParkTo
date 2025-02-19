@@ -36,6 +36,10 @@ public partial class LevelAction : MonoBehaviour {
         return !_state.IsPlaying;
     }
 
+    public void Restart() {
+        _state.Initialize(_generator.LevelPack, _generator.LevelIndex);
+    }
+
     public void Rotate(int direction) {
         _view.RotateLevelView(direction);
     }

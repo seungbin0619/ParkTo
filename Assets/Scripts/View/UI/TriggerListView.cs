@@ -17,6 +17,7 @@ public class TriggerListView : SelectableList<TriggerType>
 
     [SerializeField] 
     private SerializedDictionary<TriggerType, TriggerView> _views;
+    private Triggers _triggers;
 
     protected override void Awake()
     {
@@ -29,7 +30,8 @@ public class TriggerListView : SelectableList<TriggerType>
     public void Initialize(LevelGenerator generator) {
         if(!generator.HasInitialized) return;
         // Debug.Log("initialized");
-        var _triggers = generator.Triggers;
+
+        _triggers = generator.Triggers;
 
         _views.Values.Select(view => _triggers.Types.Contains(view.Type) ? view : null).ToList().ForEach((view) => {
             if(view == null) return;
@@ -42,12 +44,14 @@ public class TriggerListView : SelectableList<TriggerType>
             _views[type].Count = _triggers[type];
         }
 
-        _triggers.OnTriggerUsed += (trigger) => _views[trigger.Type].Count = _triggers[trigger.Type];
-        _triggers.OnTriggerCancelled += (trigger) => _views[trigger.Type].Count = _triggers[trigger.Type];
+        _triggers.OnTriggerUsed += (type) => _views[type].Count = _triggers[type];
+        _triggers.OnTriggerCancelled += (type) => _views[type].Count = _triggers[type];
     }
     public override void OnSubmitted()
     {
+        if(!_triggers.IsEnabled(_selected)) return;
         base.OnSubmitted();
+
         _module.AssignTrigger();  
     }
 

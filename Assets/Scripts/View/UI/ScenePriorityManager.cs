@@ -98,4 +98,8 @@ public class ScenePriorityManager : MonoBehaviour {
     private int GetHighestPriority() {
         return _scenePriority.Values.Count == 0 ? 0 : _scenePriority.Values.Max();
     }
+
+    public bool IsDefault() {
+        return GetHighestPriority() == 0;
+    }
 }

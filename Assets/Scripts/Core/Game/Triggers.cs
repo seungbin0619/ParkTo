@@ -4,8 +4,8 @@ using System.Linq;
 using Unity.VisualScripting;
 
 public class Triggers {
-    public event Action<Trigger> OnTriggerUsed = delegate {};
-    public event Action<Trigger> OnTriggerCancelled = delegate {};
+    public event Action<TriggerType> OnTriggerUsed = delegate {};
+    public event Action<TriggerType> OnTriggerCancelled = delegate {};
 
     public const uint Infinity = uint.MaxValue;
     private readonly Dictionary<TriggerType, uint> _triggers;
@@ -36,6 +36,7 @@ public class Triggers {
         if(_triggers[type] == Infinity) return;
 
         _triggers[type]--;
+        OnTriggerUsed?.Invoke(type);
     }
 
     public void Use(Trigger trigger) {
@@ -47,6 +48,7 @@ public class Triggers {
         if(_triggers[type] == Infinity) return;
 
         _triggers[type]++;
+        OnTriggerCancelled?.Invoke(type);
     }
 
     public void Cancel(Trigger trigger) {

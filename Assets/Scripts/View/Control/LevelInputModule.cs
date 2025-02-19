@@ -26,17 +26,16 @@ public class LevelInputModule : MonoBehaviour {
         _action.Play();
     }
 
+    public void OnRestart() => Restart();
+
+    public void Restart() {
+        _action.Restart();
+    }
+
     public void OnUndo() => Undo();
 
     public void Undo() {
         _action.Undo();
-    }
-
-    public void OnRestart() => Restart();
-
-    public void Restart() {
-        // implement
-        Debug.Log("Restart");
     }
 
     public void OnCancel() {

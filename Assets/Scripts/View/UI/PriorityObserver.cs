@@ -13,6 +13,9 @@ public class PriorityObserver : MonoBehaviour
     
     public bool State { get; private set; }
 
+    [SerializeField]
+    private bool _enableOnDefault = false;
+
     protected virtual void Awake() {
         if(!Application.isPlaying) return;
 
@@ -40,7 +43,8 @@ public class PriorityObserver : MonoBehaviour
     }
 
     protected void SetState() {
-        State = ScenePriorityManager.current.IsHighestPriority(_sceneName);
+        if(_enableOnDefault) State = ScenePriorityManager.current.IsDefault();
+        else State = ScenePriorityManager.current.IsHighestPriority(_sceneName);
 
         OnStateUpdate(State);
     }

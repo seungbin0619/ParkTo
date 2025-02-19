@@ -2,10 +2,7 @@
 
 using System;
 using System.Linq;
-using AYellowpaper.SerializedCollections;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public partial class GroundView : MonoBehaviour {
     private Ground _ground;
