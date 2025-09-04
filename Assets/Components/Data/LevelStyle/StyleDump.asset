@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: StyleDump
   m_EditorClassIdentifier: 
   groundTile: {fileID: 11400000, guid: f32751073a7db99429bd33211a881c13, type: 2}
-  carView: {fileID: -8543542547339778989, guid: 2e1829e702e871045b8e4d8ebb00c730, type: 3}
+  carView: {fileID: 6129242277549573001, guid: 3eb10131f1f06c346b7f8d6cedac4daa, type: 3}
   primaryColor: {r: 1, g: 1, b: 1, a: 1}
   secondaryColor: {r: 1, g: 1, b: 1, a: 1}
